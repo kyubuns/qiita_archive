@@ -1,0 +1,83 @@
+
+<h1>
+<span id="追記" class="fragment"></span><a href="#%E8%BF%BD%E8%A8%98"><i class="fa fa-link"></i></a>追記</h1>
+
+<p>新バージョンできました。<br>
+<a href="http://qiita.com/kyubuns/items/cb01f926966b51a5501c" class="autolink" id="reference-83382bdda34d65d3fa14">http://qiita.com/kyubuns/items/cb01f926966b51a5501c</a></p>
+
+<h1>
+<span id="なにこれ" class="fragment"></span><a href="#%E3%81%AA%E3%81%AB%E3%81%93%E3%82%8C"><i class="fa fa-link"></i></a>なにこれ？</h1>
+
+<p>uGUIの9sliced sprite作る時に、<br>
+まずPhotoshopで9sliced sprite用の画像を作って、<br>
+Unityにインポートした後に、SpriteEditor開いて、1個づつBorderの値入れて・・・めんどくさい！！！という話を聞いたので作ってみました。<br>
+どんなツールか知りたい方は、準備は読み飛ばして、使い方のところを見てください。<br>
+名前はodenです。</p>
+
+<h1>
+<span id="リポジトリ" class="fragment"></span><a href="#%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA"><i class="fa fa-link"></i></a>リポジトリ</h1>
+
+<p><a href="https://github.com/kyubuns/oden" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/oden</a></p>
+
+<h1>
+<span id="準備" class="fragment"></span><a href="#%E6%BA%96%E5%82%99"><i class="fa fa-link"></i></a>準備</h1>
+
+<h2>
+<span id="photoshop" class="fragment"></span><a href="#photoshop"><i class="fa fa-link"></i></a>Photoshop</h2>
+
+<p><a href="https://raw.githubusercontent.com/kyubuns/oden/master/oden.js" class="autolink" rel="nofollow noopener" target="_blank">https://raw.githubusercontent.com/kyubuns/oden/master/oden.js</a><br>
+このjsファイルをダウンロードして、↓のOS/Photoshopバージョンに対応した箇所に入れてください。<br>
+Photoshopを起動している場合は、再起動しないと読み込まれないみたいです。<br>
+Mac: /Applications/Adobe Photoshop CC 2014/Presets/Scripts/<br>
+Windows: C:\Program Files\Adobe\Adobe Photoshop CC (64 Bit)\Presets\Scripts\</p>
+
+<h2>
+<span id="unity" class="fragment"></span><a href="#unity"><i class="fa fa-link"></i></a>Unity</h2>
+
+<p><a href="https://github.com/kyubuns/oden/blob/master/OdenImporter.cs" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/oden/blob/master/OdenImporter.cs</a><br>
+このC#ファイルをダウンロードして、UnityプロジェクトのどこかのEditorディレクトリ以下に入れてください。</p>
+
+<h1>
+<span id="使い方" class="fragment"></span><a href="#%E4%BD%BF%E3%81%84%E6%96%B9"><i class="fa fa-link"></i></a>使い方</h1>
+
+<p>以下で使用しているpsdファイルは、リポジトリのsample以下に入っています。</p>
+
+<h2>
+<span id="photoshop-1" class="fragment"></span><a href="#photoshop-1"><i class="fa fa-link"></i></a>Photoshop</h2>
+
+<p>まずは普通に素材を作ります。<br>
+この時、Rootにある1つ1つのレイヤーフォルダが、1つのSpriteになるようにします。<br>
+また、出力するレイヤーフォルダは、名前の先頭を#にしてください。<br>
+(ex. #Button, #Window, ...)<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fc18ef76b-0ffd-7ed1-9706-af22b10ba473.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=17474160a590a03dcda04761e9e68d8a" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fc18ef76b-0ffd-7ed1-9706-af22b10ba473.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=17474160a590a03dcda04761e9e68d8a" alt="a1.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/c18ef76b-0ffd-7ed1-9706-af22b10ba473.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fc18ef76b-0ffd-7ed1-9706-af22b10ba473.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=20a088f4343b8af3b6e9baecc3e69d49 1x" loading="lazy"></a></p>
+
+<p>ここに、必要のない箇所を四角形で指定した#Minというレイヤーを追加します。<br>
+出力されるpngにこのレイヤーは含まれません。色はなんでもいいです。非表示にしておいても構いません。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F6f55e5dd-eee8-991d-720a-2af8d784ed48.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=a3bc832a83426b5ddefd38ba0278a959" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F6f55e5dd-eee8-991d-720a-2af8d784ed48.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=a3bc832a83426b5ddefd38ba0278a959" alt="a2.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/6f55e5dd-eee8-991d-720a-2af8d784ed48.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F6f55e5dd-eee8-991d-720a-2af8d784ed48.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=46abb01eeb18d1e78288336d265aadab 1x" loading="lazy"></a></p>
+
+<p>File-&gt;Plugins-&gt;Odenを選択すると、psdがあるのと同じディレクトリ内に、png画像及びodenファイルが生成されます。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F74e3cbe1-5832-563d-87aa-a9b9cce4483f.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=da1604ed4e065d0edfb369aca68700a2" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F74e3cbe1-5832-563d-87aa-a9b9cce4483f.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=da1604ed4e065d0edfb369aca68700a2" alt="b1.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/74e3cbe1-5832-563d-87aa-a9b9cce4483f.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F74e3cbe1-5832-563d-87aa-a9b9cce4483f.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=7ae349408c2b4e9a4b5c964216e17b7c 1x" loading="lazy"></a></p>
+
+<p>ちゃんとsliceされてる。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F4f201bf8-5531-6430-58eb-6350633a984c.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=bb19f737ed0c5e85f7c2ee5f99c0b493" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F4f201bf8-5531-6430-58eb-6350633a984c.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=bb19f737ed0c5e85f7c2ee5f99c0b493" alt="TestButton.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/4f201bf8-5531-6430-58eb-6350633a984c.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F4f201bf8-5531-6430-58eb-6350633a984c.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=709095fc8f8df1a34d37fabf74c8529e 1x" loading="lazy"></a></p>
+
+<h2>
+<span id="unity-1" class="fragment"></span><a href="#unity-1"><i class="fa fa-link"></i></a>Unity</h2>
+
+<p>OdenImporter.csを追加したUnityProjectのどこかに、上記で生成したpng, odenファイルを追加します。<br>
+この時、pngファイルと対応したodenファイルは同じディレクトリ内に存在しないと認識されません。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F3739ccc0-b5bd-df54-84d1-d1d545a5bc0d.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=cb4db5b2a7a0bb29c3fd56a55e73152b" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F3739ccc0-b5bd-df54-84d1-d1d545a5bc0d.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=cb4db5b2a7a0bb29c3fd56a55e73152b" alt="Test_unity_-_unity_-_PC__Mac___Linux_Standalone.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/3739ccc0-b5bd-df54-84d1-d1d545a5bc0d.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F3739ccc0-b5bd-df54-84d1-d1d545a5bc0d.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=0ad79e16467a16b6b10697308ddb5226 1x" loading="lazy"></a></p>
+
+<p>これで作業は終了です！<br>
+今追加されたSpriteの設定を見ると、自動的にBorderが指定されていることがわかります。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F53940c9a-0030-f371-3435-60974de3157a.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=9b5b40a885cd1c98dd64e4b035fe3e79" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F53940c9a-0030-f371-3435-60974de3157a.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=9b5b40a885cd1c98dd64e4b035fe3e79" alt="Test_unity_-_unity_-_PC__Mac___Linux_Standalone 2.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/53940c9a-0030-f371-3435-60974de3157a.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F53940c9a-0030-f371-3435-60974de3157a.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=2ebcf3ca42c8a2652a30422db3e7d62d 1x" loading="lazy"></a></p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F8e1c6744-a295-e02e-efa5-c9120934eeff.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=59081a8aafe984ba3e04c758e9d43791" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F8e1c6744-a295-e02e-efa5-c9120934eeff.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=59081a8aafe984ba3e04c758e9d43791" alt="t.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/8e1c6744-a295-e02e-efa5-c9120934eeff.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F8e1c6744-a295-e02e-efa5-c9120934eeff.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=11a2e66e601a8e98532d09fdf4ba4d4c 1x" loading="lazy"></a></p>
+
+<h1>
+<span id="めも" class="fragment"></span><a href="#%E3%82%81%E3%82%82"><i class="fa fa-link"></i></a>めも</h1>
+
+<p>Photoshopさわり始めたてなので用語とか間違ってたらツッコミください。<br>
+エラー検出も甘いのでコケたところあったら教えて下さい。<br>
+何かあったら、<a href="http://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">twitter @kyubuns</a>か<a href="https://github.com/kyubuns/oden/issues" rel="nofollow noopener" target="_blank">githubのissue</a>にお願いします。</p>

@@ -1,0 +1,75 @@
+
+<h1>
+<span id="20141127追記" class="fragment"></span><a href="#20141127%E8%BF%BD%E8%A8%98"><i class="fa fa-link"></i></a>2014/11/27追記</h1>
+
+<p>Unityのどこかのバージョンからか、出力するInfo.plistの「スペースの量」が変化していて↓の方法使えなくなってます。<br>
+<code>&lt;dict&gt;</code>を<code>&lt;dict&gt;</code>にすると治るのですが、やっぱり素直に<br>
+PostProcessでPlistBuddy使って追加する方が安全そうです。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>/usr/libexec/PlistBuddy -c 'Add :CFBundleURLTypes array' Info.plist
+/usr/libexec/PlistBuddy -c "Add CFBundleURLTypes:0:CFBundleURLSchemes array" Info.plist
+/usr/libexec/PlistBuddy -c "Add CFBundleURLTypes:0:CFBundleURLSchemes:0 string appname" Info.plist
+</pre></div></div>
+
+<h1>
+<span id="やってること" class="fragment"></span><a href="#%E3%82%84%E3%81%A3%E3%81%A6%E3%82%8B%E3%81%93%E3%81%A8"><i class="fa fa-link"></i></a>やってること</h1>
+
+<p>PostProcessでXCodeProject(正確には、その中のInfo.plist)にurl schemeを登録するだけ。</p>
+
+<h1>
+<span id="前書き" class="fragment"></span><a href="#%E5%89%8D%E6%9B%B8%E3%81%8D"><i class="fa fa-link"></i></a>前書き</h1>
+
+<p>AndroidはAndroidManifest.xmlに書くだけなのでググればでます。<br>
+iOSは何故かググってもPostprocessBuildPlayerでshellscript書いたりpython書いたりruby書いたり、<br>
+みんな自由だな〜と思ったのでc#で完結するコードを書いてみました。<br>
+shellscriptを使うと、こんな置換みたいな無理矢理な方法ではなくPlistBuddyという便利な奴を使えるので、それはそれでありだと思います。<br>
+PostprocessBuildPlayer使っちゃうとデバッグがとてもめんどくさい（Consoleに出ない）というのがマイナスポイントなので個人的には使いたくないです。<br>
+結果的に生まれる物は一緒なので、お好きな物をどうぞ。</p>
+
+<h1>
+<span id="やりかた" class="fragment"></span><a href="#%E3%82%84%E3%82%8A%E3%81%8B%E3%81%9F"><i class="fa fa-link"></i></a>やりかた</h1>
+
+<p>↓のスクリプトをEditor以下に放り込めばOK。<br>
+<a href="http://d.hatena.ne.jp/kyubuns/20140615/1402825919" rel="nofollow noopener" target="_blank">前にもまとめました</a>が、別にAssets/Editorでなくても、Assets/HogeFuga/Editor以下でも、Assets/KotoriTyuntyun/Editor以下でもEditor以下なら何でもOKです。</p>
+
+<div class="code-frame" data-lang="lang">
+<div class="code-lang"><span class="bold">BuildPostProcessor.cs</span></div>
+<div class="highlight"><pre>using System.IO;
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.Callbacks;
+
+public class BuildPostProcessor
+{
+    [PostProcessBuild]
+    public static void OnPostProcessBuild(BuildTarget target, string xcodeProjectPath)
+    {
+        if(target != BuildTarget.iPhone) return;
+        AddUrlScheme(xcodeProjectPath, "hogefugapiyo");
+    }
+
+    private static void AddUrlScheme(string xcodeProjectPath, string scheme)
+    {
+        var plistPath = Path.Combine(xcodeProjectPath, "Info.plist");
+        var info = File.ReadAllText(plistPath);
+        var beforeText = "&lt;plist version=\"1.0\"&gt;\n&lt;dict&gt;"; // どこかのバージョンから &lt;plist version=\"1.0\"&gt;\n  &lt;dict&gt;になっています。対応した方使ってください。
+        var afterText = string.Format("&lt;plist version=\"1.0\"&gt;\n&lt;dict&gt;\n&lt;key&gt;CFBundleURLTypes&lt;/key&gt;&lt;array&gt;&lt;dict&gt;&lt;key&gt;CFBundleURLSchemes&lt;/key&gt;&lt;array&gt;&lt;string&gt;{0}&lt;/string&gt;&lt;/array&gt;&lt;/dict&gt;&lt;/array&gt;", scheme);
+
+        info = info.Replace(beforeText, afterText);
+        File.WriteAllText(plistPath, info);
+    }
+}
+</pre></div>
+</div>
+
+<h1>
+<span id="ちなみに" class="fragment"></span><a href="#%E3%81%A1%E3%81%AA%E3%81%BF%E3%81%AB"><i class="fa fa-link"></i></a>ちなみに</h1>
+
+<p>いつも罠にかかるんですが、URL Schemeは_(アンダーバー)が使えません。<br>
+これ、ビルドは通るんですけどアプリ審査提出時の自動テストで弾かれるので気づきにくいです。</p>
+
+<h1>
+<span id="関連記事" class="fragment"></span><a href="#%E9%96%A2%E9%80%A3%E8%A8%98%E4%BA%8B"><i class="fa fa-link"></i></a>関連記事</h1>
+
+<p><a href="http://qiita.com/kyubuns/items/8e5b56e51091aa5a48ba" id="reference-903d1eeb7d0cfcf6600c">Unity iOSで自動的に画像リソースを追加する</a><br>
+<a href="http://qiita.com/kyubuns/items/bce1e6f060d3ceeb9811" id="reference-d6d33a723bea51d16c46">Unity iOSで独自の*.frameworkを自動的に追加する</a></p>

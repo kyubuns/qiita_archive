@@ -1,0 +1,29 @@
+<p>AssetPostProcessor内で処理した場合は勝手に保存されている。たぶん。<br>
+これは、AssetPostProcessor外で処理するときの話です。</p>
+
+<p>エディタ拡張でTextureImporter.spritesheetをスクリプトから変更した時、</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>EditorUtility.SetDirty(importer);
+EditorUtility.SaveAssets();
+AssetDatabase.SaveAssets();
+</pre></div></div>
+
+<p>ではだめで</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>EditorUtility.SetDirty(importer);
+AssetDatabase.ImportAsset(texturePath, ImportAssetOptions.ForceUpdate);
+</pre></div></div>
+
+<p>する必要がある。<br>
+spritesheet以外のプロパティは、こんなことしなくても保存されてる気がする。</p>
+
+<hr>
+
+<p>唐突に関係ない話します。<br>
+uGUIのTextでBitmapFontを使うと描画位置がズレるの、ググっても同士が見つからなくて困ってます。<br>
+何か知ってる方情報ください。<br>
+（Unity5.3.1p3にて確認）</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fd8419325-7a79-fe03-bb7b-b850f048d69b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=41a42ba3d16fb23848d81c65ee76d416" target="_blank" rel="nofollow noopener"><img width="911" alt="fo1.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fd8419325-7a79-fe03-bb7b-b850f048d69b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=41a42ba3d16fb23848d81c65ee76d416" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/d8419325-7a79-fe03-bb7b-b850f048d69b.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fd8419325-7a79-fe03-bb7b-b850f048d69b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=5197413330b0a9d00278b5f2041b6efa 1x" loading="lazy"></a></p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F7a371a6d-f95b-0328-fe7a-017372e52a99.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=c2ac41f8e4a639cf14c337865cf78c2e" target="_blank" rel="nofollow noopener"><img width="918" alt="fo2.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F7a371a6d-f95b-0328-fe7a-017372e52a99.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=c2ac41f8e4a639cf14c337865cf78c2e" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/7a371a6d-f95b-0328-fe7a-017372e52a99.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F7a371a6d-f95b-0328-fe7a-017372e52a99.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=fb17ceca29c53d8b6eefd0e0e977c1f8 1x" loading="lazy"></a></p>

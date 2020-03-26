@@ -1,0 +1,117 @@
+<p>色んなサイズのボタンが作れる汎用素材を作りたい！とか、<br>
+出来るだけUI素材のサイズを小さくしたい！とか言う時に役立つ9SlicedSprite。</p>
+
+<p>でも、9Slice用の画像を作ったり、Unity上でボーダーを設定したりするのがめんどくさい！<br>
+ということで、自動化しちゃいました。<br>
+名前は <strong>OnionRing</strong> です。<br>
+(<a href="http://qiita.com/kyubuns/items/cb01f926966b51a5501c" id="reference-164d6bb10e0414b43330">自動で9 sliced sprite(9 patch)画像を生成してくれるモジュール作った(ruby)</a>のUnity移植版です。)</p>
+
+<h1>
+<span id="リポジトリ" class="fragment"></span><a href="#%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA"><i class="fa fa-link"></i></a>リポジトリ</h1>
+
+<p><a href="http://github.com/kyubuns/OnionRingUnity" rel="nofollow noopener" target="_blank">github: kyubuns/OnionRingUnity</a></p>
+
+<h1>
+<span id="で何が出来るの" class="fragment"></span><a href="#%E3%81%A7%E4%BD%95%E3%81%8C%E5%87%BA%E6%9D%A5%E3%82%8B%E3%81%AE"><i class="fa fa-link"></i></a>で、何が出来るの？</h1>
+
+<p>こういう画像を突っ込むと<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fba6211dd-8ece-7866-7e9e-1f3f561cd175.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=40318b703f1e2a539f6ab334afa2ac22" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fba6211dd-8ece-7866-7e9e-1f3f561cd175.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=40318b703f1e2a539f6ab334afa2ac22" alt="before.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/ba6211dd-8ece-7866-7e9e-1f3f561cd175.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fba6211dd-8ece-7866-7e9e-1f3f561cd175.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=39248c927c856393ff157217f3b913c6 1x" loading="lazy"></a></p>
+
+<p>こういう画像が出てきます。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F3f711404-ee29-52a4-0923-d4f17d494db1.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=d819c460e460ea7bd01f2ebc827838f0" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F3f711404-ee29-52a4-0923-d4f17d494db1.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=d819c460e460ea7bd01f2ebc827838f0" alt="after.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/3f711404-ee29-52a4-0923-d4f17d494db1.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F3f711404-ee29-52a4-0923-d4f17d494db1.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=a0401af69583a5c2e934b8297f114f9b 1x" loading="lazy"></a></p>
+
+<p>uGUI用のSlice設定まで自動で行うことも出来ます。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F4c30a682-b636-bd88-b941-8d4a46981625.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=e393ea9ed5ce67dd0b2b36149b443c49" target="_blank" rel="nofollow noopener"><img width="300" alt="Sample_unity_-_OnionRingUnity_-_Web_Player__OpenGL_4_1_.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F4c30a682-b636-bd88-b941-8d4a46981625.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=e393ea9ed5ce67dd0b2b36149b443c49" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/4c30a682-b636-bd88-b941-8d4a46981625.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F4c30a682-b636-bd88-b941-8d4a46981625.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=c7d7e51d727b16f44a751aae3ce78683 1x" loading="lazy"></a></p>
+
+<h1>
+<span id="使い方" class="fragment"></span><a href="#%E4%BD%BF%E3%81%84%E6%96%B9"><i class="fa fa-link"></i></a>使い方</h1>
+
+<p>基本的に、AssetPostprocessor内で使われることを想定しています。<br>
+使えるメソッドは1つだけ、<br>
+<code>OnionRing.TextureSlicer.Slice(Texture2D texture)</code><br>
+これだけです。<br>
+すると、SliceされたTextureとBorderの値を持ったやつが帰ってきます。</p>
+
+<h2>
+<span id="サンプル" class="fragment"></span><a href="#%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB"><i class="fa fa-link"></i></a>サンプル</h2>
+
+<p>(以下のスクリプトは、リポジトリ内にすぐに試せるように入っています。)</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">OnionRingSampleImporter.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEditor</span><span class="p">;</span>
+
+<span class="cm">/*
+OnionRingSample/Editor/Inディレクトリにpngファイルを入れると、
+OnionRingSample/Editor/Outディレクトリにsliceされたpngファイルが出力されるサンプルです。
+*/</span>
+
+<span class="k">namespace</span> <span class="nn">OnionRing</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">sealed</span> <span class="k">class</span> <span class="nc">Importer</span> <span class="p">:</span> <span class="n">AssetPostprocessor</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">static</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">SlicedTexture</span><span class="p">&gt;</span> <span class="n">textures</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">SlicedTexture</span><span class="p">&gt;();</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">OnPostprocessTexture</span><span class="p">(</span><span class="n">Texture2D</span> <span class="n">texture</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span><span class="p">(!</span><span class="n">assetPath</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="s">"OnionRingSample/Editor/In"</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+
+            <span class="c1">// sliceして、pngで保存</span>
+            <span class="kt">var</span> <span class="n">slicedTexture</span> <span class="p">=</span> <span class="n">TextureSlicer</span><span class="p">.</span><span class="nf">Slice</span><span class="p">(</span><span class="n">texture</span><span class="p">);</span>
+            <span class="n">File</span><span class="p">.</span><span class="nf">WriteAllBytes</span><span class="p">(</span><span class="n">assetPath</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span><span class="s">"/In/"</span><span class="p">,</span> <span class="s">"/Out/"</span><span class="p">),</span> <span class="n">slicedTexture</span><span class="p">.</span><span class="n">Texture</span><span class="p">.</span><span class="nf">EncodeToPNG</span><span class="p">());</span>
+
+            <span class="c1">// border設定をするときに使うので残しておく</span>
+            <span class="n">textures</span><span class="p">[</span><span class="n">Path</span><span class="p">.</span><span class="nf">GetFileNameWithoutExtension</span><span class="p">(</span><span class="n">assetPath</span><span class="p">)]</span> <span class="p">=</span> <span class="n">slicedTexture</span><span class="p">;</span>
+
+            <span class="c1">// Refreshすると、さっき保存したpngが読み込まれる</span>
+            <span class="c1">// delay入れないと稀にEditorごと落ちるので注意。原因不明。</span>
+            <span class="n">EditorApplication</span><span class="p">.</span><span class="n">delayCall</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="n">AssetDatabase</span><span class="p">.</span><span class="nf">Refresh</span><span class="p">();</span> <span class="p">};</span>
+        <span class="p">}</span>
+
+        <span class="k">void</span> <span class="nf">OnPreprocessTexture</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">if</span><span class="p">(!</span><span class="n">assetPath</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="s">"OnionRingSample/Editor/Out"</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+
+            <span class="kt">var</span> <span class="n">fileName</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="nf">GetFileNameWithoutExtension</span><span class="p">(</span><span class="n">assetPath</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(!</span><span class="n">textures</span><span class="p">.</span><span class="nf">ContainsKey</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+
+            <span class="c1">// sliceしたtextureに対して、sprite boarderを設定する</span>
+            <span class="kt">var</span> <span class="n">slicedTexture</span> <span class="p">=</span> <span class="n">textures</span><span class="p">[</span><span class="n">fileName</span><span class="p">];</span>
+            <span class="kt">var</span> <span class="n">importer</span> <span class="p">=</span> <span class="n">assetImporter</span> <span class="k">as</span> <span class="n">TextureImporter</span><span class="p">;</span>
+            <span class="n">importer</span><span class="p">.</span><span class="n">spriteBorder</span> <span class="p">=</span> <span class="n">slicedTexture</span><span class="p">.</span><span class="n">Boarder</span><span class="p">.</span><span class="nf">ToVector4</span><span class="p">();</span>
+
+            <span class="n">Debug</span><span class="p">.</span><span class="nf">LogFormat</span><span class="p">(</span><span class="s">"{0} Sliced!"</span><span class="p">,</span> <span class="n">fileName</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="応用例" class="fragment"></span><a href="#%E5%BF%9C%E7%94%A8%E4%BE%8B"><i class="fa fa-link"></i></a>応用例</h2>
+
+<ul>
+<li>psdから自動的に各レイヤーをpngで書きだして、OnionRingで9slice化する</li>
+<li>9slice化したSpriteをまとめて自動的に<a href="https://www.codeandweb.com/texturepacker" rel="nofollow noopener" target="_blank">TexturePacker</a>にかける</li>
+</ul>
+
+<p>などなど。</p>
+
+<h1>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h1>
+
+<p>意見・感想・質問などなどは、<a href="http://twitter.com/kyubuns/" rel="nofollow noopener" target="_blank">Twitter @kyubuns</a> または ここのコメント欄 まで お気軽にどうぞ。<br>
+プルリクもお待ちしてます。</p>
+
+<ul>
+<li>このライブラリは<a href="oinkgms.com">オインクゲームズ</a>の業務時間中に作ったものです。</li>
+<li>この記事は、<a href="http://qiita.com/advent-calendar/2015/unity">Unityアドベントカレンダー2015</a> 19日目の記事の一部です。</li>
+</ul>
+
+<h1>
+<span id="リポジトリ-1" class="fragment"></span><a href="#%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA-1"><i class="fa fa-link"></i></a>リポジトリ</h1>
+
+<p><a href="github.com/kyubuns/OnionRingUnity">github: kyubuns/OnionRingUnity</a></p>

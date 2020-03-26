@@ -1,0 +1,142 @@
+
+<h1>
+<span id="まえがき" class="fragment"></span><a href="#%E3%81%BE%E3%81%88%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>まえがき</h1>
+
+<p>マッパーってやつだと思います。たぶん。</p>
+
+<p><a href="http://qiita.com/yonestra/items/976d575fed5a4997a3a4" id="reference-c6123b984719f94fd8ac">C#のリフレクションを使いモデルクラスを動的に初期化する</a><br>
+この記事にめっちゃお世話になりました！！<br>
+というか、半分ぐらいコピペです。</p>
+
+<h1>
+<span id="実現したいこと" class="fragment"></span><a href="#%E5%AE%9F%E7%8F%BE%E3%81%97%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8"><i class="fa fa-link"></i></a>実現したいこと</h1>
+
+<p>こんな感じのcsvファイルを用意して</p>
+
+<div class="code-frame" data-lang="lang">
+<div class="code-lang"><span class="bold">EnemyMaster.csv</span></div>
+<div class="highlight"><pre>ID,Name,Hp,Power
+slime,スライム,10,1
+bat,こうもり,5,2
+</pre></div>
+</div>
+
+<p>たったこれだけで</p>
+
+<div class="code-frame" data-lang="lang">
+<div class="code-lang"><span class="bold">EnemyMasterTable.cs</span></div>
+<div class="highlight"><pre>using UnityEngine;
+using System.Collections;
+
+public class EnemyMasterTable : MasterTableBase&lt;EnemyMaster&gt;
+{
+  private static readonly string FilePath = "EnemyMaster";
+  public void Load() { Load(FilePath); }
+}
+
+public class EnemyMaster : MasterBase
+{
+  public string ID { get; private set; }
+  public string Name { get; private set; }
+  public int Hp { get; private set; }
+  public int Power { get; private set; }
+}
+</pre></div>
+</div>
+
+<div class="code-frame" data-lang="lang">
+<div class="code-lang"><span class="bold">Hoge.cs</span></div>
+<div class="highlight"><pre>var enemyMasterTable = new EnemyMasterTable();
+enemyMasterTable.Load();
+foreach(var enemyMaster in enemyMasterTable.All)
+{
+    Debug.Log(enemyMaster.Name);
+}
+</pre></div>
+</div>
+
+<p>こんなことが出来るといいな！！！<br>
+と思って作りました。</p>
+
+<h1>
+<span id="中身" class="fragment"></span><a href="#%E4%B8%AD%E8%BA%AB"><i class="fa fa-link"></i></a>中身</h1>
+
+<div class="code-frame" data-lang="lang">
+<div class="code-lang"><span class="bold">MasterTableBase.cs</span></div>
+<div class="highlight"><pre>using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+public class MasterTableBase&lt;T&gt; where T : MasterBase, new()
+{
+  protected List&lt;T&gt; masters;
+  public List&lt;T&gt; All { get { return masters; } }
+
+  public void Load(string filePath)
+  {
+    var text = ((TextAsset)Resources.Load(filePath, typeof(TextAsset))).text;
+    text = text.Trim().Replace("\r", "") + "\n";
+    var lines = text.Split('\n').ToList();
+
+    // header
+    var headerElements = lines[0].Split(',');
+    lines.RemoveAt(0); // header
+
+    // body
+    masters = new List&lt;T&gt;();
+    foreach(var line in lines) ParseLine(line, headerElements);
+  }
+
+  private void ParseLine(string line, string[] headerElements)
+  {
+    var elements = line.Split(',');
+    if(elements.Length == 1) return;
+    if(elements.Length != headerElements.Length)
+    {
+      Debug.LogWarning(string.Format("can't load: {0}", line));
+      return;
+    }
+
+    var param = new Dictionary&lt;string, string&gt;();
+    for(int i=0;i&lt;elements.Length;++i) param.Add(headerElements[i], elements[i]);
+    var master = new T();
+    master.Load(param);
+    masters.Add(master);
+  }
+}
+
+public class MasterBase
+{
+  public void Load(Dictionary&lt;string, string&gt; param)
+  {
+    foreach(string key in param.Keys) SetField (key, param[key]);
+  }
+
+  private void SetField(string key, string value)
+  {
+    PropertyInfo propertyInfo = this.GetType().GetProperty(key, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+    if(propertyInfo.PropertyType == typeof(int))         propertyInfo.SetValue(this, int.Parse(value), null);
+    else if(propertyInfo.PropertyType == typeof(string)) propertyInfo.SetValue(this, value, null);
+    else if(propertyInfo.PropertyType == typeof(double)) propertyInfo.SetValue(this, double.Parse(value), null);
+    // 他の型にも対応させたいときには適当にここに。enumとかもどうにかなりそう。
+  }
+}
+</pre></div>
+</div>
+
+<h1>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h1>
+
+<p>便利なんですけど、そこそこ重いと思う（計測はしてない）のでお気を付けて。<br>
+iOS動作検証済み</p>
+
+<h1>
+<span id="宣伝" class="fragment"></span><a href="#%E5%AE%A3%E4%BC%9D"><i class="fa fa-link"></i></a>宣伝</h1>
+
+<p>CSVを簡単にUnity上から確認できる<a href="https://www.assetstore.unity3d.com/jp/#!/content/18424" rel="nofollow noopener" target="_blank">CSV Viewer</a>をAssetStoreに出してるのでよければぜひぜひ。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F5dd19404-367a-95b0-2daa-8477bd0f1b26.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=8acd772149a39b7e1891798f3dee0cec" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F5dd19404-367a-95b0-2daa-8477bd0f1b26.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=8acd772149a39b7e1891798f3dee0cec" alt="Dungeon_unity_-_chocolate_-_iPhone__iPod_Touch_and_iPad.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/5dd19404-367a-95b0-2daa-8477bd0f1b26.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F5dd19404-367a-95b0-2daa-8477bd0f1b26.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=fa4dba8b3a4e90fd5306a15238eb14f5 1x" loading="lazy"></a></p>

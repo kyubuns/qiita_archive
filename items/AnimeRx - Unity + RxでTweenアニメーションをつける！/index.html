@@ -1,0 +1,216 @@
+
+<h2>
+<span id="animerx" class="fragment"></span><a href="#animerx"><i class="fa fa-link"></i></a>AnimeRx</h2>
+
+<p><a href="https://github.com/neuecc/UniRx" rel="nofollow noopener" target="_blank">UniRx</a>ガンガン使ってる方向けのTweenアニメーションライブラリです。</p>
+
+<h2>
+<span id="コンセプト" class="fragment"></span><a href="#%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88"><i class="fa fa-link"></i></a>コンセプト</h2>
+
+<ul>
+<li>アニメーションライブラリといいつつも、TransformやGameObjectは握らず、<br>
+素直に IObservable(float,Vector2,Vector3)を操作するライブラリ。<br>
+(下記サンプル内の"Combine"や"Advanced - Circle"を見ていただければ柔軟さがわかると思います。)</li>
+<li>Easingは一通り実装済み。</li>
+<li>「aからbにn秒で移動」だけでなく「aからbに速度vで移動」の指定が可能。</li>
+<li>スケジューラーも自分で書けるので「Time.time」「Time.unscaledTime」だけでなく独自のタイマーで動かすことが可能。</li>
+</ul>
+
+<h2>
+<span id="リポジトリ" class="fragment"></span><a href="#%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA"><i class="fa fa-link"></i></a>リポジトリ</h2>
+
+<p><a href="https://github.com/kyubuns/AnimeRx" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/AnimeRx</a></p>
+
+<h2>
+<span id="基本" class="fragment"></span><a href="#%E5%9F%BA%E6%9C%AC"><i class="fa fa-link"></i></a>基本</h2>
+
+<ul>
+<li>
+<code>Anime.Play</code> で <code>IObservable&lt;Vector3&gt;</code> を準備</li>
+<li>
+<code>SubscribeToPosition(cube)</code> などを使ってtransformに代入</li>
+</ul>
+
+<h2>
+<span id="サンプル" class="fragment"></span><a href="#%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB"><i class="fa fa-link"></i></a>サンプル</h2>
+
+<h3>
+<span id="start" class="fragment"></span><a href="#start"><i class="fa fa-link"></i></a>Start</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796308-7d0512aa-0a9f-11e8-9c66-c1dceeeafb72.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=9f46f13ee162bd5fa45a9f7fe6c4583e" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796308-7d0512aa-0a9f-11e8-9c66-c1dceeeafb72.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=9f46f13ee162bd5fa45a9f7fe6c4583e" alt="sample1" data-canonical-src="https://user-images.githubusercontent.com/961165/35796308-7d0512aa-0a9f-11e8-9c66-c1dceeeafb72.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796308-7d0512aa-0a9f-11e8-9c66-c1dceeeafb72.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=7c5dd05ca6a930055c97e9ec8f1d65dd 1x" loading="lazy"></a></p>
+
+<p>(-5,0,0)から(5,0,0)へ、秒速4mで移動。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Motion</span><span class="p">.</span><span class="nf">Uniform</span><span class="p">(</span><span class="m">4f</span><span class="p">))</span>
+    <span class="p">.</span><span class="nf">SubscribeToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+</pre></div></div>
+
+<p>SubscribeToPositionは以下と同義です。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre>    <span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">cube</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="n">x</span><span class="p">);</span>
+</pre></div></div>
+
+<p>他にもSubscribeToLocalPosition, SubscribeToLocalScaleや、<br>
+<code>IObservable&lt;float&gt;</code> を取るSubscribeToPositionXなどなど諸々準備してあります。</p>
+
+<h3>
+<span id="method-chain" class="fragment"></span><a href="#method-chain"><i class="fa fa-link"></i></a>Method Chain</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796309-7d2bbdf6-0a9f-11e8-8fe1-acef944a36c0.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=f0506f0c02ffb33b8ea708a9d425c465" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796309-7d2bbdf6-0a9f-11e8-8fe1-acef944a36c0.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=f0506f0c02ffb33b8ea708a9d425c465" alt="sample2" data-canonical-src="https://user-images.githubusercontent.com/961165/35796309-7d2bbdf6-0a9f-11e8-8fe1-acef944a36c0.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796309-7d2bbdf6-0a9f-11e8-8fe1-acef944a36c0.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=a1ae1803fb28fcf0fe5a90a220108fb2 1x" loading="lazy"></a></p>
+
+<p>(-5,0,0)から(5,0,0)へ移動した後、(0,3,0)に等速で移動。<br>
+メソッドチェーンでガンガン次の動きを書いていけます。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="kt">var</span> <span class="n">animator</span> <span class="p">=</span> <span class="n">Motion</span><span class="p">.</span><span class="nf">Uniform</span><span class="p">(</span><span class="m">5f</span><span class="p">);</span>
+<span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">animator</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">3f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">animator</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">SubscribeToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="easing" class="fragment"></span><a href="#easing"><i class="fa fa-link"></i></a>Easing</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796312-7d518662-0a9f-11e8-99e4-e5943212d966.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=b3fa9764cada92edda7110cd3cdec710" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796312-7d518662-0a9f-11e8-99e4-e5943212d966.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=b3fa9764cada92edda7110cd3cdec710" alt="sample3" data-canonical-src="https://user-images.githubusercontent.com/961165/35796312-7d518662-0a9f-11e8-99e4-e5943212d966.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796312-7d518662-0a9f-11e8-99e4-e5943212d966.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=2e99993b2864930946305821b10882bf 1x" loading="lazy"></a></p>
+
+<p>EaseOutQuadで2秒かけて移動。<br>
+<a href="http://easings.net/" rel="nofollow noopener" target="_blank">Easing</a>は一通り実装済み。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseOutQuad</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">SubscribeToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="wait" class="fragment"></span><a href="#wait"><i class="fa fa-link"></i></a>Wait</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796321-7e3ff25c-0a9f-11e8-956a-d85aa2a30e48.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=154a4753a7be2d0344fdb77b559c8fea" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796321-7e3ff25c-0a9f-11e8-956a-d85aa2a30e48.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=154a4753a7be2d0344fdb77b559c8fea" alt="sample10" data-canonical-src="https://user-images.githubusercontent.com/961165/35796321-7e3ff25c-0a9f-11e8-956a-d85aa2a30e48.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796321-7e3ff25c-0a9f-11e8-956a-d85aa2a30e48.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=a331f659c7c05201d62a81401bc8e29a 1x" loading="lazy"></a></p>
+
+<p>移動した後、1秒まって再度動き出す。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseOutExpo</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">1f</span><span class="p">))</span>
+    <span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseOutExpo</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">SubscribeToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="path" class="fragment"></span><a href="#path"><i class="fa fa-link"></i></a>Path</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796313-7d772fc0-0a9f-11e8-91c5-4780b43a5b4f.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=46fd8df916fc27aaff565e95814dd02a" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796313-7d772fc0-0a9f-11e8-91c5-4780b43a5b4f.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=46fd8df916fc27aaff565e95814dd02a" alt="sample4" data-canonical-src="https://user-images.githubusercontent.com/961165/35796313-7d772fc0-0a9f-11e8-91c5-4780b43a5b4f.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796313-7d772fc0-0a9f-11e8-91c5-4780b43a5b4f.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=66253a21b6851aa7cc98c267e64edd7d 1x" loading="lazy"></a></p>
+
+<p>指定したpositionに順番に移動。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="kt">var</span> <span class="n">positions</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span>
+<span class="p">{</span>
+    <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">3f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="p">-</span><span class="m">3f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span>
+<span class="p">};</span>
+
+<span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseInOutSine</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">6f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">SubscribeToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="combine" class="fragment"></span><a href="#combine"><i class="fa fa-link"></i></a>Combine</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796315-7d9e024e-0a9f-11e8-908c-f35b4326ee42.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=5252095b079212202c04e729ec092cfb" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796315-7d9e024e-0a9f-11e8-908c-f35b4326ee42.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=5252095b079212202c04e729ec092cfb" alt="sample5" data-canonical-src="https://user-images.githubusercontent.com/961165/35796315-7d9e024e-0a9f-11e8-908c-f35b4326ee42.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796315-7d9e024e-0a9f-11e8-908c-f35b4326ee42.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=e296c11bd24fe5fea247d318d2a7ba36 1x" loading="lazy"></a></p>
+
+<p>x, y, zの各座標を別々にアニメーションさせて合成。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="kt">var</span> <span class="n">x</span> <span class="p">=</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">5f</span><span class="p">,</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseInOutSine</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">3f</span><span class="p">)));</span>
+
+<span class="kt">var</span> <span class="n">y</span> <span class="p">=</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="m">3f</span><span class="p">,</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseInOutSine</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">1.5f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseInOutSine</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">1.5f</span><span class="p">)));</span>
+
+<span class="kt">var</span> <span class="n">z</span> <span class="p">=</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">Stay</span><span class="p">(</span><span class="m">0f</span><span class="p">);</span>
+
+<span class="n">Observable</span><span class="p">.</span><span class="nf">CombineLatest</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">SubscribeToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="extensions" class="fragment"></span><a href="#extensions"><i class="fa fa-link"></i></a>Extensions</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796317-7dc739de-0a9f-11e8-8aef-599e7e325efc.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=fa675a17999110c3af999337c39046d6" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796317-7dc739de-0a9f-11e8-8aef-599e7e325efc.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=fa675a17999110c3af999337c39046d6" alt="sample6" data-canonical-src="https://user-images.githubusercontent.com/961165/35796317-7dc739de-0a9f-11e8-8aef-599e7e325efc.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796317-7dc739de-0a9f-11e8-8aef-599e7e325efc.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=01ca9feb1b3a00cc234cd37f4472d000 1x" loading="lazy"></a></p>
+
+<p>cube.transform.positionから(3,3,0)へ移動。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">cube</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span>
+    <span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">3f</span><span class="p">,</span> <span class="m">3f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseOutBack</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">SubscribeToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="advanced---circle" class="fragment"></span><a href="#advanced---circle"><i class="fa fa-link"></i></a>Advanced - Circle</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796318-7dedcb62-0a9f-11e8-907c-e0ee65298b17.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7d1ae4b39bde771efe8d099dedd24ca3" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796318-7dedcb62-0a9f-11e8-907c-e0ee65298b17.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7d1ae4b39bde771efe8d099dedd24ca3" alt="sample8" data-canonical-src="https://user-images.githubusercontent.com/961165/35796318-7dedcb62-0a9f-11e8-907c-e0ee65298b17.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796318-7dedcb62-0a9f-11e8-907c-e0ee65298b17.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=0b7aa7a30d374e3d349f3f48c6667937 1x" loading="lazy"></a></p>
+
+<p>IObservbleを円運動に変換。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="m">0f</span><span class="p">,</span> <span class="n">Mathf</span><span class="p">.</span><span class="n">PI</span> <span class="p">*</span> <span class="m">2f</span><span class="p">,</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseOutCubic</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">3f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="n">Mathf</span><span class="p">.</span><span class="nf">Sin</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">Mathf</span><span class="p">.</span><span class="nf">Cos</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="m">0.0f</span><span class="p">))</span>
+    <span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span> <span class="p">*</span> <span class="m">3f</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">SubscribeToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="advanced---timing" class="fragment"></span><a href="#advanced---timing"><i class="fa fa-link"></i></a>Advanced - Timing</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796319-7e1568d4-0a9f-11e8-8e08-28ff53093e8c.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=64d406833e0e1eca8f75ba1328933085" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796319-7e1568d4-0a9f-11e8-8e08-28ff53093e8c.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=64d406833e0e1eca8f75ba1328933085" alt="sample9" data-canonical-src="https://user-images.githubusercontent.com/961165/35796319-7e1568d4-0a9f-11e8-8e08-28ff53093e8c.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796319-7e1568d4-0a9f-11e8-8e08-28ff53093e8c.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=217970f654da65b982c1f75860f8874b 1x" loading="lazy"></a></p>
+
+<p>WhenAllを使ってアニメーションのタイミングを合わせる。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="kt">var</span> <span class="n">leftCube1</span> <span class="p">=</span> <span class="n">Anime</span>
+    <span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">0.5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">Linear</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2.5f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">DoToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+
+<span class="kt">var</span> <span class="n">rightCube1</span> <span class="p">=</span> <span class="n">Anime</span>
+    <span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0.5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseOutCubic</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">1f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">DoToPosition</span><span class="p">(</span><span class="n">cube2</span><span class="p">);</span>
+
+<span class="kt">var</span> <span class="n">leftCube2</span> <span class="p">=</span> <span class="n">Anime</span>
+    <span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">0.5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">0.5f</span><span class="p">,</span> <span class="m">3f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseOutCubic</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">1f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">DoToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+
+<span class="kt">var</span> <span class="n">rightCube2</span> <span class="p">=</span> <span class="n">Anime</span>
+    <span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0.5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0.5f</span><span class="p">,</span> <span class="m">3f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Easing</span><span class="p">.</span><span class="nf">EaseOutCubic</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">1f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">DoToPosition</span><span class="p">(</span><span class="n">cube2</span><span class="p">);</span>
+
+<span class="n">Observable</span><span class="p">.</span><span class="nf">WhenAll</span><span class="p">(</span><span class="n">leftCube1</span><span class="p">,</span> <span class="n">rightCube1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">ContinueWith</span><span class="p">(</span><span class="n">Observable</span><span class="p">.</span><span class="nf">WhenAll</span><span class="p">(</span><span class="n">leftCube2</span><span class="p">,</span> <span class="n">rightCube2</span><span class="p">))</span>
+    <span class="p">.</span><span class="nf">Subscribe</span><span class="p">();</span>
+</pre></div></div>
+
+<h3>
+<span id="animationcurve" class="fragment"></span><a href="#animationcurve"><i class="fa fa-link"></i></a>AnimationCurve</h3>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796322-7e6983e2-0a9f-11e8-807c-ff3a2967a2cf.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=3a83a2830f12e0493f424acf154fd338" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796322-7e6983e2-0a9f-11e8-807c-ff3a2967a2cf.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=3a83a2830f12e0493f424acf154fd338" alt="sample11" data-canonical-src="https://user-images.githubusercontent.com/961165/35796322-7e6983e2-0a9f-11e8-807c-ff3a2967a2cf.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fuser-images.githubusercontent.com%2F961165%2F35796322-7e6983e2-0a9f-11e8-807c-ff3a2967a2cf.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=04662ee8e0585dbe0e2ba79b1f53bc05 1x" loading="lazy"></a></p>
+
+<p>UnityEngine.AnimationCurveを利用して移動。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">Motion</span><span class="p">.</span><span class="nf">From</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">3f</span><span class="p">)))</span>
+    <span class="p">.</span><span class="nf">SubscribeToPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="hpゲージが徐々に減る" class="fragment"></span><a href="#hp%E3%82%B2%E3%83%BC%E3%82%B8%E3%81%8C%E5%BE%90%E3%80%85%E3%81%AB%E6%B8%9B%E3%82%8B"><i class="fa fa-link"></i></a>HPゲージが徐々に減る</h3>
+
+<blockquote class="twitter-tweet">
+<p>AnimeRxを使うと、よくある「HPゲージが徐々に減る」ってやつもEasingでいい感じにアニメ付けながら簡単に作れる <a href="https://t.co/WW9lzrPyQg" rel="nofollow noopener" target="_blank">https://t.co/WW9lzrPyQg</a> <a href="https://t.co/zgrPoxnMOd" rel="nofollow noopener" target="_blank">https://t.co/zgrPoxnMOd</a> <a href="https://twitter.com/hashtag/Unity?src=hash&amp;ref_src=twsrc%5Etfw" rel="nofollow noopener" target="_blank">#Unity</a> <a href="https://t.co/7jJKZPKSi4" rel="nofollow noopener" target="_blank">pic.twitter.com/7jJKZPKSi4</a></p>— きゅぶんず (@kyubuns) <a href="https://twitter.com/kyubuns/status/960672588010733568?ref_src=twsrc%5Etfw" rel="nofollow noopener" target="_blank">2018年2月6日</a>
+</blockquote>
+
+<script async src="https://platform.twitter.com/widgets.js"></script>
+
+<h2>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h2>
+
+<p>リポジトリ<br>
+<a href="https://github.com/kyubuns/AnimeRx" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/AnimeRx</a></p>
+
+<p>unitypackageはこちら<br>
+<a href="https://github.com/kyubuns/AnimeRx/releases" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/AnimeRx/releases</a></p>
+
+<p>ご意見ご感想バンバンお待ちしております。<br>
+<a href="https://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">@kyubuns</a></p>

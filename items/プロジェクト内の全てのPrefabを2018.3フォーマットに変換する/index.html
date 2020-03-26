@@ -1,0 +1,38 @@
+<p>Unity2018.3からPrefabWorkflowが新しくなりました。<br>
+これにより<a href="https://qiita.com/kyubuns/items/5741e5281f4bb8de656c" id="reference-322fa285de827c0f4112">4年前から待ち望んでいた</a>Prefab in Prefabが実現したり、Prefab編集用シーンがすぐに開けるようになったりともろもろ最高です。<br>
+詳細はこちら。<br>
+<a href="https://blogs.unity3d.com/jp/2018/06/20/introducing-new-prefab-workflows/" class="autolink" rel="nofollow noopener" target="_blank">https://blogs.unity3d.com/jp/2018/06/20/introducing-new-prefab-workflows/</a></p>
+
+<p>この変更に伴い、.prefabデータのフォーマットが大幅に変更になりました。<br>
+普通に作業している分には特に気にすることは無いのですが、コイツがたまに悪さをします。<br>
+具体的にはUnityのキャッシュがない状態から（2018.2以前からのキャッシュがあると上手くいく。）、2018.2以前のフォーマットのPrefabを含んだiOS向けAssetBundleを生成すると、iOS実機で読み込んだ時にだけ全てのコンポーネントが剥がれたPrefabが読み込まれる等です。他にもキャッシュがない状態からAssetBundleを生成したらコケるなど。</p>
+
+<p>まあ前置きは置いといて、そんなときに「じゃあプロジェクト内の全てのPrefabを2018.3のフォーマットにしよう」と思うわけです。<br>
+ReimportAllしても変更は入りません。<br>
+ということでスクリプトを書きました。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEditor</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Sandbox</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">ReimportPrefab</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="nf">MenuItem</span><span class="p">(</span><span class="s">"Sandbox/ReimportPrefab"</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Run</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">directory</span> <span class="p">=</span> <span class="k">new</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="nf">DirectoryInfo</span><span class="p">(</span><span class="n">Application</span><span class="p">.</span><span class="n">dataPath</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="n">files</span> <span class="p">=</span> <span class="n">directory</span><span class="p">.</span><span class="nf">GetFiles</span><span class="p">(</span><span class="s">"*.prefab"</span><span class="p">,</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="n">SearchOption</span><span class="p">.</span><span class="n">AllDirectories</span><span class="p">);</span>
+
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">file</span> <span class="k">in</span> <span class="n">files</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">path</span> <span class="p">=</span> <span class="s">"Assets"</span> <span class="p">+</span> <span class="n">file</span><span class="p">.</span><span class="nf">ToString</span><span class="p">().</span><span class="nf">Replace</span><span class="p">(</span><span class="n">Application</span><span class="p">.</span><span class="n">dataPath</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+                <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">go</span> <span class="p">=</span> <span class="n">PrefabUtility</span><span class="p">.</span><span class="nf">LoadPrefabContents</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+                <span class="n">PrefabUtility</span><span class="p">.</span><span class="nf">SaveAsPrefabAsset</span><span class="p">(</span><span class="n">go</span><span class="p">,</span> <span class="n">path</span><span class="p">);</span>
+                <span class="n">PrefabUtility</span><span class="p">.</span><span class="nf">UnloadPrefabContents</span><span class="p">(</span><span class="n">go</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>

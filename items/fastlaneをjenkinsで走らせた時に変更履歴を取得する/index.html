@@ -1,0 +1,11 @@
+<p>make_changelog_from_jenkinsは認証とかが面倒だなーと思ったので<br>
+jenkinsが勝手に設定しておいてくれる ENV['GIT_PREVIOUS_SUCCESSFUL_COMMIT'] を利用する。</p>
+
+<div class="code-frame" data-lang="ruby"><div class="highlight"><pre><span class="n">private_lane</span> <span class="ss">:make_changelog</span> <span class="k">do</span> <span class="o">|</span><span class="n">options</span><span class="o">|</span>
+  <span class="n">changelog_from_git_commits</span><span class="p">(</span>
+    <span class="ss">between: </span><span class="p">[</span><span class="no">ENV</span><span class="p">[</span><span class="s1">'GIT_PREVIOUS_SUCCESSFUL_COMMIT'</span><span class="p">]</span> <span class="o">||</span> <span class="s2">"HEAD^"</span><span class="p">,</span> <span class="s2">"HEAD"</span><span class="p">],</span>
+    <span class="ss">pretty: </span><span class="s2">"- %s (%an)"</span><span class="p">,</span>
+    <span class="ss">merge_commit_filtering: </span><span class="s1">'exclude_merges'</span><span class="p">,</span>
+  <span class="p">)</span>
+<span class="k">end</span>
+</pre></div></div>

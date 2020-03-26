@@ -1,0 +1,41 @@
+<p>3rdライブ最高でしたね！<br>
+さて、<a href="http://cinderella.idolmaster.jp/sl-stage/" rel="nofollow noopener" target="_blank">デレステ</a>の現在のイベントは、1回プレイすつのにスタミナが50必要です。<br>
+自分の環境では最大スタミナが67、スタミナを50使って参加すると17残ります。<br>
+次にスタミナが50になる時刻が一体いつなのか知りたい！ということで、<br>
+ちゃちゃっと書いたスクリプトが便利だったので貼っておきます。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F89f22013-8e4e-03cd-9a37-bdec11716b18.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=11245349922b846dab27966ffb1dda40" target="_blank" rel="nofollow noopener"><img width="304" alt="2.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F89f22013-8e4e-03cd-9a37-bdec11716b18.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=11245349922b846dab27966ffb1dda40" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/89f22013-8e4e-03cd-9a37-bdec11716b18.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F89f22013-8e4e-03cd-9a37-bdec11716b18.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=d465338354e150ec0031f52ea3c77fbb 1x" loading="lazy"></a></p>
+
+<div class="code-frame" data-lang="lang">
+<div class="code-lang"><span class="bold">stamina.sh</span></div>
+<div class="highlight"><pre>#!/bin/bash
+
+readonly MIN_PER_STAMINA=5
+
+function usage() {
+cat &lt;&lt;_EOT_
+Usage:
+$0 \$1
+スタミナが\$1まで回復する時刻
+$0 \$1 \$2
+スタミナの現在値を\$1として\$2まで回復する時刻
+_EOT_
+}
+
+if [ $# -eq 0 ]; then
+  usage
+  exit 0
+fi
+
+calc_stamina=0
+if [ $# -eq 1 ]; then
+  calc_stamina=$1
+fi
+if [ $# -eq 2 ]; then
+  calc_stamina=$(($2-$1))
+fi
+minutes=$(($calc_stamina*MIN_PER_STAMINA))
+eval "date -v+${minutes}M '+%Y/%m/%d %H:%M'"
+echo "( $minutes 分後)"
+</pre></div>
+</div>

@@ -1,0 +1,13 @@
+<p>ビルド用のスクリプトを別のリポジトリに置いといて一元管理！みたいなことをしている時に便利。</p>
+
+<div class="code-frame" data-lang="ruby"><div class="highlight"><pre><span class="n">private_lane</span> <span class="ss">:import_builder_to_unity</span> <span class="k">do</span> <span class="o">|</span><span class="n">options</span><span class="o">|</span>
+  <span class="nb">require</span> <span class="s1">'tmpdir'</span>
+  <span class="no">Dir</span><span class="p">.</span><span class="nf">mktmpdir</span><span class="p">(</span><span class="s2">"test_clone"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">tmp_path</span><span class="o">|</span>
+    <span class="n">clone_folder</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">"git@github.com:***/***.git"</span>
+    <span class="n">sh</span><span class="p">(</span><span class="s2">"GIT_TERMINAL_PROMPT=0 git clone '</span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2">' '</span><span class="si">#{</span><span class="n">clone_folder</span><span class="si">}</span><span class="s2">' --depth 1"</span><span class="p">)</span>
+
+    <span class="no">FileUtils</span><span class="p">.</span><span class="nf">cp</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="n">clone_folder</span><span class="si">}</span><span class="s2">/Test.sh"</span><span class="p">,</span> <span class="s2">"."</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div></div>

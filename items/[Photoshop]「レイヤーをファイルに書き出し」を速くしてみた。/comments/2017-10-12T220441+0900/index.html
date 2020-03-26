@@ -1,0 +1,19 @@
+<p>動作検証してないですが、下の方にある<br>
+<code><br>
+    options = new ExportOptionsSaveForWeb();<br>
+    options.format = format;<br>
+    options.optimized = true;<br>
+    options.interlaced = false;<br>
+</code><br>
+の部分を、<br>
+<code><br>
+    options = new ExportOptionsSaveForWeb();<br>
+    options.format = SaveDocumentType.JPEG;<br>
+    options.optimized = false;<br>
+    options.interlaced = false;<br>
+    options.quality = 100;//100%の画質<br>
+    options.lossy = 0;<br>
+</code><br>
+に書き換えてみてくださいー<br>
+細かいオプションはこちらに乗ってます<br>
+<a href="https://qiita.com/yudough/items/8240cd1a84f09e833df3" class="autolink" id="reference-be094856023ffac0c3bb">https://qiita.com/yudough/items/8240cd1a84f09e833df3</a></p>

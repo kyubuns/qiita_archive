@@ -1,0 +1,245 @@
+<p>弊社オインクゲームズから先日リリースした<a href="http://1000mz.jp" rel="nofollow noopener" target="_blank">1000m Zombie Escape!(以下1000mZ)</a>におけるゲームフローの制御方法について紹介します。</p>
+
+<h1>
+<span id="はじめに" class="fragment"></span><a href="#%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB"><i class="fa fa-link"></i></a>はじめに</h1>
+
+<p>今回は、Unityの公式チュートリアルである<a href="https://www.assetstore.unity3d.com/jp/#!/content/46209" rel="nofollow noopener" target="_blank">Tanks! Tutorial(Asset Store)</a>のゲームフロー制御部分を参考にしています。<br>
+こちらの解説は、<a href="http://tsubakit1.hateblo.jp/entry/2015/10/16/223009" rel="nofollow noopener" target="_blank">テラシュールブログ</a>さんで紹介されてます。<br>
+（椿さんいつもお世話になってます！）<br>
+こちらを先に読んでおいてもらえると、これから出てくるコードが理解しやすいと思います。</p>
+
+<h1>
+<span id="ゲームの流れ" class="fragment"></span><a href="#%E3%82%B2%E3%83%BC%E3%83%A0%E3%81%AE%E6%B5%81%E3%82%8C"><i class="fa fa-link"></i></a>ゲームの流れ</h1>
+
+<p>1000mZは、1プレイ数分で終わるカジュアルゲームです。<br>
+具体的なゲームフローは以下のようになっています。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F43fd226e-8376-29f1-3fb8-4af61184c714.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=633f47a8334b765fb6894e29d99d0374" target="_blank" rel="nofollow noopener"><img width="762" alt="gameflow3.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F43fd226e-8376-29f1-3fb8-4af61184c714.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=633f47a8334b765fb6894e29d99d0374" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/43fd226e-8376-29f1-3fb8-4af61184c714.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F43fd226e-8376-29f1-3fb8-4af61184c714.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=20a7754fc447c2c525d2b6d90ad33ee4 1x" loading="lazy"></a></p>
+
+<p>メインフローは、タイトル画面-&gt;ゲームプレイ画面-&gt;フィニッシュ画面となっていて、<br>
+そこに「どこからでもタイトル画面に戻れる」という特徴を兼ね備えています。</p>
+
+<h1>
+<span id="オレオレpubsubライブラリ-kuchen" class="fragment"></span><a href="#%E3%82%AA%E3%83%AC%E3%82%AA%E3%83%ACpubsub%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA-kuchen"><i class="fa fa-link"></i></a>オレオレpub/subライブラリ "Kuchen"</h1>
+
+<p>オレオレpub/subライブラリ、その名も"Kuchen"を開発しました。<br>
+<a href="http://qiita.com/kyubuns/items/75735a0ccafc376d2b5d" id="reference-a96314baed2826f4f742">詳しい紹介はこちらをご覧ください。</a><br>
+ゲームフロー制御のコードに出てくるので、先に紹介します。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">KuchenSample.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">KuchenSample</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="p">(</span><span class="n">topic</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"sample topic: "</span> <span class="p">+</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="n">arg</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="c1">// 別のGameObjectからでもOK</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="s">"abcde"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 実行結果</span>
+<span class="c1">// sample topic: abcde</span>
+</pre></div>
+</div>
+
+<p>以上のコードが、Kuchenで出来る(ほぼ)全てです。<br>
+特定の文字列(今回は"SampleTopic")を、Subscribeしておけば、誰かがその文字列をPublishした時に呼ばれる。という単純なものです。<br>
+これを応用すると、以下のような事ができます。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">KuchenCoroutineSample.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">KuchenCoroutineSample</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"SampleTopicが送信されるまで待つよ。"</span><span class="p">);</span>
+        <span class="k">yield</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nf">WaitForMessage</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"SampleTopicが呼ばれたよ！"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<p>このように、コルーチン内でイベントが送信されるのを待つことが出来ます。</p>
+
+<h2>
+<span id="いやいやaction使ってメソッドを登録すればいいじゃん" class="fragment"></span><a href="#%E3%81%84%E3%82%84%E3%81%84%E3%82%84action%E4%BD%BF%E3%81%A3%E3%81%A6%E3%83%A1%E3%82%BD%E3%83%83%E3%83%89%E3%82%92%E7%99%BB%E9%8C%B2%E3%81%99%E3%82%8C%E3%81%B0%E3%81%84%E3%81%84%E3%81%98%E3%82%83%E3%82%93"><i class="fa fa-link"></i></a>いやいや、Action使ってメソッドを登録すればいいじゃん</h2>
+
+<p>（と思わなかった方は読み飛ばして頂いて大丈夫です。）<br>
+このKuchenのメリットは2つあります。</p>
+
+<ul>
+<li>発行する相手を知らなくていい</li>
+<li>寿命管理を自分でしなくていい</li>
+</ul>
+
+<p>1つ目は、さっきのコードを見た頂ければわかると思うので説明は省きます。<br>
+2つ目ですが、KuchenでSubscribeしたイベントは、GameObjectがDestroyされたタイミングで自動的に外されるようになっています。<br>
+なので、いちいちOnDestroyで参照を外したりする必要はありません。</p>
+
+<h1>
+<span id="具体的なコードと解説" class="fragment"></span><a href="#%E5%85%B7%E4%BD%93%E7%9A%84%E3%81%AA%E3%82%B3%E3%83%BC%E3%83%89%E3%81%A8%E8%A7%A3%E8%AA%AC"><i class="fa fa-link"></i></a>具体的なコードと解説</h1>
+
+<p>話を戻して、具体的なゲームフロー制御の解説に入ります。<br>
+先に完成形のコードを張り、その後にコメント形式で解説をいれます。<br>
+（コードは説明のために簡略化してあり、ゲームに使っているそのままではありません。）</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">GameFlow.cs</span></div>
+<div class="highlight"><pre><span class="k">public</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nf">StartCoroutine</span><span class="p">(</span><span class="nf">MainFlow</span><span class="p">());</span>
+    <span class="nf">StartCoroutine</span><span class="p">(</span><span class="nf">NextGame</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">MainFlow</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="nf">StartCoroutine</span><span class="p">(</span><span class="nf">LoadMap</span><span class="p">());</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="nf">StartCoroutine</span><span class="p">(</span><span class="nf">LoadCharacter</span><span class="p">());</span>
+    <span class="n">Loading</span><span class="p">.</span><span class="nf">Finish</span><span class="p">();</span>
+
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nf">WaitForMessage</span><span class="p">(</span><span class="s">"Tap"</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Start"</span><span class="p">);</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nf">WaitForMessage</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]{</span><span class="s">"Dead"</span><span class="p">,</span> <span class="s">"Goal"</span><span class="p">});</span>
+    <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Finish"</span><span class="p">,</span> <span class="n">player</span><span class="p">.</span><span class="n">IsAlive</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"WindowOpen.Result"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">NextGame</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nf">WaitForMessage</span><span class="p">(</span><span class="s">"NextGame"</span><span class="p">);</span>
+    <span class="n">Loading</span><span class="p">.</span><span class="nf">Start</span><span class="p">();</span>
+    <span class="n">SceneManager</span><span class="p">.</span><span class="nf">LoadScene</span><span class="p">(</span><span class="s">"Main"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="データロード" class="fragment"></span><a href="#%E3%83%87%E3%83%BC%E3%82%BF%E3%83%AD%E3%83%BC%E3%83%89"><i class="fa fa-link"></i></a>データロード</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">GameFlow.cs</span></div>
+<div class="highlight"><pre><span class="c1">// public IEnumerator MainFlow()</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="nf">StartCoroutine</span><span class="p">(</span><span class="nf">LoadMap</span><span class="p">());</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="nf">StartCoroutine</span><span class="p">(</span><span class="nf">LoadCharacter</span><span class="p">());</span>
+    <span class="n">Loading</span><span class="p">.</span><span class="nf">Finish</span><span class="p">();</span>
+</pre></div>
+</div>
+
+<p>まず、マップのロードおよびキャラクターモデルのロードをします。<br>
+ロードに何フレームかかっても大丈夫なように、ロード完了を待ってから次に進みます。<br>
+ロードが完了したら、Loading.Finish()で画面を覆っているローディング表示を外します。</p>
+
+<h2>
+<span id="ゲーム開始まで" class="fragment"></span><a href="#%E3%82%B2%E3%83%BC%E3%83%A0%E9%96%8B%E5%A7%8B%E3%81%BE%E3%81%A7"><i class="fa fa-link"></i></a>ゲーム開始まで</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">GameFlow.cs</span></div>
+<div class="highlight"><pre><span class="c1">// public IEnumerator MainFlow()</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nf">WaitForMessage</span><span class="p">(</span><span class="s">"Tap"</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Start"</span><span class="p">);</span>
+</pre></div>
+</div>
+
+<p>"Tap"を待っている間、画面は以下のようになっています。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F59c1f4bf-510f-cce3-2b5d-acd041f567c7.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=de0cfa30610fe62c369ed90d94f75f3a" target="_blank" rel="nofollow noopener"><img width="200" alt="IMG_3240.PNG" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F59c1f4bf-510f-cce3-2b5d-acd041f567c7.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=de0cfa30610fe62c369ed90d94f75f3a" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/59c1f4bf-510f-cce3-2b5d-acd041f567c7.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F59c1f4bf-510f-cce3-2b5d-acd041f567c7.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=1d70a7a26538888cee279521960e8591 1x" loading="lazy"></a></p>
+
+<p>ユーザーはキャラクター選択ボタンも押せるし、オプション画面も押せます。<br>
+ボタン以外の箇所をタップすると、ゲームが開始されます。<br>
+これは、背面に画面全体を覆うようにボタンが置いてあり、そのボタンを押すと"Tap"イベントが飛ぶようになっています。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fe8379197-bc22-803c-807d-523ad24b337e.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=2b0fdec9dc0e6204112602ca2950b100" target="_blank" rel="nofollow noopener"><img width="400" alt="Main_unity_-_client_-_iPhone__iPod_Touch_and_iPad__OpenGL_4_1_.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fe8379197-bc22-803c-807d-523ad24b337e.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=2b0fdec9dc0e6204112602ca2950b100" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/e8379197-bc22-803c-807d-523ad24b337e.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fe8379197-bc22-803c-807d-523ad24b337e.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=8d2f00ca06502f427233d84015c50c00 1x" loading="lazy"></a></p>
+
+<p>そして、"Tap"のイベントが受け取ったら、自ら"Start"というイベントを発行します。<br>
+UIやプレイヤーキャラクター、周りのゾンビなどは、この"Start"イベントを受け取ることで動き始める仕組みになっています。</p>
+
+<h2>
+<span id="ゲーム終了" class="fragment"></span><a href="#%E3%82%B2%E3%83%BC%E3%83%A0%E7%B5%82%E4%BA%86"><i class="fa fa-link"></i></a>ゲーム終了</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">GameFlow.cs</span></div>
+<div class="highlight"><pre><span class="c1">// public IEnumerator MainFlow()</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nf">WaitForMessage</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]{</span><span class="s">"Dead"</span><span class="p">,</span> <span class="s">"Goal"</span><span class="p">});</span>
+    <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Finish"</span><span class="p">,</span> <span class="n">player</span><span class="p">.</span><span class="n">IsAlive</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"WindowOpen.Result"</span><span class="p">);</span>
+</pre></div>
+</div>
+
+<p>"Dead", "Goal"のイベントが発行されたらゲーム終了です。<br>
+名前から想像できる通りのタイミングで発行されます。<br>
+"Finish"を発行することで、ゲームの終了を各ゲームオブジェクトに伝えると同時に、<br>
+"WindowOpen.Result"を発行することで、リザルト画面（以下の画像の画面）を表示しています。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F56884e02-0349-0574-0a7f-0b209fe0f24c.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=9ec8f1a76616d583e3a3b9b7f36681c0" target="_blank" rel="nofollow noopener"><img width="200" alt="IMG_3241_2.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F56884e02-0349-0574-0a7f-0b209fe0f24c.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=9ec8f1a76616d583e3a3b9b7f36681c0" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/56884e02-0349-0574-0a7f-0b209fe0f24c.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F56884e02-0349-0574-0a7f-0b209fe0f24c.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=f5c42ee8d31cc8f174dd33f4e9121ae9 1x" loading="lazy"></a></p>
+
+<p>ちなみに、ウィンドウを表示するスクリプトは以下の様にワイルドカードを使いイベントを受信しています。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">WindowOpener.cs</span></div>
+<div class="highlight"><pre><span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"WindowOpen.*"</span><span class="p">,</span> <span class="p">(</span><span class="n">topic</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="kt">var</span> <span class="n">windowName</span> <span class="p">=</span> <span class="n">topic</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="sc">'.'</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span>
+    <span class="c1">// {windowName}を表示する</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="次のゲームへ" class="fragment"></span><a href="#%E6%AC%A1%E3%81%AE%E3%82%B2%E3%83%BC%E3%83%A0%E3%81%B8"><i class="fa fa-link"></i></a>次のゲームへ</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">GameFlow.cs</span></div>
+<div class="highlight"><pre><span class="k">public</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nf">StartCoroutine</span><span class="p">(</span><span class="nf">MainFlow</span><span class="p">());</span>
+    <span class="nf">StartCoroutine</span><span class="p">(</span><span class="nf">NextGame</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="c1">// (MainFlow省略)</span>
+
+<span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">NextGame</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nf">WaitForMessage</span><span class="p">(</span><span class="s">"NextGame"</span><span class="p">);</span>
+    <span class="n">Loading</span><span class="p">.</span><span class="nf">Start</span><span class="p">();</span>
+    <span class="n">SceneManager</span><span class="p">.</span><span class="nf">LoadScene</span><span class="p">(</span><span class="s">"Main"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<p>MainFlowとNextGameは同時に走っています。<br>
+これは「いつでもタイトル画面に戻れる」ことを実現するためです。<br>
+同時に走っているので、いつ"NextGame"が発行されてもLoading.Startで画面転換の演出を行い、再びMainシーンをリロードすることが出来ます。</p>
+
+<p>例えば、先ほど貼ったフィニッシュ画面での再挑戦ボタンを押した時などに、この"NextGame"イベントが発行されています。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F436c176f-d500-13c7-dd2a-1115fb079006.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7b01b2534dbcd34603c988f391c5bc17" target="_blank" rel="nofollow noopener"><img width="200" alt="IMG_3241_3.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F436c176f-d500-13c7-dd2a-1115fb079006.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7b01b2534dbcd34603c988f391c5bc17" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/436c176f-d500-13c7-dd2a-1115fb079006.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F436c176f-d500-13c7-dd2a-1115fb079006.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=dd1a3ef3a23076ef33d3407bae232490 1x" loading="lazy"></a></p>
+
+<h1>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h1>
+
+<p>今回の1000mZでは、自分で作ったpub/subライブラリを利用してゲーム制御を行ってみました。<br>
+<a href="http://qiita.com/kyubuns/items/75735a0ccafc376d2b5d">Kuchenについてはこちらをご覧ください。</a><br>
+ゲームフロー制御にコルーチンを使う今回の方法は、あんまり大規模なゲームでは難しくなるかなーとも思いつつ、今回の規模ではちょうどよい方法でした。<br>
+上記のコードでは簡略化のため省いていますが、制御を一時停止するチュートリアルなどの遷移も綺麗に入れることが出来ました。</p>
+
+<h2>
+<span id="宣伝" class="fragment"></span><a href="#%E5%AE%A3%E4%BC%9D"><i class="fa fa-link"></i></a>宣伝</h2>
+
+<p><a href="http://1000mz.jp" rel="nofollow noopener" target="_blank">1000m Zombie Escape</a>をよろしくお願いします！</p>
+
+<h1>
+<span id="1000mzにおけるシリーズ" class="fragment"></span><a href="#1000mz%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA"><i class="fa fa-link"></i></a>1000mZにおける〜シリーズ</h1>
+
+<p><a href="http://qiita.com/kyubuns/items/98b2127e01d9baf62fe7">"1000m Zombie Escape!"におけるゲームフロー制御方法</a><br>
+<a href="http://qiita.com/kyubuns/items/9cf5684bffc4103e944f" id="reference-7b3c5470c642b9cc03e9">"1000m Zombie Escape!"における多言語対応手法</a></p>

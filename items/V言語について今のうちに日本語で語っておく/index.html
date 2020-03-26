@@ -1,0 +1,77 @@
+<p>公式サイト - <a href="https://vlang.io/" class="autolink" rel="nofollow noopener" target="_blank">https://vlang.io/</a></p>
+
+<h1>
+<span id="3行で" class="fragment"></span><a href="#3%E8%A1%8C%E3%81%A7"><i class="fa fa-link"></i></a>3行で</h1>
+
+<p>2019年6月に公開予定のSimple, fast, safeをウリにした言語。<br>
+現在は<a href="https://vlang.io/play" rel="nofollow noopener" target="_blank">Web上でPlaygroundで遊べたり</a>、<a href="https://www.patreon.com/vlang" rel="nofollow noopener" target="_blank">月30ドル払うとアーリーアクセスでコンパイラが落とせたり</a>する。<br>
+ビルドが早い、nullもundefinedも無い。最高〜</p>
+
+<h1>
+<span id="特徴" class="fragment"></span><a href="#%E7%89%B9%E5%BE%B4"><i class="fa fa-link"></i></a>特徴</h1>
+
+<ul>
+<li>Fast compilation
+
+<ul>
+<li>doom3のコードが0.5秒でビルド出来るらしい、果たしてcなら何秒なんだ</li>
+<li><a href="https://vlang.io/compilation_speed" class="autolink" rel="nofollow noopener" target="_blank">https://vlang.io/compilation_speed</a></li>
+</ul>
+</li>
+<li>No global state</li>
+<li>No null</li>
+<li>No undefined values</li>
+<li>Option types</li>
+<li>Generics
+
+<ul>
+<li>アーリーアクセスのコンパイラには実装されていない、結局これ使ったらコンパイル時間伸びたりしないのだろうか・・・</li>
+</ul>
+</li>
+<li>Immutability by default</li>
+<li>Partially pure functions</li>
+</ul>
+
+<h1>
+<span id="サンプルコード" class="fragment"></span><a href="#%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB%E3%82%B3%E3%83%BC%E3%83%89"><i class="fa fa-link"></i></a>サンプルコード</h1>
+
+<div class="code-frame" data-lang="golang"><div class="highlight"><pre><span class="k">struct</span> <span class="n">User</span> <span class="p">{</span>
+    <span class="n">id</span> <span class="kt">int</span> 
+<span class="p">}</span> 
+
+<span class="k">struct</span> <span class="n">Repo</span> <span class="p">{</span>
+    <span class="n">users</span> <span class="p">[]</span><span class="n">User</span> 
+<span class="p">}</span> 
+
+<span class="n">fn</span> <span class="n">new_repo</span><span class="p">()</span> <span class="n">Repo</span> <span class="p">{</span>
+        <span class="n">user</span> <span class="o">:=</span> <span class="n">User</span><span class="p">{</span><span class="n">id</span><span class="o">:</span><span class="m">10</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">Repo</span> <span class="p">{</span>
+                <span class="n">users</span><span class="o">:</span> <span class="p">[</span><span class="n">user</span><span class="p">]</span>
+        <span class="p">}</span>
+<span class="p">}</span> 
+
+<span class="n">fn</span> <span class="p">(</span><span class="n">r</span> <span class="n">Repo</span><span class="p">)</span> <span class="n">find_user_by_id</span><span class="p">(</span><span class="n">id</span> <span class="kt">int</span><span class="p">)</span> <span class="n">User</span><span class="err">?</span> <span class="p">{</span> 
+    <span class="k">for</span> <span class="n">user</span> <span class="n">in</span> <span class="n">r</span><span class="o">.</span><span class="n">users</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">id</span> <span class="p">{</span>
+            <span class="c">// V automatically wraps this into an option type  </span>
+            <span class="k">return</span> <span class="n">user</span> 
+        <span class="p">}</span> 
+    <span class="p">}</span> 
+    <span class="k">return</span> <span class="kt">error</span><span class="p">(</span><span class="err">'</span><span class="n">User</span> <span class="err">$</span><span class="n">id</span> <span class="n">not</span> <span class="n">found</span><span class="err">'</span><span class="p">)</span> 
+<span class="p">}</span> 
+
+<span class="n">fn</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">repo</span> <span class="o">:=</span> <span class="n">new_repo</span><span class="p">()</span> 
+    <span class="c">// Option types must be handled by `or` blocks  </span>
+    <span class="n">user</span> <span class="o">:=</span> <span class="n">repo</span><span class="o">.</span><span class="n">find_user_by_id</span><span class="p">(</span><span class="m">10</span><span class="p">)</span> <span class="n">or</span> <span class="p">{</span> 
+        <span class="c">// `or` block must end with `return`, `break`, or `continue`  </span>
+        <span class="nb">println</span><span class="p">(</span><span class="err">'</span><span class="n">not</span> <span class="n">found</span><span class="err">'</span><span class="p">)</span> 
+        <span class="k">return</span>  
+    <span class="p">}</span> 
+    <span class="nb">println</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="c">// ==&gt; '10'  </span>
+<span class="p">}</span>  
+</pre></div></div>
+
+<p>パッと見Goっぽい。<br>
+デフォルトがImmutabilityだったり、Optional返すときは必ずorブロックでどうにかしないといけなかったりする点がとても好き。<br>
+コンパイル速度の速さを生かしてゲーム開発に役立てたい。</p>

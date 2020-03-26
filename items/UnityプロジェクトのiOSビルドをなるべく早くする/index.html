@@ -1,0 +1,77 @@
+
+<h1>
+<span id="まえがき" class="fragment"></span><a href="#%E3%81%BE%E3%81%88%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>まえがき</h1>
+
+<p>Unityでゲームを作っていて、「開発チーム内に共有する開発者向けビルドをなるべく早くしたい！」というお話です。<br>
+リリースビルドには使わないほうが良いオプションが多数登場します。<br>
+UnityからXCodeプロジェクトを出力した後は、fastlaneを利用してビルドしているだけなので、実はUnityそんな関係ないです。<br>
+ここではfastlaneのコードとして紹介しますが、XCode上からでも同じ設定が出来るはずです。<br>
+「ここのパラメーターいじるともっと早くなるかも？」みたいな情報バンバンお待ちしております！</p>
+
+<h1>
+<span id="結論" class="fragment"></span><a href="#%E7%B5%90%E8%AB%96"><i class="fa fa-link"></i></a>結論</h1>
+
+<p>プロジェクト規模やビルドマシンのスペックによってビルド時間は変わるので参考値でしかありませんが、<br>
+オプション無しで40分かかっていたビルドが、10分ちょっとで終わるようになりました。</p>
+
+<div class="code-frame" data-lang="ruby"><div class="highlight"><pre>    <span class="n">build_ios_app</span><span class="p">(</span>
+      <span class="ss">project: </span><span class="n">xcodeproj_path</span><span class="p">,</span>
+      <span class="ss">scheme: </span><span class="s2">"Unity-iPhone"</span><span class="p">,</span>
+      <span class="ss">configuration: </span><span class="s2">"Release"</span><span class="p">,</span>
+      <span class="ss">export_method: </span><span class="s2">"ad-hoc"</span><span class="p">,</span>
+      <span class="ss">export_options: </span><span class="p">{</span>
+        <span class="ss">uploadBitcode: </span><span class="kp">false</span><span class="p">,</span>
+        <span class="ss">uploadSymbols: </span><span class="kp">false</span><span class="p">,</span>
+        <span class="ss">compileBitcode: </span><span class="kp">false</span><span class="p">,</span>
+      <span class="p">},</span>
+      <span class="ss">include_bitcode: </span><span class="kp">false</span><span class="p">,</span>
+      <span class="ss">include_symbols: </span><span class="kp">false</span><span class="p">,</span>
+      <span class="ss">xcargs: </span><span class="s2">"IDEBuildOperationMaxNumberOfConcurrentCompileTasks=16 GCC_GENERATE_DEBUGGING_SYMBOLS=NO DEBUG_INFORMATION_FORMAT=dwarf ONLY_ACTIVE_ARCH=YES VALID_ARCHS=arm64 CC=</span><span class="se">\"</span><span class="s2">ccacheclang</span><span class="se">\"</span><span class="s2"> GCC_PRECOMPILE_PREFIX_HEADER=NO"</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div></div>
+
+<h1>
+<span id="詳細" class="fragment"></span><a href="#%E8%A9%B3%E7%B4%B0"><i class="fa fa-link"></i></a>詳細</h1>
+
+<h2>
+<span id="debug-symbolとbitcodeを生成しない" class="fragment"></span><a href="#debug-symbol%E3%81%A8bitcode%E3%82%92%E7%94%9F%E6%88%90%E3%81%97%E3%81%AA%E3%81%84"><i class="fa fa-link"></i></a>debug symbolとbitcodeを生成しない。</h2>
+
+<p>debug symbolを生成しないのはクラッシュした時のログが見にくくなって悩むところですが、<br>
+ビルド時間がかなり軽減されたので生成しないことにしました。<br>
+なぜこのオプションが2段階になっているのかは謎です。</p>
+
+<div class="code-frame" data-lang="ruby"><div class="highlight"><pre>      <span class="ss">export_options: </span><span class="p">{</span>
+        <span class="ss">uploadBitcode: </span><span class="kp">false</span><span class="p">,</span>
+        <span class="ss">uploadSymbols: </span><span class="kp">false</span><span class="p">,</span>
+        <span class="ss">compileBitcode: </span><span class="kp">false</span><span class="p">,</span>
+      <span class="p">},</span>
+      <span class="ss">include_bitcode: </span><span class="kp">false</span><span class="p">,</span>
+      <span class="ss">include_symbols: </span><span class="kp">false</span><span class="p">,</span>
+</pre></div></div>
+
+<p><code>GCC_GENERATE_DEBUGGING_SYMBOLS=NO DEBUG_INFORMATION_FORMAT=dwarf</code></p>
+
+<h2>
+<span id="並列ビルド" class="fragment"></span><a href="#%E4%B8%A6%E5%88%97%E3%83%93%E3%83%AB%E3%83%89"><i class="fa fa-link"></i></a>並列ビルド</h2>
+
+<p>CPUのコア数とかと相談しながら決めてください。<br>
+盛り盛りMacProを使用しているので16並列にしています。</p>
+
+<p><code>IDEBuildOperationMaxNumberOfConcurrentCompileTasks=16</code></p>
+
+<h2>
+<span id="arm64向けビルドしか行わない" class="fragment"></span><a href="#arm64%E5%90%91%E3%81%91%E3%83%93%E3%83%AB%E3%83%89%E3%81%97%E3%81%8B%E8%A1%8C%E3%82%8F%E3%81%AA%E3%81%84"><i class="fa fa-link"></i></a>arm64向けビルドしか行わない</h2>
+
+<p>開発チーム内にarmv7を使っている人間がいなかったのでarm64だけに絞りました。<br>
+これも結構効きます。</p>
+
+<p><code>ONLY_ACTIVE_ARCH=YES VALID_ARCHS=arm64</code></p>
+
+<h2>
+<span id="ccacheを使う" class="fragment"></span><a href="#ccache%E3%82%92%E4%BD%BF%E3%81%86"><i class="fa fa-link"></i></a>ccacheを使う</h2>
+
+<p>ccacheの説明は省きますが、まあそりゃ使ったらビルド早くなるわなって感じなので使います。<br>
+CC=\"ccache clang\" って書けたら良かったんですけど実行時に死ぬので<br>
+<code>ccache clang $@</code> とだけ書いたファイルを/usr/local/bin/ccacheclangみたいなところに置いておきます。</p>
+
+<p><code>CC=\"ccacheclang\"</code></p>

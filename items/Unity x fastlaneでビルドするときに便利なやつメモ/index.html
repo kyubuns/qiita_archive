@@ -1,0 +1,73 @@
+
+<h1>
+<span id="unity実行ファイルのパス取得" class="fragment"></span><a href="#unity%E5%AE%9F%E8%A1%8C%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E3%83%91%E3%82%B9%E5%8F%96%E5%BE%97"><i class="fa fa-link"></i></a>Unity(実行ファイル)のパス取得</h1>
+
+<div class="code-frame" data-lang="ruby"><div class="highlight"><pre><span class="k">def</span> <span class="nf">get_unity_path</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+  <span class="n">unity_version</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="n">project_path</span><span class="si">}</span><span class="s2">/ProjectSettings/ProjectVersion.txt"</span><span class="p">).</span><span class="nf">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)[</span><span class="mi">1</span><span class="p">].</span><span class="nf">strip</span>
+
+  <span class="n">unity_path</span> <span class="o">=</span> <span class="s2">"/Applications/Unity</span><span class="si">#{</span><span class="n">unity_version</span><span class="si">}</span><span class="s2">"</span>
+  <span class="n">unity_path</span> <span class="o">=</span> <span class="s2">"/Applications/Unity/Hub/Editor/</span><span class="si">#{</span><span class="n">unity_version</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="no">File</span><span class="p">.</span><span class="nf">exists?</span><span class="p">(</span><span class="s2">"/Applications/Unity/Hub/Editor/</span><span class="si">#{</span><span class="n">unity_version</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">unity_path</span>
+<span class="k">end</span>
+</pre></div></div>
+
+<h1>
+<span id="unity上のメソッドを実行" class="fragment"></span><a href="#unity%E4%B8%8A%E3%81%AE%E3%83%A1%E3%82%BD%E3%83%83%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C"><i class="fa fa-link"></i></a>Unity上のメソッドを実行</h1>
+
+<div class="code-frame" data-lang="ruby"><div class="highlight"><pre><span class="n">private_lane</span> <span class="ss">:unity</span> <span class="k">do</span> <span class="o">|</span><span class="n">options</span><span class="o">|</span>
+  <span class="n">unity_path</span> <span class="o">=</span> <span class="n">get_unity_path</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="ss">:project_path</span><span class="p">])</span>
+
+  <span class="n">args</span> <span class="o">=</span> <span class="s2">""</span>
+  <span class="n">args</span> <span class="o">+=</span> <span class="s2">" -buildTarget </span><span class="si">#{</span><span class="n">options</span><span class="p">[</span><span class="ss">:target</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="ss">:target</span><span class="p">]</span>
+  <span class="n">args</span> <span class="o">+=</span> <span class="s2">" </span><span class="si">#{</span><span class="n">options</span><span class="p">[</span><span class="ss">:args</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="ss">:args</span><span class="p">]</span>
+
+  <span class="n">sh</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="n">unity_path</span><span class="si">}</span><span class="s2">/Unity.app/Contents/MacOS/Unity -batchmode </span><span class="si">#{</span><span class="n">args</span><span class="si">}</span><span class="s2"> -nographics -quit -projectPath </span><span class="si">#{</span><span class="n">options</span><span class="p">[</span><span class="ss">:project_path</span><span class="p">]</span><span class="si">}</span><span class="s2"> -executeMethod </span><span class="si">#{</span><span class="n">options</span><span class="p">[</span><span class="ss">:method</span><span class="p">]</span><span class="si">}</span><span class="s2"> -logFile /dev/stdout"</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div></div>
+
+<div class="code-frame" data-lang="ruby"><div class="highlight"><pre><span class="n">unity</span><span class="p">(</span>
+  <span class="ss">project_path: </span><span class="n">project_path</span><span class="p">,</span>
+  <span class="ss">target: </span><span class="s2">"osx"</span><span class="p">,</span>
+  <span class="ss">method: </span><span class="s2">"AssetBundles.BuildScript.BuildAssetBundles"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div></div>
+
+<h1>
+<span id="unityテスト実行" class="fragment"></span><a href="#unity%E3%83%86%E3%82%B9%E3%83%88%E5%AE%9F%E8%A1%8C"><i class="fa fa-link"></i></a>Unityテスト実行</h1>
+
+<div class="code-frame" data-lang="ruby"><div class="highlight"><pre><span class="n">private_lane</span> <span class="ss">:run_unity_editor_tests</span> <span class="k">do</span> <span class="o">|</span><span class="n">options</span><span class="o">|</span>
+  <span class="n">unity_path</span> <span class="o">=</span> <span class="n">get_unity_path</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="ss">:project_path</span><span class="p">])</span>
+
+  <span class="n">sh</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="n">unity_path</span><span class="si">}</span><span class="s2">/Unity.app/Contents/MacOS/Unity -batchmode -quit -runEditorTests -editorTestsResultFile </span><span class="si">#{</span><span class="n">options</span><span class="p">[</span><span class="ss">:result_path</span><span class="p">]</span><span class="si">}</span><span class="s2"> -projectPath </span><span class="si">#{</span><span class="n">options</span><span class="p">[</span><span class="ss">:project_path</span><span class="p">]</span><span class="si">}</span><span class="s2"> -logFile /dev/stdout"</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div></div>
+
+<h1>
+<span id="xcodeビルドを頑張る" class="fragment"></span><a href="#xcode%E3%83%93%E3%83%AB%E3%83%89%E3%82%92%E9%A0%91%E5%BC%B5%E3%82%8B"><i class="fa fa-link"></i></a>XCodeビルドを頑張る</h1>
+
+<div class="code-frame" data-lang="ruby"><div class="highlight"><pre>      <span class="n">xcargs</span> <span class="o">=</span> <span class="s2">""</span>
+      <span class="n">xcargs</span> <span class="o">+=</span> <span class="s2">" IDEBuildOperationMaxNumberOfConcurrentCompileTasks=16"</span>
+      <span class="n">xcargs</span> <span class="o">+=</span> <span class="s2">" GCC_GENERATE_DEBUGGING_SYMBOLS=NO DEBUG_INFORMATION_FORMAT=dwarf"</span>
+      <span class="n">xcargs</span> <span class="o">+=</span> <span class="s2">" ONLY_ACTIVE_ARCH=YES VALID_ARCHS=arm64"</span>
+      <span class="n">xcargs</span> <span class="o">+=</span> <span class="s2">" CC=</span><span class="se">\"</span><span class="s2">ccacheclang</span><span class="se">\"</span><span class="s2"> GCC_PRECOMPILE_PREFIX_HEADER=NO"</span> <span class="k">if</span> <span class="no">File</span><span class="p">.</span><span class="nf">exist?</span><span class="p">(</span><span class="s2">"/usr/local/bin/ccacheclang"</span><span class="p">)</span>
+
+      <span class="n">build_ios_app</span><span class="p">(</span>
+        <span class="ss">project: </span><span class="n">xcodeproj</span><span class="p">,</span>
+        <span class="ss">scheme: </span><span class="s2">"Unity-iPhone"</span><span class="p">,</span>
+        <span class="ss">codesigning_identity: </span><span class="n">codesigning_identity</span><span class="p">,</span>
+        <span class="ss">configuration: </span><span class="s2">"Debug"</span><span class="p">,</span>
+        <span class="ss">export_method: </span><span class="s2">"ad-hoc"</span><span class="p">,</span>
+        <span class="ss">export_options: </span><span class="p">{</span>
+          <span class="ss">signingStyle: </span><span class="s2">"manual"</span><span class="p">,</span>
+          <span class="ss">compileBitcode: </span><span class="kp">false</span><span class="p">,</span>
+          <span class="ss">provisioningProfiles: </span><span class="p">{</span>
+            <span class="s2">"</span><span class="si">#{</span><span class="n">options</span><span class="p">[</span><span class="ss">:app_identifier</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="s2">"</span><span class="si">#{</span><span class="n">provisining_uuid</span><span class="si">}</span><span class="s2">"</span>
+          <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="ss">skip_profile_detection: </span><span class="kp">true</span><span class="p">,</span>
+        <span class="ss">include_bitcode: </span><span class="kp">false</span><span class="p">,</span>
+        <span class="ss">include_symbols: </span><span class="kp">false</span><span class="p">,</span>
+        <span class="ss">xcargs: </span><span class="n">xcargs</span><span class="p">,</span>
+      <span class="p">)</span>
+</pre></div></div>

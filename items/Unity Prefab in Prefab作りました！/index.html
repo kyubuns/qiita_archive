@@ -1,0 +1,122 @@
+
+<h1>
+<span id="はじめに" class="fragment"></span><a href="#%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB"><i class="fa fa-link"></i></a>はじめに</h1>
+
+<p>Prefab in Prefabは、Unityさんが公式で対応すると言っていますが、待ちきれなかったので作っちゃいました。<br>
+<a href="http://feedback.unity3d.com/suggestions/editor-nested-prefabs" class="autolink" rel="nofollow noopener" target="_blank">http://feedback.unity3d.com/suggestions/editor-nested-prefabs</a></p>
+
+<p>Play時だけではなく、Edit時にも動作します！</p>
+
+<p>バグ報告、ご意見、ご感想、お待ちしております。<br>
+<a href="http://twitter.com/kyubuns" class="autolink" rel="nofollow noopener" target="_blank">http://twitter.com/kyubuns</a><br>
+<a href="http://forum.unity3d.com/threads/244380-FREE-OpenSource-Prefab-in-Prefab-for-Unity4-x" class="autolink" rel="nofollow noopener" target="_blank">http://forum.unity3d.com/threads/244380-FREE-OpenSource-Prefab-in-Prefab-for-Unity4-x</a></p>
+
+<h1>
+<span id="どんな時に使うの" class="fragment"></span><a href="#%E3%81%A9%E3%82%93%E3%81%AA%E6%99%82%E3%81%AB%E4%BD%BF%E3%81%86%E3%81%AE"><i class="fa fa-link"></i></a>どんな時に使うの？</h1>
+
+<p>1つのPrefabの中に、似たようなボタンを2つ入れたい。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Ff5130710-5f3c-03fc-a00f-6a6556521655.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=bd6748e679b93a065575e42947cfe26a" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Ff5130710-5f3c-03fc-a00f-6a6556521655.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=bd6748e679b93a065575e42947cfe26a" alt="スクリーンショット_050914_100604_PM.jpg" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/f5130710-5f3c-03fc-a00f-6a6556521655.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Ff5130710-5f3c-03fc-a00f-6a6556521655.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=86eb069d22a80b7728ca20bf38355f6a 1x" loading="lazy"></a></p>
+
+<p>コピーして作ってしまうと、「ボタンの背景素材を入れ替える」とかなったときにめんどくさいなぁ・・・<br>
+でも、今のUnityはPrefabの中にPrefabがあるときに、親のPrefabをApplyすると子が親のPrefabに吸収されてしまい、子のPrefabを独立したまま反映させることが出来ない。</p>
+
+<p>などなど、これ汎用的に使いたいなぁ。という時に使います！</p>
+
+<h1>
+<span id="どんなことが出来るの" class="fragment"></span><a href="#%E3%81%A9%E3%82%93%E3%81%AA%E3%81%93%E3%81%A8%E3%81%8C%E5%87%BA%E6%9D%A5%E3%82%8B%E3%81%AE"><i class="fa fa-link"></i></a>どんなことが出来るの？</h1>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fe2bf262f-3568-ec5e-a1ef-cfe9cb3eeda6.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=4765700fd58a76a2bbdbf5ca9d1a3217" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fe2bf262f-3568-ec5e-a1ef-cfe9cb3eeda6.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=4765700fd58a76a2bbdbf5ca9d1a3217" alt="スクリーンショット_050914_101456_PM.jpg" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/e2bf262f-3568-ec5e-a1ef-cfe9cb3eeda6.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fe2bf262f-3568-ec5e-a1ef-cfe9cb3eeda6.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=c618a8d9c2f184a3cb75b2862c9f09b4 1x" loading="lazy"></a></p>
+
+<p>これがPrefab in Prefabだ！</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fb90ad583-3676-a240-b459-bec12405d04c.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=e2b77152902a24b03821a5cdead9dd51" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fb90ad583-3676-a240-b459-bec12405d04c.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=e2b77152902a24b03821a5cdead9dd51" alt="スクリーンショット_050914_100945_PM.jpg" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/b90ad583-3676-a240-b459-bec12405d04c.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fb90ad583-3676-a240-b459-bec12405d04c.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=0b4064c8aba6d87dade67a13898f5b0d 1x" loading="lazy"></a></p>
+
+<p>元となっているPrefabを変更すると・・・<br>
+（Applyした後に保存したタイミング）</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F186188a1-e1d6-d96f-bd80-320efecba38d.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=dea3fa1be88ceb5df3a2a533a538306b" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F186188a1-e1d6-d96f-bd80-320efecba38d.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=dea3fa1be88ceb5df3a2a533a538306b" alt="スクリーンショット_050914_101103_PM.jpg" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/186188a1-e1d6-d96f-bd80-320efecba38d.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F186188a1-e1d6-d96f-bd80-320efecba38d.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=b8224865d1ae01401ebc05fc9dfa8efd 1x" loading="lazy"></a></p>
+
+<p>Prefab in Prefabを利用している方にも反映される！</p>
+
+<h1>
+<span id="どうやって使うの" class="fragment"></span><a href="#%E3%81%A9%E3%81%86%E3%82%84%E3%81%A3%E3%81%A6%E4%BD%BF%E3%81%86%E3%81%AE"><i class="fa fa-link"></i></a>どうやって使うの？</h1>
+
+<h2>
+<span id="準備編" class="fragment"></span><a href="#%E6%BA%96%E5%82%99%E7%B7%A8"><i class="fa fa-link"></i></a>準備編</h2>
+
+<p>↓をcloneしてきて、<br>
+<a href="https://github.com/kyubuns/prefab_in_prefab" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/prefab_in_prefab</a></p>
+
+<div class="code-frame" data-lang="shell-session"><div class="highlight"><pre><span class="go">cp prefab_in_prefab/Assets/PrefabInPrefab your_project/Assets/
+</span></pre></div></div>
+
+<p>以上。</p>
+
+<h2>
+<span id="使い方" class="fragment"></span><a href="#%E4%BD%BF%E3%81%84%E6%96%B9"><i class="fa fa-link"></i></a>使い方</h2>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F2c4a906c-5d47-a18f-4621-f29ae5e61f9d.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=2bfae7474ece904085efd7a9f5fc8cdd" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F2c4a906c-5d47-a18f-4621-f29ae5e61f9d.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=2bfae7474ece904085efd7a9f5fc8cdd" alt="スクリーンショット_050914_095834_PM.jpg" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/2c4a906c-5d47-a18f-4621-f29ae5e61f9d.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F2c4a906c-5d47-a18f-4621-f29ae5e61f9d.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=41491c1d0eacf407da3e9e499a3b28af 1x" loading="lazy"></a><br>
+PrefabInPrefabコンポーネントを張り付けて、Prefabを設定するだけ。</p>
+
+<h1>
+<span id="同じprefabで別の挙動をさせる" class="fragment"></span><a href="#%E5%90%8C%E3%81%98prefab%E3%81%A7%E5%88%A5%E3%81%AE%E6%8C%99%E5%8B%95%E3%82%92%E3%81%95%E3%81%9B%E3%82%8B"><i class="fa fa-link"></i></a>同じPrefabで別の挙動をさせる</h1>
+
+<p>PrefabInPrefabコンポーネントがついているゲームオブジェクトについているコンポーネントは、<br>
+生成されたPrefabのinstanceにコピーされます。</p>
+
+<p>NGUIのUIButtonを利用した例を紹介します。</p>
+
+<p>WindowPrefabの中で、ButtonPrefabを使いたいとします。</p>
+
+<p>↓は、WindowPrefab内のGameObjectです。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fa5299a41-7205-e392-300f-18f93a992e07.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=0eb87170c19b1f3ae49067785be5fa7d" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fa5299a41-7205-e392-300f-18f93a992e07.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=0eb87170c19b1f3ae49067785be5fa7d" alt="スクリーンショット_050914_095957_PM.jpg" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/a5299a41-7205-e392-300f-18f93a992e07.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fa5299a41-7205-e392-300f-18f93a992e07.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=93a15fde3f835f20d3f5f4417ff3cf7f 1x" loading="lazy"></a><br>
+（「これらはコピーされる」って文字の上にPrefabInPrefabついてます。文字の入れ方が雑ですみません；；）</p>
+
+<p>実行時には、コンポーネントがコピーされるため、↓のような状態になります。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F77b80bd5-0d70-3ca0-b478-62c42565c2d8.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=c0c9cab6f467611faf6ae9e56da807cd" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F77b80bd5-0d70-3ca0-b478-62c42565c2d8.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=c0c9cab6f467611faf6ae9e56da807cd" alt="スクリーンショット_050914_100135_PM.jpg" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/77b80bd5-0d70-3ca0-b478-62c42565c2d8.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F77b80bd5-0d70-3ca0-b478-62c42565c2d8.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=e5a88cf936c1751cc36c8d8bbf6ad7cb 1x" loading="lazy"></a></p>
+
+<p>ここのButtonTextコンポーネント(ButtonPrefabにつける)、SetButtonTextコンポーネント(WindowPrefabのButtonにつける。)は以下のような簡単なスクリプトです。</p>
+
+<div class="code-frame" data-lang="csharp">
+<div class="code-lang"><span class="bold">ButtonText.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">ButtonText</span> <span class="p">:</span> <span class="n">MonoBehaviour</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="n">UILabel</span> <span class="n">label</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">text</span>
+    <span class="p">{</span>
+        <span class="k">set</span> <span class="p">{</span>
+            <span class="n">label</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">get</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">label</span><span class="p">.</span><span class="n">text</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<div class="code-frame" data-lang="csharp">
+<div class="code-lang"><span class="bold">SetButtonText.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+
+<span class="p">[</span><span class="n">ExecuteInEditMode</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SetButtonText</span> <span class="p">:</span> <span class="n">MonoBehaviour</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="kt">string</span> <span class="n">text</span><span class="p">;</span>
+
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">buttonText</span> <span class="p">=</span> <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">ButtonText</span><span class="p">&gt;();</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">buttonText</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span> <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">ButtonText</span><span class="p">&gt;().</span><span class="n">text</span> <span class="p">=</span> <span class="n">text</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<p>このようにして、同じPrefabを使いつつ、別のテキストをラベルに設定することができます。<br>
+また、上記画像にあるようにUIEventTriggerを利用することにより、ボタンが押された時のイベントも別々に設定ができます。</p>
+
+<p>（追記：PrefabInPrefab/Example/Scenes/ExampleにNGUIを使用しないサンプルを追加しました。）</p>

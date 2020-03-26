@@ -1,0 +1,19 @@
+<p>タイトルでオチてます。</p>
+
+<p>が、それだけじゃ寂しいので、rubyで書いたコードも貼っておきます。<br>
+コードからドキュメントを自動生成する方法は様々あると思うので、<br>
+ドキュメントがdocument.mdというファイルに保存されている体で。</p>
+
+<div class="code-frame" data-lang="rb"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">'qiita'</span>
+
+<span class="n">namespace</span> <span class="ss">:hoge</span> <span class="k">do</span>
+  <span class="n">desc</span> <span class="s2">"hogeのドキュメントをqiitaにアップロード"</span>
+  <span class="n">task</span> <span class="ss">:upload</span> <span class="k">do</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="no">Qiita</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">access_token: </span><span class="s2">"{アクセストークン}"</span><span class="p">,</span> <span class="ss">team: </span><span class="s2">"{チーム名}"</span><span class="p">)</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s2">"document.md"</span><span class="p">)</span>
+    <span class="n">client</span><span class="p">.</span><span class="nf">patch</span><span class="p">(</span><span class="s2">"/api/v2/items/{更新する記事のID}"</span><span class="p">,</span> <span class="ss">title: </span><span class="s1">'{タイトル}'</span><span class="p">,</span> <span class="ss">body: </span><span class="n">body</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div></div>
+
+<p>これ作った後に、githubのwikiで良かったんじゃ・・・って思ったんですけど考えないことにします。</p>

@@ -1,0 +1,176 @@
+<p>Unity用Pub/Subライブラリ、その名も"<a href="https://github.com/kyubuns/Kuchen" rel="nofollow noopener" target="_blank">Kuchen</a>"を公開したのでご紹介します。<br>
+読み方はクーヘンです。バウムクーヘンのクーヘンです。</p>
+
+<h2>
+<span id="なにこれ" class="fragment"></span><a href="#%E3%81%AA%E3%81%AB%E3%81%93%E3%82%8C"><i class="fa fa-link"></i></a>なにこれ？</h2>
+
+<p>コンセプトは、<strong>小さいゲーム開発プロジェクトの開発速度を上げるライブラリ</strong> です。<br>
+小さなプロジェクトというのが大切で、個人でゲームを作ってる！とか、プロトタイプをさくっと作りたい！とかいう時に向いてると思います。</p>
+
+<h2>
+<span id="何ができるの" class="fragment"></span><a href="#%E4%BD%95%E3%81%8C%E3%81%A7%E3%81%8D%E3%82%8B%E3%81%AE"><i class="fa fa-link"></i></a>何ができるの？</h2>
+
+<p>誰かがSubscribeして、誰かがPublishする。それだけです。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"baum"</span><span class="p">)</span> <span class="p">});</span>
+</pre></div></div>
+
+<p>誰かがSubscribeして、</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+</pre></div></div>
+
+<p>誰かがPublishする。<br>
+こうすれば、先ほど登録していた <code>() =&gt; { Debug.Log("baum") })</code> が呼ばれます。</p>
+
+<h3>
+<span id="いやいやaction使ってメソッドを登録すればいいじゃん" class="fragment"></span><a href="#%E3%81%84%E3%82%84%E3%81%84%E3%82%84action%E4%BD%BF%E3%81%A3%E3%81%A6%E3%83%A1%E3%82%BD%E3%83%83%E3%83%89%E3%82%92%E7%99%BB%E9%8C%B2%E3%81%99%E3%82%8C%E3%81%B0%E3%81%84%E3%81%84%E3%81%98%E3%82%83%E3%82%93"><i class="fa fa-link"></i></a>いやいや、Action使ってメソッドを登録すればいいじゃん</h3>
+
+<p>（と思わなかった方は読み飛ばして頂いて大丈夫です。）<br>
+Kuchenのメリットは2つあります。</p>
+
+<ul>
+<li>発行する相手を知らなくていい</li>
+<li>寿命管理を自分でしなくていい</li>
+</ul>
+
+<p>1つ目は、さっきのコードを見た頂ければわかると思うので説明は省きます。<br>
+2つ目ですが、KuchenでSubscribeしたイベントは、GameObjectがDestroyされたタイミングで自動的に外されるようになっています。<br>
+なので、いちいちOnDestroyで参照を外したりする必要はありません。</p>
+
+<h2>
+<span id="使用例" class="fragment"></span><a href="#%E4%BD%BF%E7%94%A8%E4%BE%8B"><i class="fa fa-link"></i></a>使用例</h2>
+
+<p>こんなの何に使えるの？？と、頭の上に？マークが浮かんでいると思うので、具体的な使用例を紹介していきます。</p>
+
+<h3>
+<span id="例えばエフェクトや効果音" class="fragment"></span><a href="#%E4%BE%8B%E3%81%88%E3%81%B0%E3%82%A8%E3%83%95%E3%82%A7%E3%82%AF%E3%83%88%E3%82%84%E5%8A%B9%E6%9E%9C%E9%9F%B3"><i class="fa fa-link"></i></a>例えば、エフェクトや効果音</h3>
+
+<p>Kuchenで実現できることの1つに「気軽にクラスの責任を分けられる」というものがあります。<br>
+「Spaceキーを押したらプレイヤーキャラクターが攻撃する」処理を書く時、</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">どこかの入力管理クラス.cs</span></div>
+<div class="highlight"><pre><span class="k">if</span><span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">Space</span><span class="p">))</span> <span class="n">Publisher</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Attack"</span><span class="p">);</span>
+<span class="c1">// MonoBehaviourであれば、this.Publish("Attack"); でも同じ意味。</span>
+</pre></div>
+</div>
+
+<p>入力管理クラスは、入力を管理するだけ。<br>
+プレイヤーへの参照を握る必要はありません。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">プレイヤークラス.cs</span></div>
+<div class="highlight"><pre><span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"Attack"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// 当たり判定とか敵へのダメージ処理</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">エフェクト.cs</span></div>
+<div class="highlight"><pre><span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"Attack"</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// 攻撃エフェクトを表示</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">効果音.cs</span></div>
+<div class="highlight"><pre><span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"Attack"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// 攻撃の効果音を再生</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+
+<p>このように、1つのイベントを複数人が受け取ることで、「送る側は何も考えずに送るだけ」「受け取る側は、自分の作業に必要なイベントを受け取るだけ」が実現できます。<br>
+また、プレイヤークラス、エフェクトクラス、効果音クラスは、それぞれ参照を握る必要はありません。<br>
+ここに、「攻撃時だけカメラがアップになる！」みたいな処理を入れようと思えば、カメラクラスでもAttackをSubscribeすれば良いだけです。</p>
+
+<h3>
+<span id="例えばui" class="fragment"></span><a href="#%E4%BE%8B%E3%81%88%E3%81%B0ui"><i class="fa fa-link"></i></a>例えば、UI</h3>
+
+<p>沢山あるUIのボタン1つ1つに、UnityEditorのInspectorからOnClickの処理を設定していく・・・というのはなかなか苦痛なんですよね。<br>
+または、（うちの場合がそうなんですけど）psdからuGUIのGameObjectを自動生成してる！とかいう場合。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">Extension.cs</span></div>
+<div class="highlight"><pre><span class="k">foreach</span><span class="p">(</span><span class="kt">var</span> <span class="n">button</span> <span class="k">in</span> <span class="n">root</span><span class="p">.</span><span class="n">GetComponentsInChildren</span><span class="p">&lt;</span><span class="n">Button</span><span class="p">&gt;())</span>
+<span class="p">{</span>
+  <span class="kt">var</span> <span class="n">buttonName</span> <span class="p">=</span> <span class="n">button</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+  <span class="n">button</span><span class="p">.</span><span class="n">onClick</span><span class="p">.</span><span class="nf">AddListener</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="n">Publisher</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">"OnClick.{0}"</span><span class="p">,</span> <span class="n">buttonName</span><span class="p">));</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<p>このようにすれば、root以下のButton全てにPublishイベントを設定できます。<br>
+受け取り側はこんな感じ。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">ボタンイベント.cs</span></div>
+<div class="highlight"><pre><span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"OnClick.HogeButton"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"HogeButtonが押されたよ！"</span><span class="p">);</span> <span class="p">});</span>
+<span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"OnClick.FugaButton"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"FugaButtonが押されたよ！"</span><span class="p">);</span> <span class="p">});</span>
+</pre></div>
+</div>
+
+<h3>
+<span id="例えばコルーチンによるゲームフロー制御" class="fragment"></span><a href="#%E4%BE%8B%E3%81%88%E3%81%B0%E3%82%B3%E3%83%AB%E3%83%BC%E3%83%81%E3%83%B3%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%95%E3%83%AD%E3%83%BC%E5%88%B6%E5%BE%A1"><i class="fa fa-link"></i></a>例えば、コルーチンによるゲームフロー制御</h3>
+
+<p><a href="http://1000mz.jp" rel="nofollow noopener" target="_blank">1000mZ</a>では、ゲームフローの制御にKuchenを使っています。<br>
+詳しくは<a href="http://qiita.com/kyubuns/items/98b2127e01d9baf62fe7" id="reference-96e168b5b040b11d4f40">こちらの記事</a>をご覧ください。</p>
+
+<h2>
+<span id="応用例" class="fragment"></span><a href="#%E5%BF%9C%E7%94%A8%E4%BE%8B"><i class="fa fa-link"></i></a>応用例</h2>
+
+<p>ここからは、実際こんな使い方したことないけど、まあ使えるな〜みたいな例を書いていきます。</p>
+
+<h3>
+<span id="例えば生存確認" class="fragment"></span><a href="#%E4%BE%8B%E3%81%88%E3%81%B0%E7%94%9F%E5%AD%98%E7%A2%BA%E8%AA%8D"><i class="fa fa-link"></i></a>例えば、生存確認</h3>
+
+<p>少し上で「送る側は何も考えずに送るだけ」と書きましたが、<br>
+Publishの返り値として、「何人が受け取ったか」がintで帰ってくるので、生存確認なんかも出来ます。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">Enemy.cs</span></div>
+<div class="highlight"><pre><span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"Ping"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{});</span>
+</pre></div>
+</div>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">全員死んでるかな？.cs</span></div>
+<div class="highlight"><pre><span class="k">if</span><span class="p">(</span><span class="n">Publisher</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Ping"</span><span class="p">)</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 敵は全滅。*/</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="ほか" class="fragment"></span><a href="#%E3%81%BB%E3%81%8B"><i class="fa fa-link"></i></a>ほか</h2>
+
+<p>他にも良い使用例募集中です！コメントにでも書いてってください！</p>
+
+<h2>
+<span id="リポジトリ" class="fragment"></span><a href="#%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA"><i class="fa fa-link"></i></a>リポジトリ</h2>
+
+<p>具体的な使い方はREADME.mdに書いてあります。<br>
+<a href="https://github.com/kyubuns/Kuchen" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/Kuchen</a></p>
+
+<h2>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h2>
+
+<p>前々から作ろう作ろうと思っていたライブラリがやっと形になりました。<br>
+Kuchenは、制約の緩いPub/Subライブラリです。<br>
+制約の強さには好みがあると思いますが、そこは一旦作りやすいもの、ということで抑えました。<br>
+「各クラスが何に責任を持つか」を明確にし、「自分の責任でないことは他人（他クラス）に任せる。」「誰が誰の参照を持っているかなんて知ったこっちゃない。」<br>
+ということを、めちゃくちゃ気軽に実現したい！と思っていて考えた結果、Kuchenが完成しました。<br>
+Kuchenを使うことで、特にプロジェクト初期の開発速度が上がると考えています。</p>
+
+<p>さらに、このライブラリは、思想によって様々な使い方が出来ると思っています。<br>
+この記事だけでは、自分の思想は伝えきれていないと思うので、「ここまで読んだけど、何が良いのかわからなかった」という方もいらっしゃると思います。<br>
+伝えきれていないことを思い出せたら追記します。</p>
+
+<h2>
+<span id="最後に" class="fragment"></span><a href="#%E6%9C%80%E5%BE%8C%E3%81%AB"><i class="fa fa-link"></i></a>最後に</h2>
+
+<p>ご意見、ご感想、PRなどなど待ってます。<br>
+<a href="http://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">@kyubuns</a></p>

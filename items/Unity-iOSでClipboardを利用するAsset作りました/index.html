@@ -1,0 +1,107 @@
+
+<h1>
+<span id="uniclipboard" class="fragment"></span><a href="#uniclipboard"><i class="fa fa-link"></i></a>UniClipboard</h1>
+
+<p>native pluginを作る勉強用に作ってみました。<br>
+勉強用なので特に拡張する気は無いです。</p>
+
+<p>実は本題は「作ったこと」ではなく、「共有フォルダ(Assets/Editor, Assets/Plugins/iOS)を汚さないAssetを作る方法」「UnityのiOS NativePluginでARCを利用する方法」です。<br>
+それは下の方で触れます。</p>
+
+<h2>
+<span id="何が出来るの" class="fragment"></span><a href="#%E4%BD%95%E3%81%8C%E5%87%BA%E6%9D%A5%E3%82%8B%E3%81%AE"><i class="fa fa-link"></i></a>何が出来るの？</h2>
+
+<p>PC/Mac/iOSでClipboardにTextをset/get出来る。<br>
+webplayer, androidは未対応。</p>
+
+<h2>
+<span id="名前" class="fragment"></span><a href="#%E5%90%8D%E5%89%8D"><i class="fa fa-link"></i></a>名前</h2>
+
+<p>AssetStoreでUni~~とかNextGen~~とか流行ってるので<br>
+流行に乗ってみました。</p>
+
+<h2>
+<span id="ダウンロード" class="fragment"></span><a href="#%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89"><i class="fa fa-link"></i></a>ダウンロード</h2>
+
+<p><a href="https://github.com/kyubuns/uniclipboard" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/uniclipboard</a></p>
+
+<h2>
+<span id="サンプルコード" class="fragment"></span><a href="#%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB%E3%82%B3%E3%83%BC%E3%83%89"><i class="fa fa-link"></i></a>サンプルコード</h2>
+
+<div class="code-frame" data-lang="lang">
+<div class="code-lang"><span class="bold">sample.cs</span></div>
+<div class="highlight"><pre>if(GUI.Button(new Rect(20,40,300,60), "Copy"))
+{
+    UniClipboard.value = "Hello, UniClipboard!";
+}
+
+if(GUI.Button(new Rect(20,120,300,60), "Paste"))
+{
+    clipboardValue = UniClipboard.value;
+}
+</pre></div>
+</div>
+
+<h2>
+<span id="実験内容1-共有ディレクトリを汚さない" class="fragment"></span><a href="#%E5%AE%9F%E9%A8%93%E5%86%85%E5%AE%B91-%E5%85%B1%E6%9C%89%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%82%92%E6%B1%9A%E3%81%95%E3%81%AA%E3%81%84"><i class="fa fa-link"></i></a>実験内容1: 共有ディレクトリを汚さない</h2>
+
+<h3>
+<span id="どういうこと" class="fragment"></span><a href="#%E3%81%A9%E3%81%86%E3%81%84%E3%81%86%E3%81%93%E3%81%A8"><i class="fa fa-link"></i></a>どういうこと？</h3>
+
+<p>共有ディレクトリとは、Assets/Editor, Assets/Plugins/iOSなどを複数のAssetが共通して利用するディレクトリの事を言っています。<br>
+<a href="http://d.hatena.ne.jp/kyubuns/20140615/1402825919" rel="nofollow noopener" target="_blank">Assets/Editor以下とか、Assets/Plugins/iOS以下にファイルを置くのはやめよう。</a><br>
+Plugins/iOS以下に置けば、何もしなくてもXCodeProjectにコピーされビルドされて楽です。<br>
+が、上記エントリで書いたように「どのファイルがどのAssetの物？」という管理が非常に面倒くさくなります。</p>
+
+<h3>
+<span id="解決案" class="fragment"></span><a href="#%E8%A7%A3%E6%B1%BA%E6%A1%88"><i class="fa fa-link"></i></a>解決案</h3>
+
+<p>リポジトリを見ていただいたら分かるように、今回は全てAssets/UniClipboard以下にファイルをまとめています。<br>
+<a href="https://github.com/kyubuns/UniClipboard/tree/master/Assets" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/UniClipboard/tree/master/Assets</a></p>
+
+<p>これは、以下のAssetを利用して、PostProcess時にXCodeProject内に必要なコードをコピーしています。<br>
+(ちなみに。EveryplayのUnity対応でも使用されていました。)<br>
+<a href="https://github.com/dcariola/XCodeEditor-for-Unity" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/dcariola/XCodeEditor-for-Unity</a></p>
+
+<p>単純な話ですが、これをやるだけで利用する側はAssetの移動/削除/更新などが非常にやりやすくなります。</p>
+
+<h2>
+<span id="実験内容2-nativepluginのコードでarcを利用する" class="fragment"></span><a href="#%E5%AE%9F%E9%A8%93%E5%86%85%E5%AE%B92-nativeplugin%E3%81%AE%E3%82%B3%E3%83%BC%E3%83%89%E3%81%A7arc%E3%82%92%E5%88%A9%E7%94%A8%E3%81%99%E3%82%8B"><i class="fa fa-link"></i></a>実験内容2: NativePluginのコードで、ARCを利用する</h2>
+
+<h3>
+<span id="なにそれ" class="fragment"></span><a href="#%E3%81%AA%E3%81%AB%E3%81%9D%E3%82%8C"><i class="fa fa-link"></i></a>なにそれ？</h3>
+
+<p>Obj-Cには、ARC(Automatic Reference Counting)というメモリ管理方法があります。<br>
+これを利用することで、コード内にいちいち[hoge autorelease]等を書かなくて良くなります。<br>
+参考: <a href="http://cx5software.sakura.ne.jp/blog/2011/12/31/objective-c-memory_management_by_arc/" rel="nofollow noopener" target="_blank">Objective-C ARCによるメモリ管理</a></p>
+
+<p>しかし、AssetStoreに売っているAssetを見ても、あっち見てもこっち見てもautoreleaseだらけです。<br>
+手動でメモリ管理とかめちゃくちゃ怖いのですが、これはUnityが出力するObj-Cのコードが、実はARCに対応していないためです。</p>
+
+<h3>
+<span id="解決策" class="fragment"></span><a href="#%E8%A7%A3%E6%B1%BA%E7%AD%96"><i class="fa fa-link"></i></a>解決策</h3>
+
+<p>ググってみると、どうやらARCはファイル単位で有効/無効が設定できるようです。<br>
+参考: <a href="http://program.station.ez-net.jp/special/objective-c/llvm/arc/enable-file.asp" rel="nofollow noopener" target="_blank">ファイル毎に ARC の有効・無効を設定する</a></p>
+
+<p>ということで、（実は今回は必要ないのですが）objc_arcフラグが付いていないとビルドが通らないNativePluginを書いてみました。<br>
+<a href="https://github.com/kyubuns/UniClipboard/blob/master/Assets/UniClipboard/Editor/Plugins/iOS/uniclipboard.mm#L1" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/UniClipboard/blob/master/Assets/UniClipboard/Editor/Plugins/iOS/uniclipboard.mm#L1</a></p>
+
+<p>そして、先ほど紹介したXCodeEditor-for-Unityを利用して、特定ファイルだけにARC有効フラグをつけています。<br>
+<a href="https://github.com/kyubuns/UniClipboard/blob/master/Assets/UniClipboard/Editor/XCodePostProcess.cs" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/UniClipboard/blob/master/Assets/UniClipboard/Editor/XCodePostProcess.cs</a></p>
+
+<h2>
+<span id="補足" class="fragment"></span><a href="#%E8%A3%9C%E8%B6%B3"><i class="fa fa-link"></i></a>補足</h2>
+
+<p>ここまで大絶賛してきたXCodeEditor-for-Unityですが、1つだけUnityPro使用時にだけ踏み得るバグが存在するのでissueに回避策と併せて投稿してあります。<br>
+<a href="https://github.com/dcariola/XCodeEditor-for-Unity/issues/10" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/dcariola/XCodeEditor-for-Unity/issues/10</a></p>
+
+<p>あと、obj-Cは今日生まれて初めて書いたので、何かあったらご指摘ください。</p>
+
+<h2>
+<span id="併せて見たいシリーズ" class="fragment"></span><a href="#%E4%BD%B5%E3%81%9B%E3%81%A6%E8%A6%8B%E3%81%9F%E3%81%84%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA"><i class="fa fa-link"></i></a>併せて見たいシリーズ</h2>
+
+<ul>
+<li><a href="http://qiita.com/kyubuns/items/5741e5281f4bb8de656c" id="reference-a1bb0bf571ea0b5e4a11">Prefab in Prefab</a></li>
+<li><a href="http://qiita.com/kyubuns/items/b2dcbf9c58c5b28e0ff4" id="reference-0e7a976646cc392a2780">Unity CSV Viewer</a></li>
+</ul>

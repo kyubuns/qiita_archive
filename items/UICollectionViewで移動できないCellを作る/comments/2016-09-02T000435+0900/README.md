@@ -1,0 +1,2 @@
+ありがとうございます！！
+targetIndexPathForMoveFromItemAtIndexPathを利用したら想像通りの挙動になりました！

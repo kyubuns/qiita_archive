@@ -1,0 +1,56 @@
+
+<h1>
+<span id="はじめに" class="fragment"></span><a href="#%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB"><i class="fa fa-link"></i></a>はじめに</h1>
+
+<ul>
+<li>開発版を社内/身内にテストしてもらっている時に使える手法です。</li>
+<li>本番環境で使いたい場合は、もっとまともなものを入れましょう。</li>
+</ul>
+
+<h1>
+<span id="実機でもログが見たい" class="fragment"></span><a href="#%E5%AE%9F%E6%A9%9F%E3%81%A7%E3%82%82%E3%83%AD%E3%82%B0%E3%81%8C%E8%A6%8B%E3%81%9F%E3%81%84"><i class="fa fa-link"></i></a>実機でもログが見たい！</h1>
+
+<p>実機で動作中のゲーム、「○○のボタン押したらゲームが止まったんだけど」って言われた時どうしますか？<br>
+パターンごとに、サクッとログを取れる手段をまとめました。<br>
+USBで繋いでadb繋いで・・・とか、XCodeに繋いで・・・とかやる時代は終わりました。嘘です盛りました、たまに使います。</p>
+
+<h2>
+<span id="level1--借りて良い端末--開発pcと同じwifiに繋がっている場合" class="fragment"></span><a href="#level1--%E5%80%9F%E3%82%8A%E3%81%A6%E8%89%AF%E3%81%84%E7%AB%AF%E6%9C%AB--%E9%96%8B%E7%99%BApc%E3%81%A8%E5%90%8C%E3%81%98wifi%E3%81%AB%E7%B9%8B%E3%81%8C%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E5%A0%B4%E5%90%88"><i class="fa fa-link"></i></a>Level1 : 借りて良い端末 &amp; 開発PCと同じwifiに繋がっている場合</h2>
+
+<p>社内端末など、自分が借りて操作して良い端末かつ、同じwifiに繋がっているDEVELOPMENT_BUILDの時(正しくはAutoconnect Profilerが有効になっている時)に使える技です。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F3f3e7fd6-cd61-7c93-37a1-93d92b9e2e86.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=cb671cecaed901c4fcf8f63e59080e70" target="_blank" rel="nofollow noopener"><img width="561" alt="Monosnap 2018-12-30 22-33-49.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F3f3e7fd6-cd61-7c93-37a1-93d92b9e2e86.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=cb671cecaed901c4fcf8f63e59080e70" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/3f3e7fd6-cd61-7c93-37a1-93d92b9e2e86.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F3f3e7fd6-cd61-7c93-37a1-93d92b9e2e86.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=03c2bf8d198e82d19a884cd2b61ae034 1x" loading="lazy"></a><br>
+ConsoleWindowから同じwifiに繋がっている実機のログを見れます。<br>
+めちゃくちゃ便利。</p>
+
+<h2>
+<span id="level2--借りて良い端末の場合" class="fragment"></span><a href="#level2--%E5%80%9F%E3%82%8A%E3%81%A6%E8%89%AF%E3%81%84%E7%AB%AF%E6%9C%AB%E3%81%AE%E5%A0%B4%E5%90%88"><i class="fa fa-link"></i></a>Level2 : 借りて良い端末の場合</h2>
+
+<p><a href="https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688" rel="nofollow noopener" target="_blank">SRDebugger</a>ってAssetがめちゃくちゃ便利で、実機上でコンソールログが見れます。<br>
+画面の左上をトリプルタップ、という特殊操作をしないと開かないのでデバッグビルド感が出にくいのもオススメポイントです。<br>
+類似Assetをいろいろ試しましたが、コイツの安定感とデバッグ用のボタンを簡単に作れる機能に惹かれて愛用してます。<br>
+SafeArea対応されてないのが玉に瑕。</p>
+
+<h2>
+<span id="level3--借りれない端末-or-相手が遠くにいる場合" class="fragment"></span><a href="#level3--%E5%80%9F%E3%82%8A%E3%82%8C%E3%81%AA%E3%81%84%E7%AB%AF%E6%9C%AB-or-%E7%9B%B8%E6%89%8B%E3%81%8C%E9%81%A0%E3%81%8F%E3%81%AB%E3%81%84%E3%82%8B%E5%A0%B4%E5%90%88"><i class="fa fa-link"></i></a>Level3 : 借りれない端末 or 相手が遠くにいる場合</h2>
+
+<p>これよくあるんですよね、家で試してたらエラーでたとか。<br>
+相手がエンジニアならまだしも、そうでない場合はエラーログをどうにかして送って、というのもなかなか酷です。<br>
+そんなときに便利なAssetがこちらの<a href="https://github.com/kyubuns/UniMail" rel="nofollow noopener" target="_blank">UniMail</a>。<br>
+UniMailって名前なのですが、よく見るとUniBugReporterってパッケージも一緒に配布されています。<br>
+これを使うことで「エラーログが出た時に自動的にログ情報が入ったメーラーを立ち上げる」ということが出来ます。<br>
+API叩いて自動的にslackに流す、とかなんでも出来ます。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F2704804b-73bc-b3bd-d588-7dd5e9d0d3e9.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=f7ba5044c17c1b54ad8b030b88622969" target="_blank" rel="nofollow noopener"><img width="375" alt="68747470733a2f2f71696974612d696d6167652d73746f72652e73332e616d617a6f6e6177732e636f6d2f302f363435392f61653032326536342d343937662d666662312d636462342d3833646566306339613033622e706e67.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F2704804b-73bc-b3bd-d588-7dd5e9d0d3e9.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=f7ba5044c17c1b54ad8b030b88622969" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/2704804b-73bc-b3bd-d588-7dd5e9d0d3e9.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F2704804b-73bc-b3bd-d588-7dd5e9d0d3e9.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=a5c40683e348d7a59d29c445de0a7015 1x" loading="lazy"></a></p>
+
+<h1>
+<span id="unibugreporter--unimailの使い方" class="fragment"></span><a href="#unibugreporter--unimail%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9"><i class="fa fa-link"></i></a>UniBugReporter + UniMailの使い方</h1>
+
+<p><a href="https://github.com/kyubuns/UniMail/releases" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/UniMail/releases</a><br>
+ここからパッケージを両方インストールして、UniBugReporter.csをどこかのGameObjectに貼り付けておいてください。</p>
+
+<p>エラーが出た時にメーラーを立ち上げるサンプルが入っています。<br>
+これを参考に独自のIReporterを実装してください。<br>
+<a href="https://github.com/kyubuns/UniMail/blob/master/Assets/Plugins/UniBugReporter/MailReporter.cs" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/UniMail/blob/master/Assets/Plugins/UniBugReporter/MailReporter.cs</a></p>
+
+<p>仕上げに、UniBugReporterの中でReporterを初期化してる箇所があるのでそこを自作のReporterに差し替えれば準備完了です。<br>
+<a href="https://github.com/kyubuns/UniMail/blob/master/Assets/Plugins/UniBugReporter/UniBugReporter.cs#L16" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/UniMail/blob/master/Assets/Plugins/UniBugReporter/UniBugReporter.cs#L16</a></p>

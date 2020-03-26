@@ -1,0 +1,21 @@
+<p>anchan828さんのsocial-connectorをforkしたものです。<br>
+<a href="https://github.com/kyubuns/social-connector" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/social-connector</a></p>
+
+<p>iOS限定の対応になるので、PR上げるのはAndroid対応してからにします。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">Sample.cs</span></div>
+<div class="highlight"><pre><span class="n">SocialConnector</span><span class="p">.</span><span class="n">Callback</span> <span class="p">+=</span> <span class="p">(</span><span class="n">completed</span><span class="p">,</span> <span class="n">activityType</span><span class="p">,</span> <span class="n">stringActivityType</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="n">Debug</span><span class="p">.</span><span class="nf">LogFormat</span><span class="p">(</span><span class="s">"SocialConnector.Callback activityType={0}, completed={1}"</span><span class="p">,</span> <span class="n">activityType</span><span class="p">,</span> <span class="n">completed</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+
+<p><a href="https://github.com/kyubuns/social-connector/blob/master/Assets/SocialConnector/Sample/Sample.cs#L15" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/social-connector/blob/master/Assets/SocialConnector/Sample/Sample.cs#L15</a></p>
+
+<p>こんなかんじに、シェアしたかどうかを取得できます。<br>
+ActivityTypeは、アプリが拡張して増えていく分に関してはどうしようもないのでstringで返してます。<br>
+MailとかTwitterとかはenumで帰ってきます。</p>
+
+<p>ちなみに、「シェアする」って押したかどうか、がとれるだけで、プラットフォーム側でのエラーは検知できないです。<br>
+例えば、twitterで同じ文言を2回ツイートしようとしてエラーになって弾かれる、とか。</p>

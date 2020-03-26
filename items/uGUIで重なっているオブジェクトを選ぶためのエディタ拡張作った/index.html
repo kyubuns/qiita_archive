@@ -1,0 +1,104 @@
+<p>Greenという半透明のオブジェクトが最も手前にあり、WhiteとRedに重なっている状態。<br>
+SceneViewでRedを選択しようとしても、最も手前にあるGreenが選ばれてしまう。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F43da0aed-34fa-f9e4-2042-5ec5ed509c48.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=20e57cc712dd8362a508d1ec861a4003" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F43da0aed-34fa-f9e4-2042-5ec5ed509c48.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=20e57cc712dd8362a508d1ec861a4003" alt="4.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/43da0aed-34fa-f9e4-2042-5ec5ed509c48.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F43da0aed-34fa-f9e4-2042-5ec5ed509c48.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=18b724c25abdf0d949fee4a60eb82c3a 1x" loading="lazy"></a></p>
+
+<p>そこで、この拡張ウィンドウを表示しておくと、<br>
+SceneView上でタップした位置にあるゲームオブジェクトを拡張ウィンドウに全て表示。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fcf194543-441b-0ddd-16e1-e009b7d0b272.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=f1ff177965eb99ce3ebf3eb3feb51195" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fcf194543-441b-0ddd-16e1-e009b7d0b272.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=f1ff177965eb99ce3ebf3eb3feb51195" alt="2.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/cf194543-441b-0ddd-16e1-e009b7d0b272.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fcf194543-441b-0ddd-16e1-e009b7d0b272.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=ee28cdc8dfbcf5424923c9896d68df71 1x" loading="lazy"></a></p>
+
+<p>ボタンをクリックすると、対応したオブジェクトが選択状態になる。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F48492576-d9ae-2cb2-af1b-af9ada1b8101.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=25f3ca012440949381ebd08290245bbb" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F48492576-d9ae-2cb2-af1b-af9ada1b8101.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=25f3ca012440949381ebd08290245bbb" alt="3.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/48492576-d9ae-2cb2-af1b-af9ada1b8101.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F48492576-d9ae-2cb2-af1b-af9ada1b8101.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=418327411d0dca6dbe074daa64509c4e 1x" loading="lazy"></a></p>
+
+<p>それだけ。</p>
+
+<div class="code-frame" data-lang="csharp">
+<div class="code-lang"><span class="bold">UguiSelector.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEditor</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine.UI</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine.EventSystems</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">UGUISelector</span> <span class="p">:</span> <span class="n">EditorWindow</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="kt">bool</span> <span class="n">initialized</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+    <span class="k">static</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RaycastResult</span><span class="p">&gt;</span> <span class="n">raycastResults</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">RayCasting</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">private</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">[</span><span class="nf">MenuItem</span><span class="p">(</span><span class="s">"Window/uGUI Selector"</span><span class="p">)]</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Open</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">GetWindow</span><span class="p">&lt;</span><span class="n">UGUISelector</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">OnInspectorUpdate</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(!</span><span class="n">initialized</span> <span class="p">&amp;&amp;</span> <span class="n">EditorApplication</span><span class="p">.</span><span class="n">isPlaying</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">SceneView</span><span class="p">.</span><span class="n">onSceneGUIDelegate</span> <span class="p">!=</span> <span class="n">OnSceneGUI</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">SceneView</span><span class="p">.</span><span class="n">onSceneGUIDelegate</span> <span class="p">+=</span> <span class="n">OnSceneGUI</span><span class="p">;</span>
+                <span class="n">EditorApplication</span><span class="p">.</span><span class="n">playmodeStateChanged</span> <span class="p">+=</span> <span class="n">OnPlayModeChanged</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">initialized</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">OnGUI</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(!</span><span class="n">EditorApplication</span><span class="p">.</span><span class="n">isPlaying</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">GUILayout</span><span class="p">.</span><span class="nf">Label</span><span class="p">(</span><span class="s">"Play mode only"</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">raycastResults</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+        <span class="k">foreach</span><span class="p">(</span><span class="kt">var</span> <span class="n">obj</span> <span class="k">in</span> <span class="n">raycastResults</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">gameObject</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+            <span class="kt">var</span> <span class="n">path</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="s">"."</span><span class="p">,</span> <span class="n">obj</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="nf">GetParentNames</span><span class="p">().</span><span class="nf">Reverse</span><span class="p">().</span><span class="nf">Take</span><span class="p">(</span><span class="m">3</span><span class="p">).</span><span class="nf">Reverse</span><span class="p">().</span><span class="nf">ToArray</span><span class="p">());</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">GUILayout</span><span class="p">.</span><span class="nf">Button</span><span class="p">(</span><span class="n">path</span><span class="p">)){</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">gameObject</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+                <span class="n">Selection</span><span class="p">.</span><span class="n">activeGameObject</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">gameObject</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">OnSceneGUI</span><span class="p">(</span><span class="n">SceneView</span> <span class="n">sceneView</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(!</span><span class="n">EditorApplication</span><span class="p">.</span><span class="n">isPlaying</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Event</span><span class="p">.</span><span class="n">current</span><span class="p">.</span><span class="n">type</span> <span class="p">==</span> <span class="n">EventType</span><span class="p">.</span><span class="n">MouseDown</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Vector2</span> <span class="n">mousePos</span> <span class="p">=</span> <span class="n">Event</span><span class="p">.</span><span class="n">current</span><span class="p">.</span><span class="n">mousePosition</span><span class="p">;</span>
+            <span class="n">mousePos</span><span class="p">.</span><span class="n">y</span> <span class="p">=</span> <span class="n">sceneView</span><span class="p">.</span><span class="n">camera</span><span class="p">.</span><span class="n">pixelHeight</span> <span class="p">-</span> <span class="n">mousePos</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+            <span class="n">Vector3</span> <span class="n">position</span> <span class="p">=</span> <span class="n">sceneView</span><span class="p">.</span><span class="n">camera</span><span class="p">.</span><span class="nf">ScreenPointToRay</span><span class="p">(</span><span class="n">mousePos</span><span class="p">).</span><span class="n">origin</span><span class="p">;</span>
+
+            <span class="kt">var</span> <span class="n">pointer</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">PointerEventData</span><span class="p">(</span><span class="n">EventSystem</span><span class="p">.</span><span class="n">current</span><span class="p">);</span>
+            <span class="n">pointer</span><span class="p">.</span><span class="n">position</span> <span class="p">=</span> <span class="n">position</span><span class="p">;</span>
+
+            <span class="n">raycastResults</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RaycastResult</span><span class="p">&gt;();</span>
+            <span class="n">EventSystem</span><span class="p">.</span><span class="n">current</span><span class="p">.</span><span class="nf">RaycastAll</span><span class="p">(</span><span class="n">pointer</span><span class="p">,</span> <span class="n">raycastResults</span><span class="p">);</span>
+
+            <span class="nf">Repaint</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">OnPlayModeChanged</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">raycastResults</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RaycastResult</span><span class="p">&gt;();</span>
+        <span class="nf">Repaint</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">OnDestroy</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">SceneView</span><span class="p">.</span><span class="n">onSceneGUIDelegate</span> <span class="p">-=</span> <span class="n">OnSceneGUI</span><span class="p">;</span>
+        <span class="n">EditorApplication</span><span class="p">.</span><span class="n">playmodeStateChanged</span> <span class="p">-=</span> <span class="n">OnPlayModeChanged</span><span class="p">;</span>
+        <span class="n">initialized</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>

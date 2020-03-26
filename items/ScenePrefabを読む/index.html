@@ -1,0 +1,680 @@
+<p>Nested Prefabの公式対応を待ち続けているkyubunsです。<br>
+Unity5.xではscene/prefabファイルの形式が変わって、衝突を起こしにくいフォーマットになるそうですね！！<br>
+超期待してます！！<br>
+つまり、最初に言いたいことは、<strong>この記事を真面目に読んでも、5.xでフォーマット変わっちゃうし、そんな得しないかもしれません</strong></p>
+
+<p>が、まだ時代は4.x。↑の話も5.0では入らない予定っぽいので、暫くは今のフォーマットと仲良くしていかないといけません。<br>
+なので、ここでは、Scene/Prefabファイルをテキストエディタで編集できるようになるための情報をまとめておきたいと思います。</p>
+
+<h1>
+<span id="この記事を読むと" class="fragment"></span><a href="#%E3%81%93%E3%81%AE%E8%A8%98%E4%BA%8B%E3%82%92%E8%AA%AD%E3%82%80%E3%81%A8"><i class="fa fa-link"></i></a>この記事を読むと</h1>
+
+<p>prefabファイルのコンフリクトが解決できるようになる・・・かもしれませんが、<br>
+たいていぶつかるときは大事故なので、あまり役には立ちません。</p>
+
+<h1>
+<span id="関連記事" class="fragment"></span><a href="#%E9%96%A2%E9%80%A3%E8%A8%98%E4%BA%8B"><i class="fa fa-link"></i></a>関連記事</h1>
+
+<p>ちょうど1週間前のwordijpさんの<a href="http://qiita.com/wordijp/items/3e4b87756fd11c893a9d" id="reference-7802e2269760fc4093e2">Unityの.metaファイルに書かれているguidについて</a>を読むと理解が深まると思います！！</p>
+
+<h1>
+<span id="前準備" class="fragment"></span><a href="#%E5%89%8D%E6%BA%96%E5%82%99"><i class="fa fa-link"></i></a>前準備</h1>
+
+<p>Editor SettingsのAsset SerializationをForce Textに変更しておいてください。</p>
+
+<h1>
+<span id="gameobject1つの簡単なprefab" class="fragment"></span><a href="#gameobject1%E3%81%A4%E3%81%AE%E7%B0%A1%E5%8D%98%E3%81%AAprefab"><i class="fa fa-link"></i></a>GameObject1つの簡単なPrefab</h1>
+
+<p>以下のようなGameObject1つを持ったPrefabを作ります。<br>
+HogeFugaというコンポーネントは自分で作ったSerializeFieldを2つ持ってるだけのスクリプトです。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F31e4d341-f8d8-6175-82db-b117278e139d.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=3b537d362a3e41cd3a0c2205f445ccb8" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F31e4d341-f8d8-6175-82db-b117278e139d.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=3b537d362a3e41cd3a0c2205f445ccb8" alt="Test_unity_-_unicalendar_-_PC__Mac___Linux_Standalone.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/31e4d341-f8d8-6175-82db-b117278e139d.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F31e4d341-f8d8-6175-82db-b117278e139d.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=b50313af1a630a99457d079dbd203cde 1x" loading="lazy"></a></p>
+
+<p>さっそくテキストエディタで開いて見ましょう。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="p">%</span><span class="n">YAML</span> <span class="m">1.1</span>
+<span class="p">%</span><span class="n">TAG</span> <span class="p">!</span><span class="n">u</span><span class="p">!</span> <span class="n">tag</span><span class="p">:</span><span class="n">unity3d</span><span class="p">.</span><span class="n">com</span><span class="p">,</span><span class="m">2011</span><span class="p">:</span>
+<span class="p">---</span> <span class="p">!</span><span class="n">u</span><span class="p">!</span><span class="m">1</span> <span class="p">&amp;</span><span class="m">100000</span>
+<span class="n">GameObject</span><span class="p">:</span>
+  <span class="n">m_ObjectHideFlags</span><span class="p">:</span> <span class="m">0</span>
+  <span class="n">m_PrefabParentObject</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+  <span class="n">m_PrefabInternal</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">100100000</span><span class="p">}</span>
+  <span class="n">serializedVersion</span><span class="p">:</span> <span class="m">4</span>
+  <span class="n">m_Component</span><span class="p">:</span>
+  <span class="p">-</span> <span class="m">4</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">400000</span><span class="p">}</span>
+  <span class="p">-</span> <span class="m">65</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">6500000</span><span class="p">}</span>
+  <span class="p">-</span> <span class="m">114</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">11400000</span><span class="p">}</span>
+  <span class="n">m_Layer</span><span class="p">:</span> <span class="m">0</span>
+  <span class="n">m_Name</span><span class="p">:</span> <span class="n">Test</span>
+  <span class="n">m_TagString</span><span class="p">:</span> <span class="n">Untagged</span>
+  <span class="n">m_Icon</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+  <span class="n">m_NavMeshLayer</span><span class="p">:</span> <span class="m">0</span>
+  <span class="n">m_StaticEditorFlags</span><span class="p">:</span> <span class="m">0</span>
+  <span class="n">m_IsActive</span><span class="p">:</span> <span class="m">1</span>
+<span class="p">---</span> <span class="p">!</span><span class="n">u</span><span class="p">!</span><span class="m">4</span> <span class="p">&amp;</span><span class="m">400000</span>
+<span class="n">Transform</span><span class="p">:</span>
+  <span class="n">m_ObjectHideFlags</span><span class="p">:</span> <span class="m">1</span>
+  <span class="n">m_PrefabParentObject</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+  <span class="n">m_PrefabInternal</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">100100000</span><span class="p">}</span>
+  <span class="n">m_GameObject</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">100000</span><span class="p">}</span>
+  <span class="n">m_LocalRotation</span><span class="p">:</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="m">0</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="m">0</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="m">0</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="m">1</span><span class="p">}</span>
+  <span class="n">m_LocalPosition</span><span class="p">:</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="m">0</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="m">0</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+  <span class="n">m_LocalScale</span><span class="p">:</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="m">1</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="m">1</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="m">1</span><span class="p">}</span>
+  <span class="n">m_Children</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="n">m_Father</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+  <span class="n">m_RootOrder</span><span class="p">:</span> <span class="m">0</span>
+<span class="p">---</span> <span class="p">!</span><span class="n">u</span><span class="p">!</span><span class="m">65</span> <span class="p">&amp;</span><span class="m">6500000</span>
+<span class="n">BoxCollider</span><span class="p">:</span>
+  <span class="n">m_ObjectHideFlags</span><span class="p">:</span> <span class="m">1</span>
+  <span class="n">m_PrefabParentObject</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+  <span class="n">m_PrefabInternal</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">100100000</span><span class="p">}</span>
+  <span class="n">m_GameObject</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">100000</span><span class="p">}</span>
+  <span class="n">m_Material</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+  <span class="n">m_IsTrigger</span><span class="p">:</span> <span class="m">0</span>
+  <span class="n">m_Enabled</span><span class="p">:</span> <span class="m">1</span>
+  <span class="n">serializedVersion</span><span class="p">:</span> <span class="m">2</span>
+  <span class="n">m_Size</span><span class="p">:</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="m">100</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="m">100</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="m">1</span><span class="p">}</span>
+  <span class="n">m_Center</span><span class="p">:</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="m">0</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="m">0</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+<span class="p">---</span> <span class="p">!</span><span class="n">u</span><span class="p">!</span><span class="m">114</span> <span class="p">&amp;</span><span class="m">11400000</span>
+<span class="n">MonoBehaviour</span><span class="p">:</span>
+  <span class="n">m_ObjectHideFlags</span><span class="p">:</span> <span class="m">1</span>
+  <span class="n">m_PrefabParentObject</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+  <span class="n">m_PrefabInternal</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">100100000</span><span class="p">}</span>
+  <span class="n">m_GameObject</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">100000</span><span class="p">}</span>
+  <span class="n">m_Enabled</span><span class="p">:</span> <span class="m">1</span>
+  <span class="n">m_EditorHideFlags</span><span class="p">:</span> <span class="m">0</span>
+  <span class="n">m_Script</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">11500000</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="n">ba67021371bc7479087065875833f130</span><span class="p">,</span> <span class="n">type</span><span class="p">:</span> <span class="m">3</span><span class="p">}</span>
+  <span class="n">m_Name</span><span class="p">:</span> 
+  <span class="n">m_EditorClassIdentifier</span><span class="p">:</span> 
+  <span class="n">testValue1</span><span class="p">:</span> <span class="m">1</span>
+  <span class="n">testValue2</span><span class="p">:</span> <span class="m">2</span>
+<span class="p">---</span> <span class="p">!</span><span class="n">u</span><span class="p">!</span><span class="m">1001</span> <span class="p">&amp;</span><span class="m">100100000</span>
+<span class="n">Prefab</span><span class="p">:</span>
+  <span class="n">m_ObjectHideFlags</span><span class="p">:</span> <span class="m">1</span>
+  <span class="n">serializedVersion</span><span class="p">:</span> <span class="m">2</span>
+  <span class="n">m_Modification</span><span class="p">:</span>
+    <span class="n">m_TransformParent</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+    <span class="n">m_Modifications</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="n">m_RemovedComponents</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="n">m_ParentPrefab</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">0</span><span class="p">}</span>
+  <span class="n">m_RootGameObject</span><span class="p">:</span> <span class="p">{</span><span class="n">fileID</span><span class="p">:</span> <span class="m">100000</span><span class="p">}</span>
+  <span class="n">m_IsPrefabParent</span><span class="p">:</span> <span class="m">1</span>
+  <span class="n">m_IsExploded</span><span class="p">:</span> <span class="m">1</span>
+</pre></div></div>
+
+<p>上から順々に見ていきます。</p>
+
+<h2>
+<span id="ヘッダー" class="fragment"></span><a href="#%E3%83%98%E3%83%83%E3%83%80%E3%83%BC"><i class="fa fa-link"></i></a>ヘッダー</h2>
+
+<p>特に何も言うことがない、ただのヘッダーです。<br>
+うっかりテキストで編集してると消してしまって読み込めないよ！って言われることがあるので、<br>
+頭の片隅には置いておきましょう。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+</pre></div></div>
+
+<h2>
+<span id="rootのgameobject" class="fragment"></span><a href="#root%E3%81%AEgameobject"><i class="fa fa-link"></i></a>RootのGameObject</h2>
+
+<p>ここからが本番です。<br>
+これ1つ読めるようになれば、あとはちょろいもんです。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>--- !u!1 &amp;100000
+</pre></div></div>
+
+<p>まずはこの部分。<br>
+あ、言い忘れてました。Prefab読むときは <a href="http://docs.unity3d.com/Manual/ClassIDReference.html" rel="nofollow noopener" target="_blank">クラスIDリファレンス</a> を開いておきましょう。</p>
+
+<p>!u!の後ろの1は、クラスIDを示しています。<br>
+この場合は「1」なので、GameObjectです。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Ff0ae0745-8d6a-d8e5-be5b-153c2fe52a8b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7c332a3a50970c46d11bb6a8107d9de4" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Ff0ae0745-8d6a-d8e5-be5b-153c2fe52a8b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7c332a3a50970c46d11bb6a8107d9de4" alt="Unity_-_Manual__YAML_Class_ID_Reference.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/f0ae0745-8d6a-d8e5-be5b-153c2fe52a8b.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Ff0ae0745-8d6a-d8e5-be5b-153c2fe52a8b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=727a9573cd044311868e6d40bb16cac1 1x" loading="lazy"></a> ← クラスIDリファレンスより。</p>
+
+<p>その後ろの&amp;100000はfileIDを示しています。<br>
+fileIDは、ファイル内(Prefab内 or Scene内)でユニークなIDです。<br>
+Prefabの場合、必ずRootのObjectが100000番になっている気がします。</p>
+
+<p>さてさて、続きを見ていきましょう。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400000}
+  - 65: {fileID: 6500000}
+  - 114: {fileID: 11400000}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+</pre></div></div>
+
+<p>FileID:100000がGameObjectであること、そして、そのGameObjectが持っているメンバ変数の値が乗ってます。<br>
+m_Name: Testとなっていることから、先ほど作った↓このオブジェクトだということが分かります。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Feaf43686-750b-a8ec-e587-54425df7aee3.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=58c67dddc73c6f26392e5ecef90792a1" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Feaf43686-750b-a8ec-e587-54425df7aee3.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=58c67dddc73c6f26392e5ecef90792a1" alt="新規作成_-_Qiita.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/eaf43686-750b-a8ec-e587-54425df7aee3.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Feaf43686-750b-a8ec-e587-54425df7aee3.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=192b93265271a3a5516a18475a974eca 1x" loading="lazy"></a></p>
+
+<h2>
+<span id="参照の読み方" class="fragment"></span><a href="#%E5%8F%82%E7%85%A7%E3%81%AE%E8%AA%AD%E3%81%BF%E6%96%B9"><i class="fa fa-link"></i></a>参照の読み方</h2>
+
+<p>まず、参照の見方を先に説明しておきます。<br>
+{fileID: 12345} -&gt; fileID:12345を参照している。<br>
+{fileID: 12345, guid: abcde, type: 2} -&gt; guidがabcdeというファイルの中のfileID:12345を参照している。<br>
+FileIDは、ファイル内でユニークなだけで、ファイルをまたぐと被る事が出てくるために、他のファイルのFileIDを参照している箇所では必ずguidがセットでついてます。<br>
+type:2は謎です。<br>
+ちなみに、FileID: 0はnullみたいなものです。</p>
+
+<h2>
+<span id="コンポーネント" class="fragment"></span><a href="#%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88"><i class="fa fa-link"></i></a>コンポーネント</h2>
+
+<p>大切なところから見ていきましょう。<br>
+このGameObjectが持っているコンポーネントです。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>m_Component:
+  - 4: {fileID: 400000}
+  - 65: {fileID: 6500000}
+  - 114: {fileID: 11400000}
+</pre></div></div>
+
+<p>4, 65, 114は、全てClassIDです。<br>
+それぞれ、Transform, BoxCollider, MonoBehaviour。<br>
+先ほど自分で作ったGameObjectにある要素そのままですね。</p>
+
+<p>では、この参照先を見に行ってみましょう！</p>
+
+<h2>
+<span id="transform" class="fragment"></span><a href="#transform"><i class="fa fa-link"></i></a>Transform</h2>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>  - 4: {fileID: 400000}
+</pre></div></div>
+
+<p>全てのGameObjectはTransformに通ず。<br>
+prefabファイル内を400000で検索をかけてみると</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>--- !u!4 &amp;400000
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+</pre></div></div>
+
+<p>classIDが4なのでTransformで間違いないですね。</p>
+
+<p>m_GameObject: {fileID: 100000}<br>
+ここは、自分が張り付いているGameObjectのfileIDです。<br>
+FileID: 100000はついさっきまで見ていたやつです。<br>
+Unity4.xあたりから、m_RootOrderというのが追加されました。<br>
+Rootからの深さが保存されてるみたいです。</p>
+
+<h2>
+<span id="monobehaviour" class="fragment"></span><a href="#monobehaviour"><i class="fa fa-link"></i></a>MonoBehaviour</h2>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>- 114: {fileID: 11400000}
+</pre></div></div>
+
+<p>次に、ここを見に行ってみます。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>--- !u!114 &amp;11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba67021371bc7479087065875833f130, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testValue1: 1
+  testValue2: 2
+</pre></div></div>
+
+<p>m_Prefab**はいったん気にしないでください。<br>
+わかりやすいのは、SerializeFieldになっているtestValue1, testValue2、そのままテキストにでてますね。<br>
+なので、テキストエディタでここの値をtestValue1: 12345とかにするとUnityEditor上でもちゃんと変わります。<br>
+これを覚えておけば、sedで一気に値を変更する、なんてこともできますね。<br>
+やりませんけどね。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F21f0223f-9306-1c3d-98a5-0b7fe3915344.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=b18fcfbc4355ccc81045218ced0a9da7" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F21f0223f-9306-1c3d-98a5-0b7fe3915344.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=b18fcfbc4355ccc81045218ced0a9da7" alt="新規作成_-_Qiita.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/21f0223f-9306-1c3d-98a5-0b7fe3915344.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F21f0223f-9306-1c3d-98a5-0b7fe3915344.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=c0990eed3a4ffed9cc6491ca82328b82 1x" loading="lazy"></a></p>
+
+<p>後ここ。<br>
+m_Script: {fileID: 11500000, guid: ba67021371bc7479087065875833f130, type: 3}<br>
+このguidは、HogeFuga.cs.metaのguidに一致しています。<br>
+ここに書いてあるfileIDと、typeは、謎です。</p>
+
+<h2>
+<span id="その他" class="fragment"></span><a href="#%E3%81%9D%E3%81%AE%E4%BB%96"><i class="fa fa-link"></i></a>その他</h2>
+
+<p>m_Layerとか、m_TagStringとか自明な物は置いといて、あまり解説がされてるのを見たことない箇所を詳しく説明！<br>
+横道にそれる感じになるので読み飛ばしてもOKです！</p>
+
+<h3>
+<span id="m_prefabparentobject--m_prefabinternal" class="fragment"></span><a href="#m_prefabparentobject--m_prefabinternal"><i class="fa fa-link"></i></a>m_PrefabParentObject / m_PrefabInternal</h3>
+
+<p>m_PrefabParentObjectは、SceneにPrefabを置いたときに、どのPrefabファイルが置かれたか、という情報が保存されています。<br>
+例えば、Test.prefab.metaが</p>
+
+<div class="code-frame" data-lang="unity3d-asset">
+<div class="code-lang"><span class="bold">Test.prefab.meta</span></div>
+<div class="highlight"><pre>fileFormatVersion: 2
+guid: cd809162f4ad143a4a2021da8cf3b7ee
+NativeFormatImporter:
+  userData: 
+</pre></div>
+</div>
+
+<p>このようになっていたとして、<br>
+Test.prefabをSceneに設置した場合、そのSceneファイルには以下のようなObjectが増えます。<br>
+(本当はPrefabが持っているObject分増えるけれど、1つだけ抜き出し)</p>
+
+<div class="code-frame" data-lang="text">
+<div class="code-lang"><span class="bold">Test.scene</span></div>
+<div class="highlight"><pre>--- !u!1 &amp;1523426135
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+  m_PrefabInternal: {fileID: 1234644206}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1523426138}
+  - 65: {fileID: 1523426137}
+  - 114: {fileID: 1523426136}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+</pre></div>
+</div>
+
+<p>ここのm_PrefabParentObjectを見ると、先ほどのTest.prefab.metaのguidが一致していて、参照関係にあることが分かります。<br>
+次に気になるのは、m_PrefabInternalです。<br>
+このFileIDをSceneファイルの中から検索してみます</p>
+
+<div class="code-frame" data-lang="text">
+<div class="code-lang"><span class="bold">Test.scene</span></div>
+<div class="highlight"><pre>--- !u!1001 &amp;1234644206
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: cd809162f4ad143a4a2021da8cf3b7ee, type: 2}
+  m_RootGameObject: {fileID: 1523426135}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
+</pre></div>
+</div>
+
+<p>見るところがいっぱいありますが1つずつ。<br>
+まず、classIDが1001番。リファレンスで検索すると「Prefab」と書いてあります。<br>
+Prefabの実体(GameObject)という意味では無く、Prefabに関する情報を保持しておく箇所という感じ。<br>
+次に、m_RootGameObject: {fileID: 1523426135}、このfileIDは、ついさっき出てきた実体のGameObjectのFileIDです。（この記事内をこのIDで検索しても見つかります。）<br>
+m_Modificationは名前通り「Prefabを設置した後に、変更が加えられた値」の情報です。</p>
+
+<h1>
+<span id="階層構造を持ったprefab" class="fragment"></span><a href="#%E9%9A%8E%E5%B1%A4%E6%A7%8B%E9%80%A0%E3%82%92%E6%8C%81%E3%81%A3%E3%81%9Fprefab"><i class="fa fa-link"></i></a>階層構造を持ったPrefab</h1>
+
+<p>ここまで大丈夫でしょうか？<br>
+何も考えずに目に付いた物から説明しているので、理解しにくい構成になってると思いますが、<br>
+自分も日本語書くのがそろそろ辛くなってきたので書き直すことはたぶんないでしょう。</p>
+
+<p>次に階層構造を持ったPrefabにいってみましょう。</p>
+
+<p>こんな簡単なGameObjectを3つ連ねた物を作ってPrefab化して開いて見ます。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F571c8c8d-ace3-7854-38a3-0aa2faba9222.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7db2017a9399c098280b7a7d3f344716" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F571c8c8d-ace3-7854-38a3-0aa2faba9222.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7db2017a9399c098280b7a7d3f344716" alt="t.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/571c8c8d-ace3-7854-38a3-0aa2faba9222.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F571c8c8d-ace3-7854-38a3-0aa2faba9222.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=e5bd77ffb0935b1677e3e4503ad61987 1x" loading="lazy"></a></p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &amp;100000
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400000}
+  m_Layer: 0
+  m_Name: 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &amp;100002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400002}
+  m_Layer: 0
+  m_Name: 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &amp;100004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400004}
+  m_Layer: 0
+  m_Name: 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &amp;400000
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400002}
+  m_RootOrder: 0
+--- !u!4 &amp;400002
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 400000}
+  m_Father: {fileID: 400004}
+  m_RootOrder: 0
+--- !u!4 &amp;400004
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100004}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 400002}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!1001 &amp;100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 100004}
+  m_IsPrefabParent: 1
+  m_IsExploded: 1
+</pre></div></div>
+
+<p>コンポーネントを1つも持ってないので結構シンプルになります。<br>
+ここで注目して貰いたいのは、Transformが持っているm_Children, m_Father。<br>
+そう、Transformが持ってるんです。<br>
+Scriptを書いているときに自分の1個上のGameObjectを取ろうとすると</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">transform</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">gameObject</span>
+</pre></div></div>
+
+<p>というコードになる意味が、なんとなく理解出来るようになりますね。<br>
+分かるとは思うのですが、念のため1つだけ追ってみましょう。<br>
+「3というGameObjectの親のGameObjectは何か」を調べてみます。<br>
+しんどくなってきたので、↑のテキストを好きなエディター(ここで宗教戦争をするつもりはありません。お好きな物をどうぞ。）にコピペして下の説明読みながら探してみてください。<br>
+- m_Name: 3のGameObjectを探します。<br>
+- そのGameObjectの持っているTransformのFileIDを探します。→ 400000<br>
+- FileID: 400000のObjectを見に行って、その中のm_FatherになっているFileIDを探します。→400002<br>
+- FileID: 400002が、どのGameObjectに張り付いているか(m_GameObjectの値)を調べます→ 100002<br>
+- FileID: 100002のGameObjectのm_Nameを見ると「2」というGameObjectで有ることがわかります。</p>
+
+<p>ほら！！もうPrefabファイル読めますね！！<br>
+書き直しもできますね！！<br>
+コードレビュー時にPrefabファイルあってもdiff読んでレビューできますね！！</p>
+
+<h1>
+<span id="最後にちょっとだけsceneファイルを覗いてみる" class="fragment"></span><a href="#%E6%9C%80%E5%BE%8C%E3%81%AB%E3%81%A1%E3%82%87%E3%81%A3%E3%81%A8%E3%81%A0%E3%81%91scene%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E8%A6%97%E3%81%84%E3%81%A6%E3%81%BF%E3%82%8B"><i class="fa fa-link"></i></a>最後にちょっとだけSceneファイルを覗いてみる</h1>
+
+<p>Sceneファイルも、だいたいPrefabと同じです。<br>
+Test.unityを開いて見ます。</p>
+
+<div class="code-frame" data-lang="unity3d-asset">
+<div class="code-lang"><span class="bold">Test.unity</span></div>
+<div class="highlight"><pre>%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!29 &amp;1
+SceneSettings:
+  m_ObjectHideFlags: 0
+  m_PVSData: 
+  m_PVSObjectsArray: []
+  m_PVSPortalsArray: []
+  m_OcclusionBakeSettings:
+    smallestOccluder: 5
+    smallestHole: .25
+    backfaceThreshold: 100
+--- !u!104 &amp;2
+RenderSettings:
+  m_Fog: 0
+  m_FogColor: {r: .5, g: .5, b: .5, a: 1}
+  m_FogMode: 3
+  m_FogDensity: .00999999978
+  m_LinearFogStart: 0
+  m_LinearFogEnd: 300
+  m_AmbientLight: {r: .200000003, g: .200000003, b: .200000003, a: 1}
+  m_SkyboxMaterial: {fileID: 0}
+  m_HaloStrength: .5
+  m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
+  m_HaloTexture: {fileID: 0}
+  m_SpotCookie: {fileID: 0}
+  m_ObjectHideFlags: 0
+--- !u!127 &amp;3
+LevelGameManager:
+  m_ObjectHideFlags: 0
+--- !u!157 &amp;4
+LightmapSettings:
+  m_ObjectHideFlags: 0
+  m_LightProbes: {fileID: 0}
+  m_Lightmaps: []
+  m_LightmapsMode: 1
+  m_BakedColorSpace: 0
+  m_UseDualLightmapsInForward: 0
+  m_LightmapEditorSettings:
+    m_Resolution: 50
+    m_LastUsedResolution: 0
+    m_TextureWidth: 1024
+    m_TextureHeight: 1024
+    m_BounceBoost: 1
+    m_BounceIntensity: 1
+    m_SkyLightColor: {r: .860000014, g: .930000007, b: 1, a: 1}
+    m_SkyLightIntensity: 0
+    m_Quality: 0
+    m_Bounces: 1
+    m_FinalGatherRays: 1000
+    m_FinalGatherContrastThreshold: .0500000007
+    m_FinalGatherGradientThreshold: 0
+    m_FinalGatherInterpolationPoints: 15
+    m_AOAmount: 0
+    m_AOMaxDistance: .100000001
+    m_AOContrast: 1
+    m_LODSurfaceMappingDistance: 1
+    m_Padding: 0
+    m_TextureCompression: 0
+    m_LockAtlas: 0
+--- !u!196 &amp;5
+NavMeshSettings:
+  m_ObjectHideFlags: 0
+  m_BuildSettings:
+    agentRadius: .5
+    agentHeight: 2
+    agentSlope: 45
+    agentClimb: .400000006
+    ledgeDropHeight: 0
+    maxJumpAcrossDistance: 0
+    accuratePlacement: 0
+    minRegionArea: 2
+    widthInaccuracy: 16.666666
+    heightInaccuracy: 10
+  m_NavMesh: {fileID: 0}
+--- !u!1 &amp;912467296
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 912467301}
+  - 20: {fileID: 912467300}
+  - 92: {fileID: 912467299}
+  - 124: {fileID: 912467298}
+  - 81: {fileID: 912467297}
+  m_Layer: 0
+  m_Name: Main Camera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &amp;912467297
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 912467296}
+  m_Enabled: 1
+--- !u!124 &amp;912467298
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 912467296}
+  m_Enabled: 1
+--- !u!92 &amp;912467299
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 912467296}
+  m_Enabled: 1
+--- !u!20 &amp;912467300
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 912467296}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: .300000012
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_HDR: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: .0219999999
+--- !u!4 &amp;912467301
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 912467296}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+</pre></div>
+</div>
+
+<p>ヘッダーの下にSceneSettingsとかRenderSettingsとかScene特有の設定が諸々ありますね。<br>
+でも順々に見ていけば、さっきのPrefabが読めていれば、Sceneファイルも余裕で読めるはずです！<br>
+是非お試しを！</p>
+
+<h1>
+<span id="後書き" class="fragment"></span><a href="#%E5%BE%8C%E6%9B%B8%E3%81%8D"><i class="fa fa-link"></i></a>後書き</h1>
+
+<p>いやー、「アドベントカレンダーだからカレンダー作ってみました」って記事にならなくてよかった。<br>
+本当によかった。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F959dd143-0c27-b15b-3bf0-b591ec82bb5b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=fe053c3133e85e3e0d94875c3a881cc3" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F959dd143-0c27-b15b-3bf0-b591ec82bb5b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=fe053c3133e85e3e0d94875c3a881cc3" alt="かれんだー.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/959dd143-0c27-b15b-3bf0-b591ec82bb5b.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F959dd143-0c27-b15b-3bf0-b591ec82bb5b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=4b99082525047b813b201dc92108a526 1x" loading="lazy"></a></p>
+
+<h1>
+<span id="メモ" class="fragment"></span><a href="#%E3%83%A1%E3%83%A2"><i class="fa fa-link"></i></a>メモ</h1>
+
+<p>ClassIDReference <a href="http://docs.unity3d.com/Manual/ClassIDReference.html" class="autolink" rel="nofollow noopener" target="_blank">http://docs.unity3d.com/Manual/ClassIDReference.html</a></p>

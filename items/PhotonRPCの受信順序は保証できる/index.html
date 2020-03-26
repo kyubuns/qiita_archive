@@ -1,0 +1,70 @@
+
+<h1>
+<span id="まえがき" class="fragment"></span><a href="#%E3%81%BE%E3%81%88%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>まえがき</h1>
+
+<p>これはPhoton以外でオンラインゲームを作ったことがある人が勘違いしやすい点かなと思う。<br>
+自分がアホなだけかもしれない。<br>
+なので、タイトルを読んで「当たり前じゃないの？？」と思った方は、逆に混乱させるだけだと思うのでここで戻るボタンを押してください。</p>
+
+<h1>
+<span id="自分が勘違いしていた点" class="fragment"></span><a href="#%E8%87%AA%E5%88%86%E3%81%8C%E5%8B%98%E9%81%95%E3%81%84%E3%81%97%E3%81%A6%E3%81%84%E3%81%9F%E7%82%B9"><i class="fa fa-link"></i></a>自分が勘違いしていた点</h1>
+
+<p>例えば、同じルーム内にA,B,C,Dという4人のプレイヤーがいたとする。<br>
+この時、ルーム内に1つだけ存在するアイテムに対して「Aがアイテムを取得した」というRPCを呼ぶのと「Bがアイテムを取得した」というRPCを呼ぶことが同時に起こりえる。</p>
+
+<p>具体的にコードに起こすと、2クライアントが同時に以下のコードを呼ぶ場合である。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">photonView</span><span class="p">.</span><span class="nf">RPC</span><span class="p">(</span><span class="s">"GetItem"</span><span class="p">,</span> <span class="n">PhotonTargets</span><span class="p">.</span><span class="n">All</span><span class="p">);</span>
+
+<span class="p">[</span><span class="n">PunRPC</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">void</span> <span class="nf">GetItem</span><span class="p">(</span><span class="n">PhotonMessageInfo</span> <span class="n">info</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">isActive</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="n">info</span><span class="p">.</span><span class="n">Sender</span> <span class="p">+</span> <span class="s">"がアイテムを取ったよ！"</span><span class="p">);</span>
+    <span class="n">isActive</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<p>この時、Aのクライアントでは「Aがアイテムを取ったよ！」と表示され、Bのクライアントでは「Bがアイテムを取ったよ！」と表示される。<br>
+さらに具合の悪いことに、C,Dのクライアントでは「Aがアイテムを取ったよ！」「Bがアイテムを取ったよ！」のどちらが表示されるのかは不定である。<br>
+CとDの結果は同じかもしれないし、違うかもしれない。<br>
+本当にクライアント同士が直接通信しているオンラインゲームであれば、このようなケースを考慮しなければならない。</p>
+
+<h1>
+<span id="冷静に考えてみる" class="fragment"></span><a href="#%E5%86%B7%E9%9D%99%E3%81%AB%E8%80%83%E3%81%88%E3%81%A6%E3%81%BF%E3%82%8B"><i class="fa fa-link"></i></a>冷静に考えてみる</h1>
+
+<p>Photonは、クライアント同士がメッセージのやりとりをしているわけではなく、あくまでクライアントとPhotonServer間の通信しかしていない。<br>
+つまり、「AがPhotonTargets.Allに送信する」というのは、「AがPhotonServerに送信する」「PhotonServerがB,C,Dに送信する」ということ。<br>
+何が言いたいかというと、みんな同じPhotonServerというところを経由しているんだから全クライアントのRPCの受信順は保証されるはずである。</p>
+
+<p>上に書いたコードは間違いで、正しくはこう。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">photonView</span><span class="p">.</span><span class="nf">RPC</span><span class="p">(</span><span class="s">"GetItem"</span><span class="p">,</span> <span class="n">PhotonTargets</span><span class="p">.</span><span class="n">AllViaServer</span><span class="p">);</span> <span class="c1">// &lt;- Allを使うとローカルだけ先に実行されてしまう</span>
+
+<span class="p">[</span><span class="n">PunRPC</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">void</span> <span class="nf">GetItem</span><span class="p">(</span><span class="n">PhotonMessageInfo</span> <span class="n">info</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">isActive</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="n">info</span><span class="p">.</span><span class="n">Sender</span> <span class="p">+</span> <span class="s">"がアイテムを取ったよ！"</span><span class="p">);</span>
+    <span class="n">isActive</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<p>このコードは、全てのクライアントで同じ結果になる。</p>
+
+<h1>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h1>
+
+<p>Photonは使えば使うほど「中の人、よくわかってるな〜」と感心させられる実装になっているので、流行ってるだけあるなと思いました（小並感）</p>
+
+<h1>
+<span id="参考" class="fragment"></span><a href="#%E5%8F%82%E8%80%83"><i class="fa fa-link"></i></a>参考</h1>
+
+<blockquote>
+<p>Example: In a racing game you could send the RPC "finished" as AllViaServer. The first "finished" RPC call will tell you who won. The following "finished" calls will tell you who's on the ranks.<br>
+<a href="http://doc.photonengine.com/ja/pun/current/tutorials/rpcsandraiseevent" class="autolink" rel="nofollow noopener" target="_blank">http://doc.photonengine.com/ja/pun/current/tutorials/rpcsandraiseevent</a></p>
+</blockquote>

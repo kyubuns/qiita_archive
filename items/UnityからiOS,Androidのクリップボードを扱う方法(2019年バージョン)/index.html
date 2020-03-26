@@ -1,0 +1,30 @@
+<p>iOS, Androidのクリップボードを扱う方法をググると、このアセットを入れて〜とか、ネイティブプラグインを〜とかいう記事が色々出てきますが、そんな時代は終わりました。<br>
+Unity2018.1以降ならこれでいけます。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">$"クリップボードのテキスト = </span><span class="p">{</span><span class="n">GUIUtility</span><span class="p">.</span><span class="n">systemCopyBuffer</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+<span class="n">GUIUtility</span><span class="p">.</span><span class="n">systemCopyBuffer</span> <span class="p">=</span> <span class="s">"新しいテキスト"</span><span class="p">;</span>
+</pre></div></div>
+
+<h3>
+<span id="20174" class="fragment"></span><a href="#20174"><i class="fa fa-link"></i></a>2017.4</h3>
+
+<p><a href="https://docs.unity3d.com/ja/2017.4/ScriptReference/GUIUtility-systemCopyBuffer.html" class="autolink" rel="nofollow noopener" target="_blank">https://docs.unity3d.com/ja/2017.4/ScriptReference/GUIUtility-systemCopyBuffer.html</a></p>
+
+<p><code>Note: iOS and Android do not support this feature.</code><br>
+この時点ではサポートされてなかったのでネイティブプラグインを書く必要があった。</p>
+
+<h3>
+<span id="20181" class="fragment"></span><a href="#20181"><i class="fa fa-link"></i></a>2018.1</h3>
+
+<p><a href="https://docs.unity3d.com/ja/2018.1/ScriptReference/GUIUtility-systemCopyBuffer.html" class="autolink" rel="nofollow noopener" target="_blank">https://docs.unity3d.com/ja/2018.1/ScriptReference/GUIUtility-systemCopyBuffer.html</a></p>
+
+<p><code>Note: tvOS and Tizen do not support this feature.</code><br>
+tvOSとTizen以外はいけるようになった。</p>
+
+<h3>
+<span id="20191" class="fragment"></span><a href="#20191"><i class="fa fa-link"></i></a>2019.1</h3>
+
+<p><a href="https://docs.unity3d.com/ja/2019.1/ScriptReference/GUIUtility-systemCopyBuffer.html" class="autolink" rel="nofollow noopener" target="_blank">https://docs.unity3d.com/ja/2019.1/ScriptReference/GUIUtility-systemCopyBuffer.html</a></p>
+
+<p><code>Note: tvOS does not support this feature.</code><br>
+tvOSは未だ対応されず。</p>

@@ -1,0 +1,59 @@
+<p>丁寧に書いてる記事ではなく、同じ問題で困ってる人が見ると良い感じに分かる記事です。</p>
+
+<h2>
+<span id="署名する" class="fragment"></span><a href="#%E7%BD%B2%E5%90%8D%E3%81%99%E3%82%8B"><i class="fa fa-link"></i></a>署名する</h2>
+
+<ul>
+<li><a href="https://qiita.com/ptkyoku/items/3fb1ae542ff04423c781" id="reference-c5ad122e68a664dc80a9">keystoreを作る</a></li>
+<li>パスワードは保存されないのでビルド時によしなに設定する。</li>
+</ul>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">PlayerSettings</span><span class="p">.</span><span class="n">Android</span><span class="p">.</span><span class="n">keystoreName</span> <span class="p">=</span> <span class="p">~~~;</span>
+<span class="n">PlayerSettings</span><span class="p">.</span><span class="n">Android</span><span class="p">.</span><span class="n">keystorePass</span> <span class="p">=</span> <span class="p">~~~;</span>
+<span class="n">PlayerSettings</span><span class="p">.</span><span class="n">Android</span><span class="p">.</span><span class="n">keyaliasName</span> <span class="p">=</span> <span class="p">~~~;</span>
+<span class="n">PlayerSettings</span><span class="p">.</span><span class="n">Android</span><span class="p">.</span><span class="n">keyaliasPass</span> <span class="p">=</span> <span class="p">~~~;</span>
+</pre></div></div>
+
+<h2>
+<span id="このリリースは-google-play-の-64-ビット要件に準拠していません" class="fragment"></span><a href="#%E3%81%93%E3%81%AE%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9%E3%81%AF-google-play-%E3%81%AE-64-%E3%83%93%E3%83%83%E3%83%88%E8%A6%81%E4%BB%B6%E3%81%AB%E6%BA%96%E6%8B%A0%E3%81%97%E3%81%A6%E3%81%84%E3%81%BE%E3%81%9B%E3%82%93"><i class="fa fa-link"></i></a>このリリースは Google Play の 64 ビット要件に準拠していません</h2>
+
+<ul>
+<li>開発中はビルド早くしたかったのでIL2CPPを切っていた。</li>
+<li>これは単純にIL2CPP有効にしてARM64をターゲットに入れれば良い。</li>
+</ul>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">PlayerSettings</span><span class="p">.</span><span class="nf">SetScriptingBackend</span><span class="p">(</span><span class="n">BuildTargetGroup</span><span class="p">.</span><span class="n">Android</span><span class="p">,</span> <span class="n">ScriptingImplementation</span><span class="p">.</span><span class="n">IL2CPP</span><span class="p">);</span>
+<span class="n">PlayerSettings</span><span class="p">.</span><span class="n">Android</span><span class="p">.</span><span class="n">targetArchitectures</span> <span class="p">=</span> <span class="n">AndroidArchitecture</span><span class="p">.</span><span class="n">ARM64</span> <span class="p">|</span> <span class="n">AndroidArchitecture</span><span class="p">.</span><span class="n">ARMv7</span><span class="p">;</span>
+</pre></div></div>
+
+<h2>
+<span id="apk-が最適化されていません" class="fragment"></span><a href="#apk-%E3%81%8C%E6%9C%80%E9%81%A9%E5%8C%96%E3%81%95%E3%82%8C%E3%81%A6%E3%81%84%E3%81%BE%E3%81%9B%E3%82%93"><i class="fa fa-link"></i></a>APK が最適化されていません</h2>
+
+<blockquote>
+<p>解決策:<br>
+Android App Bundle を使用してデバイスの設定に合わせて自動的に最適化するか、複数の APK を使って自分で管理します。</p>
+</blockquote>
+
+<h3>
+<span id="分割apk" class="fragment"></span><a href="#%E5%88%86%E5%89%B2apk"><i class="fa fa-link"></i></a>分割APK</h3>
+
+<p>分割APK(<code>PlayerSettings.Android.useAPKExpansionFiles</code>)でいけるならそれでいいか、とビルドしてみたものの同じ警告が出てダメだった。理由は不明。</p>
+
+<h3>
+<span id="aabを作る" class="fragment"></span><a href="#aab%E3%82%92%E4%BD%9C%E3%82%8B"><i class="fa fa-link"></i></a>.aabを作る</h3>
+
+<ul>
+<li>ビルドする。</li>
+<li>これで一件落着。</li>
+</ul>
+
+<h3>
+<span id="googleplayconsoleにあげる" class="fragment"></span><a href="#googleplayconsole%E3%81%AB%E3%81%82%E3%81%92%E3%82%8B"><i class="fa fa-link"></i></a>GooglePlayConsoleにあげる</h3>
+
+<ul>
+<li>と思ったら、まだ終わっていない。</li>
+<li>作ったaabファイルをGooglePlayConsoleにアップロードすると「Googleでアプリ署名鍵の管理、保護を行ってください」とエラーを吐かれて弾かれる。</li>
+<li>「アプリの署名」、3択の正解は「Java Keystoreから鍵をエクスポートしてアップロードする」</li>
+<li>
+<code>java -jar pepk.jar --keystore=(Unityから吐いたkeystore) --alias=*** --output=***.pem --encryptionkey=***</code> で作ったpemをあげる。</li>
+</ul>

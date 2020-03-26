@@ -1,0 +1,42 @@
+<p>例えば0番目のcellを移動させたくない場合は</p>
+
+<p><a href="https://developer.apple.com/reference/uikit/uicollectionviewdatasource/1618015-collectionview" class="autolink" rel="nofollow noopener" target="_blank">https://developer.apple.com/reference/uikit/uicollectionviewdatasource/1618015-collectionview</a></p>
+
+<div class="code-frame" data-lang="swift"><div class="highlight"><pre><span class="k">override</span> <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">(</span><span class="n">_</span> <span class="nv">collectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span><span class="p">,</span> <span class="n">canMoveItemAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<p>と書くと、0番目のcellを移動させることはできなくなります。<br>
+が、他のcellを0番目の前に持ってきては出来ます。<br>
+いやいやなんでやねん。</p>
+
+<p>ここから追記。<br>
+他のcellが0番目のcellにこないように防ぐには、こんな感じにしておくといい感じになります。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>override func collectionView(_ collectionView: UICollectionView,
+                             targetIndexPathForMoveFromItemAt originalIndexPath: IndexPath,
+                             toProposedIndexPath proposedIndexPath: IndexPath) -&gt; IndexPath {
+    if proposedIndexPath.row == 0 { return IndexPath(row: 1, section: 0) }
+    return proposedIndexPath
+}
+</pre></div></div>
+
+<p>コメントで正しい方法を教えていただきました！ありがとうございます！</p>
+
+<hr>
+
+<p>↓間違ってたやり方</p>
+
+<p>結局力技でこんな感じのを追加しました。</p>
+
+<div class="code-frame" data-lang="swift"><div class="highlight"><pre><span class="k">override</span> <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">(</span><span class="n">_</span> <span class="nv">collectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span><span class="p">,</span> <span class="n">moveItemAt</span> <span class="nv">sourceIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="n">to</span> <span class="nv">destinationIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">sourceIndexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">destinationIndexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">collectionView</span><span class="p">?</span><span class="o">.</span><span class="nf">moveItem</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="n">destinationIndexPath</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="n">sourceIndexPath</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="c1">// hogefuga</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<p>もっとスマートな解決法あったら教えて下さい。</p>

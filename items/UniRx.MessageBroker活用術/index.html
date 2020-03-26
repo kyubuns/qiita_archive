@@ -1,0 +1,80 @@
+<p>UniRx.MessageBrokerを日々 <del>悪用</del> 活用してるので、便利かも！って作ったクラスを公開しておきます。</p>
+
+<h1>
+<span id="typedmessagebroker" class="fragment"></span><a href="#typedmessagebroker"><i class="fa fa-link"></i></a>TypedMessageBroker</h1>
+
+<p>MessageBrokerのPublish/Subscribeに型で制限をつける。</p>
+
+<h2>
+<span id="用途" class="fragment"></span><a href="#%E7%94%A8%E9%80%94"><i class="fa fa-link"></i></a>用途</h2>
+
+<ul>
+<li>Brokerがたくさんあるので、送り先を間違えるのを防ぐ。</li>
+</ul>
+
+<h2>
+<span id="サンプル" class="fragment"></span><a href="#%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB"><i class="fa fa-link"></i></a>サンプル</h2>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">broker1</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TypedMessageBroker</span><span class="p">&lt;</span><span class="n">IMessageType</span><span class="p">&gt;();</span>
+
+    <span class="n">broker1</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="k">new</span> <span class="nf">Message1</span><span class="p">());</span>
+    <span class="c1">// broker1.Publish(new Message2()); // IMessageTypeじゃないのでビルドエラー</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">interface</span> <span class="nc">IMessageType</span> <span class="p">{}</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Message1</span> <span class="p">:</span> <span class="n">IMessageType</span> <span class="p">{}</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Message2</span> <span class="p">{}</span>
+</pre></div></div>
+
+<h2>
+<span id="コード" class="fragment"></span><a href="#%E3%82%B3%E3%83%BC%E3%83%89"><i class="fa fa-link"></i></a>コード</h2>
+
+<p><a href="https://github.com/kyubuns/UniRxSandbox/blob/master/Assets/TypedMessageBroker/TypedMessageBroker.cs" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/UniRxSandbox/blob/master/Assets/TypedMessageBroker/TypedMessageBroker.cs</a></p>
+
+<h1>
+<span id="queueasyncmessagebroker" class="fragment"></span><a href="#queueasyncmessagebroker"><i class="fa fa-link"></i></a>QueueAsyncMessageBroker</h1>
+
+<p>PublishしたMessageの処理が全て終わるまで、次のMessageのPublishを待つ。</p>
+
+<h2>
+<span id="用途-1" class="fragment"></span><a href="#%E7%94%A8%E9%80%94-1"><i class="fa fa-link"></i></a>用途</h2>
+
+<ul>
+<li>アニメーション処理を全部Publishしておいたら良い感じに再生される</li>
+</ul>
+
+<h2>
+<span id="サンプル-1" class="fragment"></span><a href="#%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB-1"><i class="fa fa-link"></i></a>サンプル</h2>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="kt">var</span> <span class="n">broker</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">QueueAsyncMessageBroker</span><span class="p">();</span>
+
+<span class="n">broker</span><span class="p">.</span><span class="n">Subscribe</span><span class="p">&lt;</span><span class="n">Message</span><span class="p">&gt;(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Observable</span><span class="p">.</span><span class="nf">Timer</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">Value</span><span class="p">)).</span><span class="nf">AsUnitObservable</span><span class="p">()).</span><span class="nf">AddTo</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="n">broker</span><span class="p">.</span><span class="n">Subscribe</span><span class="p">&lt;</span><span class="n">Message</span><span class="p">&gt;(</span><span class="n">x</span> <span class="p">=&gt;</span>
+<span class="p">{</span>
+    <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">Time</span><span class="p">.</span><span class="n">time</span><span class="p">}</span><span class="s"> Receive Message </span><span class="p">{</span><span class="n">x</span><span class="p">.</span><span class="n">Value</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">Observable</span><span class="p">.</span><span class="nf">ReturnUnit</span><span class="p">();</span>
+<span class="p">}).</span><span class="nf">AddTo</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+<span class="n">broker</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="k">new</span> <span class="nf">Message</span><span class="p">(</span><span class="m">3</span><span class="p">));</span>
+<span class="n">broker</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="k">new</span> <span class="nf">Message</span><span class="p">(</span><span class="m">1</span><span class="p">));</span>
+<span class="n">broker</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="k">new</span> <span class="nf">Message</span><span class="p">(</span><span class="m">2</span><span class="p">));</span>
+</pre></div></div>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>0 Receive Message 3
+3 Receive Message 1
+4 Receive Message 2
+</pre></div></div>
+
+<h2>
+<span id="コード-1" class="fragment"></span><a href="#%E3%82%B3%E3%83%BC%E3%83%89-1"><i class="fa fa-link"></i></a>コード</h2>
+
+<p><a href="https://github.com/kyubuns/UniRxSandbox/blob/master/Assets/QueueMessageBroker/QueueAsyncMessageBroker.cs" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/UniRxSandbox/blob/master/Assets/QueueMessageBroker/QueueAsyncMessageBroker.cs</a></p>
+
+<h2>
+<span id="欠点" class="fragment"></span><a href="#%E6%AC%A0%E7%82%B9"><i class="fa fa-link"></i></a>欠点</h2>
+
+<ul>
+<li>Subscribeの中で例外吐いた時にcall stackが死んでる</li>
+</ul>

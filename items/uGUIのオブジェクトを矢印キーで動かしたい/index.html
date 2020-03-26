@@ -1,0 +1,38 @@
+<p>NGUIはUIWidget選択時にRectモードだと矢印キーでposition移動できるので<br>
+uGUIでも再現してみた。<br>
+Unity5用。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">CanvasRendererMover.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEditor</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+
+<span class="p">[</span><span class="nf">CustomEditor</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">CanvasRenderer</span><span class="p">))]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">CanvasRendererMover</span> <span class="p">:</span> <span class="n">Editor</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="n">hint</span> <span class="p">=</span> <span class="s">"WidgetHash"</span><span class="p">.</span><span class="nf">GetHashCode</span><span class="p">();</span>
+    <span class="k">void</span> <span class="nf">OnSceneGUI</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">UnityEditor</span><span class="p">.</span><span class="n">Tools</span><span class="p">.</span><span class="n">current</span> <span class="p">!=</span> <span class="n">Tool</span><span class="p">.</span><span class="n">Rect</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+        <span class="kt">var</span> <span class="n">e</span> <span class="p">=</span> <span class="n">Event</span><span class="p">.</span><span class="n">current</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">id</span> <span class="p">=</span> <span class="n">GUIUtility</span><span class="p">.</span><span class="nf">GetControlID</span><span class="p">(</span><span class="n">hint</span><span class="p">,</span> <span class="n">FocusType</span><span class="p">.</span><span class="n">Keyboard</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">type</span> <span class="p">=</span> <span class="n">e</span><span class="p">.</span><span class="nf">GetTypeForControl</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">type</span> <span class="p">!=</span> <span class="n">EventType</span><span class="p">.</span><span class="n">keyDown</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">keyCode</span> <span class="p">==</span> <span class="n">KeyCode</span><span class="p">.</span><span class="n">UpArrow</span><span class="p">)</span> <span class="nf">Move</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0.0f</span><span class="p">,</span> <span class="m">1.0f</span><span class="p">),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">keyCode</span> <span class="p">==</span> <span class="n">KeyCode</span><span class="p">.</span><span class="n">RightArrow</span><span class="p">)</span> <span class="nf">Move</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">1.0f</span><span class="p">,</span> <span class="m">0.0f</span><span class="p">),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">keyCode</span> <span class="p">==</span> <span class="n">KeyCode</span><span class="p">.</span><span class="n">DownArrow</span><span class="p">)</span> <span class="nf">Move</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">0.0f</span><span class="p">,</span> <span class="p">-</span><span class="m">1.0f</span><span class="p">),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">keyCode</span> <span class="p">==</span> <span class="n">KeyCode</span><span class="p">.</span><span class="n">LeftArrow</span><span class="p">)</span> <span class="nf">Move</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">1.0f</span><span class="p">,</span> <span class="m">0.0f</span><span class="p">),</span> <span class="n">e</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">Move</span><span class="p">(</span><span class="kt">object</span> <span class="n">obj</span><span class="p">,</span> <span class="n">Vector3</span> <span class="n">v</span><span class="p">,</span> <span class="n">Event</span> <span class="n">e</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">g</span> <span class="p">=</span> <span class="n">obj</span> <span class="k">as</span> <span class="n">CanvasRenderer</span><span class="p">;</span>
+        <span class="n">g</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">localPosition</span> <span class="p">+=</span> <span class="n">v</span><span class="p">;</span>
+        <span class="n">e</span><span class="p">.</span><span class="nf">Use</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>

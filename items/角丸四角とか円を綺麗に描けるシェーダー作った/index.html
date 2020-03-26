@@ -1,0 +1,63 @@
+
+<h1>
+<span id="basicshapesprite" class="fragment"></span><a href="#basicshapesprite"><i class="fa fa-link"></i></a>BasicShapeSprite</h1>
+
+<p><a href="https://github.com/kyubuns/BasicShapeSprite" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/BasicShapeSprite</a></p>
+
+<h2>
+<span id="出来ること" class="fragment"></span><a href="#%E5%87%BA%E6%9D%A5%E3%82%8B%E3%81%93%E3%81%A8"><i class="fa fa-link"></i></a>出来ること</h2>
+
+<ul>
+<li>キレイな角丸四角とか円が描ける
+
+<ul>
+<li>綺麗なまま拡縮出来る！！！！すごい！！！！</li>
+</ul>
+</li>
+<li><p>どれだけ描いてもSetPass Callが1<br>
+<a href="../../img/2_f.gif" target="_blank" rel="nofollow noopener"><img src="../../img/2_f.gif" alt="" data-canonical-src="../../img/2_f.gif" loading="lazy"></a></p></li>
+<li><p>左上だけ角丸にする、とか角ごとに指定が出来る<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2F8efc8002-d744-6e53-4867-e5a02d8dc55c.jpg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=497c635e5e63794b97279f0324203905" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2F8efc8002-d744-6e53-4867-e5a02d8dc55c.jpg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=497c635e5e63794b97279f0324203905" alt="messageImage_1581500091172.jpg" data-canonical-src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/6459/8efc8002-d744-6e53-4867-e5a02d8dc55c.jpg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2F8efc8002-d744-6e53-4867-e5a02d8dc55c.jpg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=65b8aeb431d9649053d9d69c67ade9b8 1x" loading="lazy"></a></p></li>
+</ul>
+
+<h2>
+<span id="基本的な使い方" class="fragment"></span><a href="#%E5%9F%BA%E6%9C%AC%E7%9A%84%E3%81%AA%E4%BD%BF%E3%81%84%E6%96%B9"><i class="fa fa-link"></i></a>基本的な使い方</h2>
+
+<ul>
+<li>SquareComponent, Mesh Filter, Mesh Rendererを貼り付けたGameObjectを作る</li>
+<li>Mesh Rendererのマテリアルを、BasicShapeSprite/Materials/以下に入っているものにする</li>
+<li>おしまい</li>
+</ul>
+
+<h2>
+<span id="直接シェーダーを呼び出す" class="fragment"></span><a href="#%E7%9B%B4%E6%8E%A5%E3%82%B7%E3%82%A7%E3%83%BC%E3%83%80%E3%83%BC%E3%82%92%E5%91%BC%E3%81%B3%E5%87%BA%E3%81%99"><i class="fa fa-link"></i></a>直接シェーダーを呼び出す</h2>
+
+<ul>
+<li>以下の情報を渡してメッシュを描画する</li>
+<li>uv1(float4)
+
+<ul>
+<li>[0] : x (0.0f - w)</li>
+<li>[1] : y (0.0f - h)</li>
+<li>[2] : w</li>
+<li>[3] : h</li>
+</ul>
+</li>
+<li>uv2(float2)
+
+<ul>
+<li>[0] : 角丸のR</li>
+<li>[1] : 枠の幅</li>
+</ul>
+</li>
+<li>uv3(float4)
+
+<ul>
+<li>各角を角丸にするかどうか(1.0f or 0.0f)</li>
+<li>[0] : 左下</li>
+<li>[1] : 左上</li>
+<li>[2] : 右下</li>
+<li>[3] : 右上</li>
+</ul>
+</li>
+</ul>

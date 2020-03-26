@@ -1,0 +1,55 @@
+
+<h1>
+<span id="はじめに" class="fragment"></span><a href="#%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB"><i class="fa fa-link"></i></a>はじめに</h1>
+
+<p>今年の2月に<a href="https://github.com/kyubuns/AnimeRx" rel="nofollow noopener" target="_blank">AnimeRx</a>というRxでTweenアニメーション書けるライブラリを作りました。<br>
+詳細は<a href="https://qiita.com/kyubuns/items/761235f59febe923bf99" id="reference-4725455259761afb4cd7">こちら</a>。<br>
+ですが、この半年の間でUnityのasync/awaitにも春がやってきました。<br>
+Rxで書けるのも便利だったんですけど、アニメーションってasync/awaitの方が向いてるんじゃね？と思ってTask版も作ってみたわけです。</p>
+
+<h1>
+<span id="使い方" class="fragment"></span><a href="#%E4%BD%BF%E3%81%84%E6%96%B9"><i class="fa fa-link"></i></a>使い方</h1>
+
+<p><a href="https://github.com/kyubuns/AnimeTask/releases" rel="nofollow noopener" target="_blank">UnityPackageはこちらからダウンロード出来ます。</a><br>
+Unity2018.3b3でしか挙動確認していません。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">AnimeTask</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">AnimeTask.Easing</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine.UI</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Development</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="n">Text</span> <span class="n">text</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Move Start"</span><span class="p">);</span>
+
+        <span class="k">await</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span>
+            <span class="n">OutBack</span><span class="p">.</span><span class="nf">Animation</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">)),</span>
+            <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">LocalPosition</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="p">);</span>
+
+        <span class="k">await</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span>
+            <span class="n">OutExpo</span><span class="p">.</span><span class="nf">Animation</span><span class="p">(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">3f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">)),</span>
+            <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">LocalPosition</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="p">);</span>
+
+        <span class="k">await</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span>
+            <span class="n">Linear</span><span class="p">.</span><span class="nf">Animation</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">)),</span>
+            <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">Text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s">"{0}pt"</span><span class="p">)</span>
+        <span class="p">);</span>
+
+        <span class="k">await</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span>
+            <span class="n">Linear</span><span class="p">.</span><span class="nf">Animation</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2f</span><span class="p">)),</span>
+            <span class="n">TranslateTo</span><span class="p">.</span><span class="n">Action</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="p">);</span>
+
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Move End"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<p>こんな感じで出来ます。2つ同時にやりたいときはTask.WhenAllとか使うと良い感じなんじゃないでしょうか。</p>

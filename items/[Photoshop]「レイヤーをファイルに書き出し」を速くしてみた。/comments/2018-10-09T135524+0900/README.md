@@ -1,0 +1,6 @@
+png, jpg, bmpあたりは上記の方法で可能なのですが、psd形式で保存するためにはコードを更に変更する必要があるため、こちらにpsd専用のスクリプトを用意しました。
+png出力と並列で使用する場合は、ダウンロードしたファイルの名前をExportLayersToFileForPsd.jsp等に変更してお使いください。
+https://raw.githubusercontent.com/kyubuns/yogurt/for_psd/ExportLayersToFile.jsx
+
+ちなみに、psd出力処理自体が時間がかかるので、そこまで高速化されていないように感じるかもしれないです。
+ご了承ください。

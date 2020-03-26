@@ -1,0 +1,111 @@
+
+<h2>
+<span id="airtable" class="fragment"></span><a href="#airtable"><i class="fa fa-link"></i></a>Airtable</h2>
+
+<p>ゲームのマスターデータ、何のツールで管理してますか？<br>
+Excel? GoogleSpreadsheet?<br>
+Airtableっていうめっちゃ便利なサービスがあります。</p>
+
+<p></p><blockquote class="twitter-tweet">
+<p>GoogleSpreadsheetをマスターデータに使ってる！とか、DBみたいに使ってるならAirtableめっちゃオススメ<br>制約が必ず列単位でつくから「この行だけ設定違う💢」ってなんないし<br>同じデータから別の見え方View作ったり出来るし<br>本当に求めていたものって感じ<a href="https://t.co/JQMhyOQT5g" rel="nofollow noopener" target="_blank"></a><a href="https://t.co/JQMhyOQT5g" class="autolink" rel="nofollow noopener" target="_blank">https://t.co/JQMhyOQT5g</a> <a href="https://t.co/KkFd9UHzy7" rel="nofollow noopener" target="_blank">pic.twitter.com/KkFd9UHzy7</a></p>— きゅぶんず (@kyubuns) <a href="https://twitter.com/kyubuns/status/1148042472934658048?ref_src=twsrc%5Etfw" rel="nofollow noopener" target="_blank">July 8, 2019</a>
+</blockquote> <script async src="https://platform.twitter.com/widgets.js"></script>
+
+<p></p><blockquote class="twitter-tweet">
+<p>他テーブルの行の参照つっこんだり、画像突っ込んだりも出来る <a href="https://t.co/uJ7aVoUJ1s" rel="nofollow noopener" target="_blank">pic.twitter.com/uJ7aVoUJ1s</a></p>— きゅぶんず (@kyubuns) <a href="https://twitter.com/kyubuns/status/1148111704644997122?ref_src=twsrc%5Etfw" rel="nofollow noopener" target="_blank">July 8, 2019</a>
+</blockquote> <script async src="https://platform.twitter.com/widgets.js"></script>
+
+<h2>
+<span id="マスターデータを作る" class="fragment"></span><a href="#%E3%83%9E%E3%82%B9%E3%82%BF%E3%83%BC%E3%83%87%E3%83%BC%E3%82%BF%E3%82%92%E4%BD%9C%E3%82%8B"><i class="fa fa-link"></i></a>マスターデータを作る</h2>
+
+<p>マスターデータを作ります。<br>
+「この列は数字だけ！」とかの制約がかけれたり、Filterがかけれたりしてめっちゃ便利！っていうかもはや普通にDBです。</p>
+
+<p><a href="../../img/8_7.png" target="_blank" rel="nofollow noopener"><img width="350" alt="Screen Shot 2019-07-08 at 15.50.24.png" src="../../img/8_7.png" data-canonical-src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/6459/8f17f18a-9bda-3a95-6cd8-6dde40c628e8.png"></a></p>
+
+<h2>
+<span id="unityから読む" class="fragment"></span><a href="#unity%E3%81%8B%E3%82%89%E8%AA%AD%E3%82%80"><i class="fa fa-link"></i></a>Unityから読む</h2>
+
+<p>めっちゃ分かりやすいAPIのドキュメントがあります。<br>
+ApiKeyとBase(ドキュメントのID的なもの)もここから見れます。<br>
+<a href="https://airtable.com/api" class="autolink" rel="nofollow noopener" target="_blank">https://airtable.com/api</a></p>
+
+<p><a href="https://github.com/kyubuns/airtable.net" rel="nofollow noopener" target="_blank">GitHub : kyubuns/airtable.net</a><br>
+↑公式からForkして<a href="https://github.com/ngocnicholas/airtable.net/pull/16" rel="nofollow noopener" target="_blank">若干改造</a>入れてあります。<br>
+AirtableApiClientディレクトリ以下をUnityに突っ込んで、Json.netもどこかから調達してきてください。<br>
+そしたら後はこれだけです。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">table</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">AirtableBase</span><span class="p">(</span><span class="n">ApiKey</span><span class="p">,</span> <span class="n">Base</span><span class="p">))</span>
+<span class="p">{</span>
+    <span class="kt">string</span> <span class="n">offset</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="n">table</span><span class="p">.</span><span class="n">ListRecords</span><span class="p">&lt;</span><span class="n">Player</span><span class="p">&gt;(</span><span class="s">"Player"</span><span class="p">);</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">r</span> <span class="k">in</span> <span class="n">response</span><span class="p">.</span><span class="n">Records</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">player</span> <span class="p">=</span> <span class="n">r</span><span class="p">.</span><span class="n">Fields</span><span class="p">;</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">player</span><span class="p">.</span><span class="n">Lv</span><span class="p">}</span><span class="s"> - </span><span class="p">{</span><span class="n">player</span><span class="p">.</span><span class="n">HP</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Player</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Lv</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">HP</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<p>1回の呼び出しに付き100行までしか取ってこれないので、1テーブルが100行以上になりえるときはこんな感じ。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="kt">string</span> <span class="n">offset</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+<span class="k">do</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="n">table</span><span class="p">.</span><span class="n">ListRecords</span><span class="p">&lt;</span><span class="n">Player</span><span class="p">&gt;(</span><span class="s">"Player"</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(!</span><span class="n">response</span><span class="p">.</span><span class="n">Success</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">r</span> <span class="k">in</span> <span class="n">response</span><span class="p">.</span><span class="n">Records</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">player</span> <span class="p">=</span> <span class="n">r</span><span class="p">.</span><span class="n">Fields</span><span class="p">;</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">player</span><span class="p">.</span><span class="n">Lv</span><span class="p">}</span><span class="s"> - </span><span class="p">{</span><span class="n">player</span><span class="p">.</span><span class="n">HP</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">offset</span> <span class="p">!=</span> <span class="k">null</span><span class="p">);</span>
+</pre></div></div>
+
+<h2>
+<span id="注意点" class="fragment"></span><a href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><i class="fa fa-link"></i></a>注意点</h2>
+
+<blockquote>
+<p>The API is limited to 5 requests per second.</p>
+</blockquote>
+
+<p>1秒間に5リクエストで制限かかるので、ユーザーが直接読むのには向いてなさそうです。<br>
+この制約がキツい場合はお問い合わせくださいって書いてあるので、有料プランだときっと上がるんでしょう。きっと。</p>
+ass="p">{</span><span class="n">player</span><span class="p">.</span><span class="n">HP</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">offset</span> <span class="p">!=</span> <span class="k">null</span><span class="p">);</span>
+</pre></div></div>
+
+<h2>
+<span id="注意点" class="fragment"></span><a href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><i class="fa fa-link"></i></a>注意点</h2>
+
+<blockquote>
+<p>The API is limited to 5 requests per second.</p>
+</blockquote>
+
+<p>1秒間に5リクエストで制限かかるので、ユーザーが直接読むのには向いてなさそうです。<br>
+この制約がキツい場合はお問い合わせくださいって書いてあるので、有料プランだときっと上がるんでしょう。きっと。</p>
+
+<h2>
+<span id="おまけ" class="fragment"></span><a href="#%E3%81%8A%E3%81%BE%E3%81%91"><i class="fa fa-link"></i></a>おまけ</h2>
+
+<p>HttpUtility.UrlEncodeが無い時用。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">AirtableApiClient</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">HttpUtility</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">UrlEncode</span><span class="p">(</span><span class="kt">string</span> <span class="n">stringToEscape</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Uri</span><span class="p">.</span><span class="nf">EscapeDataString</span><span class="p">(</span><span class="n">stringToEscape</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>

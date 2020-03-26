@@ -1,0 +1,45 @@
+
+<h3>
+<span id="まえがき" class="fragment"></span><a href="#%E3%81%BE%E3%81%88%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>まえがき</h3>
+
+<p>Unityでクライアントをビルドして、ビルドレポート見てみると<br>
+「このテクスチャはAssetBundleになるはずだから、ビルドには乗らないはずなのに・・・」っていうのが含まれてたりしますよね。<br>
+そんなとき、どこから参照されてるか調べるツールは便利！<br>
+でも遅い！！！1個調べるのに数分かかる！！！</p>
+
+<h3>
+<span id="で" class="fragment"></span><a href="#%E3%81%A7"><i class="fa fa-link"></i></a>で、</h3>
+
+<p>普段はmetaファイルをテキストで開いて、guidをgit grepかけてたんですが<br>
+いい加減GUIでやりたいなってことで、<a href="https://github.com/ina-amagami/unity-reference-viewer" rel="nofollow noopener" target="_blank">ina-amagamiさんが作ってたunity-reference-viewer</a>をforkしてgit grep対応してみました。<br>
+<a href="https://github.com/kyubuns/unity-reference-viewer" rel="nofollow noopener" target="_blank">kyubuns/unity-reference-viewer</a></p>
+
+<p>そう、検索を早くする工夫なんてこの記事には何も出てこないんです。<br>
+ただgrepをgit grepに変えただけなんです。<br>
+当たり前ですが、プロジェクト丸ごとgit管理してないと使えません。</p>
+
+<p>使い方はina-amagamiさんがめっちゃ丁寧に書いてくれているので<a href="https://amagamina.jp/reference-viewer/" rel="nofollow noopener" target="_blank">こちらをご覧ください。</a></p>
+
+<h3>
+<span id="計測結果" class="fragment"></span><a href="#%E8%A8%88%E6%B8%AC%E7%B5%90%E6%9E%9C"><i class="fa fa-link"></i></a>計測結果</h3>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">コマンド</th>
+<th style="text-align: left">時間</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left">grep</td>
+<td style="text-align: left">28.17s</td>
+</tr>
+<tr>
+<td style="text-align: left">git grep</td>
+<td style="text-align: left">0.53s</td>
+</tr>
+</tbody>
+</table>
+
+<p>なんと驚異の53倍速。</p>

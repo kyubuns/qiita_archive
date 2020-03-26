@@ -1,0 +1,36 @@
+<p>Unity製ゲームから画像付きメールを送るライブラリ、"<a href="https://github.com/kyubuns/UniMail" rel="nofollow noopener" target="_blank">UniMail</a>"を公開したのでご紹介します。</p>
+
+<h1>
+<span id="はじめに" class="fragment"></span><a href="#%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB"><i class="fa fa-link"></i></a>はじめに</h1>
+
+<p>今のところ画像付きメールをサポートしているプラットフォームは <strong>iOSのみ</strong> です。<br>
+Editor/Windows/OSX/Androidからも通常のメールは送れます。<br>
+サポートプラットフォームを増やすPullRequest募集中です。</p>
+
+<h1>
+<span id="なにこれ" class="fragment"></span><a href="#%E3%81%AA%E3%81%AB%E3%81%93%E3%82%8C"><i class="fa fa-link"></i></a>なにこれ？</h1>
+
+<p>Unity製ゲームから、画像付きメールを送れます。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Faebdcea5-b892-7541-25cd-9d091f0488ff.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=921d6cdc98866644cc5505e4248e3219" target="_blank" rel="nofollow noopener"><img width="300" alt="IMG_6439.PNG" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Faebdcea5-b892-7541-25cd-9d091f0488ff.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=921d6cdc98866644cc5505e4248e3219" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/aebdcea5-b892-7541-25cd-9d091f0488ff.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Faebdcea5-b892-7541-25cd-9d091f0488ff.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=3ad37ccca2f44fea7e6621d33d9d833a 1x" loading="lazy"></a> → <a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fae022e64-497f-ffb1-cdb4-83def0c9a03b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=e6937b4108079d89f72215b450e97b1d" target="_blank" rel="nofollow noopener"><img width="300" alt="IMG_6438.PNG" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fae022e64-497f-ffb1-cdb4-83def0c9a03b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=e6937b4108079d89f72215b450e97b1d" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/ae022e64-497f-ffb1-cdb4-83def0c9a03b.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fae022e64-497f-ffb1-cdb4-83def0c9a03b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=10391b4159f4198f757d3bdc2eb4833e 1x" loading="lazy"></a></p>
+
+<h1>
+<span id="使い方" class="fragment"></span><a href="#%E4%BD%BF%E3%81%84%E6%96%B9"><i class="fa fa-link"></i></a>使い方</h1>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UniMail</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Sample</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Mail</span><span class="p">.</span><span class="nf">Send</span><span class="p">(</span><span class="s">"unimail@example.com"</span><span class="p">,</span> <span class="s">"subject"</span><span class="p">,</span> <span class="s">"body1\nbody2"</span><span class="p">,</span> <span class="n">ScreenShotPath</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<h1>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h1>
+
+<p>リポジトリは<a href="https://github.com/kyubuns/UniMail" rel="nofollow noopener" target="_blank">こちら</a>。<br>
+バグ報告は<a href="https://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">twitter</a>か<a href="https://github.com/kyubuns/UniMail/issues" rel="nofollow noopener" target="_blank">githubのissue</a>にどうぞ。</p>

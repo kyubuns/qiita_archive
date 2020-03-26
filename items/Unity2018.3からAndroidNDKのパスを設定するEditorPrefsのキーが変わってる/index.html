@@ -1,0 +1,18 @@
+<p>AndroidSDK/NDKのパス、突然ビルドマシンからパスが消えて「SDKが見つかりません」って言われたりするので、<br>
+毎回EditorPrefsに設定してたものの、2018.3にしてから「NDKが見つかりません」ってたまに言われるようになったので調べてみたらキーが変わっていた。</p>
+
+<p>Unity2018.2以前</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">EditorPrefs</span><span class="p">.</span><span class="nf">SetString</span><span class="p">(</span><span class="s">"AndroidSdkRoot"</span><span class="p">,</span> <span class="s">"/path/to/android/sdk"</span><span class="p">);</span>
+<span class="n">EditorPrefs</span><span class="p">.</span><span class="nf">SetString</span><span class="p">(</span><span class="s">"AndroidNdkRoot"</span><span class="p">,</span> <span class="s">"/path/to/android/ndk"</span><span class="p">);</span>
+<span class="n">EditorPrefs</span><span class="p">.</span><span class="nf">SetString</span><span class="p">(</span><span class="s">"JdkPath"</span><span class="p">,</span> <span class="s">"/path/to/jdk"</span><span class="p">);</span>
+</pre></div></div>
+
+<p>Unity2018.3以降</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">EditorPrefs</span><span class="p">.</span><span class="nf">SetString</span><span class="p">(</span><span class="s">"AndroidSdkRoot"</span><span class="p">,</span> <span class="s">"/path/to/android/sdk"</span><span class="p">);</span>
+<span class="n">EditorPrefs</span><span class="p">.</span><span class="nf">SetString</span><span class="p">(</span><span class="s">"AndroidNdkRootR16b"</span><span class="p">,</span> <span class="s">"/path/to/android/ndk"</span><span class="p">);</span>
+<span class="n">EditorPrefs</span><span class="p">.</span><span class="nf">SetString</span><span class="p">(</span><span class="s">"JdkPath"</span><span class="p">,</span> <span class="s">"/path/to/jdk"</span><span class="p">);</span>
+</pre></div></div>
+
+<p>今後はNDKバージョン上がるたびにパスが変わっていくということだろうか</p>

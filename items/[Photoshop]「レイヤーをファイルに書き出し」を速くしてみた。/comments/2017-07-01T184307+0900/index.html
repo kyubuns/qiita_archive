@@ -1,0 +1,22 @@
+<p><a href="http://qiita.com/kyubuns/items/d2831e4b0e0eff1892c7#comment-4b62323585b8a5c3d659" class="autolink">http://qiita.com/kyubuns/items/d2831e4b0e0eff1892c7#comment-4b62323585b8a5c3d659</a><br>
+こちらと同じようにスクリプトに直接手を入れてもらうことになります。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>    copiedDoc = app.activeDocument.duplicate(activeDocument.name.slice(0, -4) + '.copy.psd');
+</pre></div></div>
+
+<p>となっている箇所を</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>    copiedDoc = app.activeDocument.duplicate(activeDocument.name.slice(0, -4) + '.copy.psd');
+    copiedDoc.resizeImage(copiedDoc.width * 10.0, copiedDoc.height * 10.0);
+</pre></div></div>
+
+<p>のように書き換えることで、10%のサイズにリサイズが出来ます。（他の%にしたい場合は10.0の部分を書き換えてください）<br>
+解像度を指定して書き出す場合は、</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>    copiedDoc = app.activeDocument.duplicate(activeDocument.name.slice(0, -4) + '.copy.psd');
+    copiedDoc.resizeImage(100.0, 100.0);
+</pre></div></div>
+
+<p>これで100px x 100pxで書き出しになります。</p>
+
+<p><a href="http://www.openspc2.org/book/PhotoshopCS/easy/canvas/002/index.html" class="autolink" rel="nofollow noopener" target="_blank">http://www.openspc2.org/book/PhotoshopCS/easy/canvas/002/index.html</a></p>

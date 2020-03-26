@@ -1,0 +1,63 @@
+
+<h1>
+<span id="前提" class="fragment"></span><a href="#%E5%89%8D%E6%8F%90"><i class="fa fa-link"></i></a>前提</h1>
+
+<ul>
+<li>iOSの話をします。きっとAndroidも似たような感じで出来ます。</li>
+<li>説明に使っているプロジェクトはこちら。
+
+<ul>
+<li><a href="https://github.com/kyubuns/StreamingAssetsDemo" rel="nofollow noopener" target="_blank">GitHub:kyubuns/StreamingAssetsDemo</a></li>
+</ul>
+</li>
+</ul>
+
+<h1>
+<span id="実現出来るようになること" class="fragment"></span><a href="#%E5%AE%9F%E7%8F%BE%E5%87%BA%E6%9D%A5%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%AA%E3%82%8B%E3%81%93%E3%81%A8"><i class="fa fa-link"></i></a>実現出来るようになること</h1>
+
+<p>このUIを<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2Fe12b3697-5eff-b5d5-58d6-b2052067d289.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=df6111eb5a6b02902b1d816c069555e9" target="_blank" rel="nofollow noopener"><img width="200" alt="Screen Shot 2019-08-03 at 18.15.50.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2Fe12b3697-5eff-b5d5-58d6-b2052067d289.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=df6111eb5a6b02902b1d816c069555e9" data-canonical-src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/6459/e12b3697-5eff-b5d5-58d6-b2052067d289.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2Fe12b3697-5eff-b5d5-58d6-b2052067d289.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=866ec58821ca828ceefcf031a555f2fe 1x" loading="lazy"></a></p>
+
+<p>こんな感じに編集したら<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2F42c6b660-882d-d5f5-f348-67aa0d146d8f.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=805aa9fc509843b1094b64d68b40d902" target="_blank" rel="nofollow noopener"><img width="200" alt="Screen Shot 2019-08-03 at 18.18.06.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2F42c6b660-882d-d5f5-f348-67aa0d146d8f.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=805aa9fc509843b1094b64d68b40d902" data-canonical-src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/6459/42c6b660-882d-d5f5-f348-67aa0d146d8f.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2F42c6b660-882d-d5f5-f348-67aa0d146d8f.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=ea138d1e34add61390326d8937aaea66 1x" loading="lazy"></a></p>
+
+<p>1分以内(※体感には個人差があります)に手元のiPhoneで新しいUIを確認できる！！</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2Fa1d49a5e-598f-879e-966b-20df06a46bed.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=06c2a1adaa4f61031fcf7e144023c30c" target="_blank" rel="nofollow noopener"><img width="200" alt="IMG_D27513BE54C9-1.jpeg" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2Fa1d49a5e-598f-879e-966b-20df06a46bed.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=06c2a1adaa4f61031fcf7e144023c30c" data-canonical-src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/6459/a1d49a5e-598f-879e-966b-20df06a46bed.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F6459%2Fa1d49a5e-598f-879e-966b-20df06a46bed.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=1eba483972ce68f4b09fb905bb4c0a19 1x" loading="lazy"></a></p>
+
+<h1>
+<span id="考えてみる" class="fragment"></span><a href="#%E8%80%83%E3%81%88%E3%81%A6%E3%81%BF%E3%82%8B"><i class="fa fa-link"></i></a>考えてみる</h1>
+
+<p>ボタンの位置をちょっと変更しただけなのに、ビルドを10分待たないと確認できない・・・っていうのは時間の無駄です。<br>
+UnityのiOSビルドは頑張っても(<a href="https://qiita.com/kyubuns/items/2d9d28e60823a7818ca5" id="reference-c06bedc3a7bae350a7f2">Qiita:UnityプロジェクトのiOSビルドをなるべく早くする</a>)そこそこの時間がかかるので、<br>
+ビルドしないでUIだけ差し替える方法を考えてみます。</p>
+
+<h2>
+<span id="案1--uiをassetbundleにしてwebで配信する" class="fragment"></span><a href="#%E6%A1%881--ui%E3%82%92assetbundle%E3%81%AB%E3%81%97%E3%81%A6web%E3%81%A7%E9%85%8D%E4%BF%A1%E3%81%99%E3%82%8B"><i class="fa fa-link"></i></a>案1 : UIをAssetBundleにしてWebで配信する</h2>
+
+<p>まあみんなやってるだろうなってやつです。<br>
+リリースバージョンでもAssetBundleはWebで配信する予定なら開発中もこれやってるところが多いと思います。</p>
+
+<h2>
+<span id="案2--ipaの中身を無理矢理いじってassetbundleを置き換える" class="fragment"></span><a href="#%E6%A1%882--ipa%E3%81%AE%E4%B8%AD%E8%BA%AB%E3%82%92%E7%84%A1%E7%90%86%E7%9F%A2%E7%90%86%E3%81%84%E3%81%98%E3%81%A3%E3%81%A6assetbundle%E3%82%92%E7%BD%AE%E3%81%8D%E6%8F%9B%E3%81%88%E3%82%8B"><i class="fa fa-link"></i></a>案2 : ipaの中身を無理矢理いじってAssetBundleを置き換える</h2>
+
+<p>今回ご紹介したいのはこちら。<br>
+AssetBundleをWebで配信する予定は無いし、わざわざ入れるのもなーって方向け。<br>
+ビルド済みのipaのStreamingAssets内に入っているAssetBundleを差し替え、再び署名すれば最速で配信出来る！という荒業です。</p>
+
+<div class="code-frame" data-lang="bash"><div class="highlight"><pre>unzip original.ipa
+<span class="nb">cp </span>Assets/StreamingAssets/AssetBundles/<span class="k">*</span> Payload/<span class="k">*</span>.app/Data/Raw/AssetBundles/
+codesign <span class="nt">-d</span> <span class="nt">--entitlements</span> :- Payload/<span class="k">*</span>.app <span class="o">&gt;</span> entitlements.plist
+codesign <span class="nt">--force</span> <span class="nt">--sign</span> <span class="s1">'iPhone Distribution: **********'</span> <span class="nt">--entitlements</span> entitlements.plist <span class="nt">--timestamp</span><span class="o">=</span>none Payload/<span class="k">*</span>.app
+zip <span class="nt">-r</span> new.zip Payload
+<span class="nb">mv </span>new.zip new.ipa
+</pre></div></div>
+
+<p>普通にビルドすると10分かかるプロジェクトでも、この方法ならたった5秒で新しいipaが出来上がります。<br>
+ぜひご活用ください。</p>
+
+<h1>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h1>
+
+<p>ゲーム開発効率化ネタが好物なので、こういう話が好きな人は是非twitter等でご連絡ください。<br>
+<a href="https://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">@kyubuns</a></p>

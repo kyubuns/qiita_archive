@@ -1,0 +1,35 @@
+<p>ググってもあんまり見当たらなかったので軽くまとめておく</p>
+
+<p><a href="http://docs.unity3d.com/530/Documentation/ScriptReference/SceneManagement.SceneManager.html" rel="nofollow noopener" target="_blank">リファレンス SceneManager</a></p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">Hoge.cs</span></div>
+<div class="highlight"><pre><span class="c1">// SceneManagerはUnityEngine.SceneManagement名前空間！</span>
+<span class="k">using</span> <span class="nn">UnityEngine.SceneManagement</span><span class="p">;</span>
+</pre></div>
+</div>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">5.2</th>
+<th style="text-align: left">5.3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left">Application.LoadLevel("Uduki")</td>
+<td style="text-align: left">SceneManager.LoadScene("Uduki")</td>
+</tr>
+<tr>
+<td style="text-align: left">Application.LoadLevelAdditive("Mio")</td>
+<td style="text-align: left">SceneManager.LoadScene("Mio", LoadSceneMode.Additive)</td>
+</tr>
+<tr>
+<td style="text-align: left">Application.loadedLevelName</td>
+<td style="text-align: left">SceneManager.GetActiveScene().name</td>
+</tr>
+</tbody>
+</table>
+
+<p>5.2からの単純移植はこんな感じ、Sceneクラスが増えてるので使うべきかも。</p>

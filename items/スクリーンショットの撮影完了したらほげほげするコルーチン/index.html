@@ -1,0 +1,17 @@
+<p>Unity5.3で追加されたWaitUntilがめっちゃ便利</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">Share.cs</span></div>
+<div class="highlight"><pre><span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">ScreenShot</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">captureDirectory</span> <span class="p">=</span> <span class="n">Application</span><span class="p">.</span><span class="n">persistentDataPath</span><span class="p">;</span>
+    <span class="kt">var</span> <span class="n">captureFileName</span> <span class="p">=</span> <span class="s">"ScreenShot.png"</span><span class="p">;</span>
+    <span class="kt">var</span> <span class="n">capturePath</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="nf">Combine</span><span class="p">(</span><span class="n">captureDirectory</span><span class="p">,</span> <span class="n">captureFileName</span><span class="p">);</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">File</span><span class="p">.</span><span class="nf">Exists</span><span class="p">(</span><span class="n">capturePath</span><span class="p">))</span> <span class="n">File</span><span class="p">.</span><span class="nf">Delete</span><span class="p">(</span><span class="n">capturePath</span><span class="p">);</span>
+    <span class="n">Application</span><span class="p">.</span><span class="nf">CaptureScreenshot</span><span class="p">(</span><span class="n">captureFileName</span><span class="p">);</span>
+    <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitUntil</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="k">return</span> <span class="n">File</span><span class="p">.</span><span class="nf">Exists</span><span class="p">(</span><span class="n">Application</span><span class="p">.</span><span class="n">isEditor</span> <span class="p">?</span> <span class="n">captureFileName</span> <span class="p">:</span> <span class="n">capturePath</span><span class="p">);</span> <span class="p">});</span>
+    <span class="c1">// HogeHoge</span>
+<span class="p">}</span>
+</pre></div>
+</div>

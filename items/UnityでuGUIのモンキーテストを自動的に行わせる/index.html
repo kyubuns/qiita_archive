@@ -1,0 +1,102 @@
+
+<h1>
+<span id="モンキーテストって" class="fragment"></span><a href="#%E3%83%A2%E3%83%B3%E3%82%AD%E3%83%BC%E3%83%86%E3%82%B9%E3%83%88%E3%81%A3%E3%81%A6"><i class="fa fa-link"></i></a>モンキーテストって？</h1>
+
+<p><a href="https://www.google.co.jp/search?q=%E3%83%A2%E3%83%B3%E3%82%AD%E3%83%BC%E3%83%86%E3%82%B9%E3%83%88" class="autolink" rel="nofollow noopener" target="_blank">https://www.google.co.jp/search?q=モンキーテスト</a></p>
+
+<p>なんかぐぐってみると思ったより皆が飼ってるサルは賢いんだなぁと思うのですが、ここでいうモンキーテストは「適当にランダムなボタンを押す」ことです。</p>
+
+<h1>
+<span id="どういうこと" class="fragment"></span><a href="#%E3%81%A9%E3%81%86%E3%81%84%E3%81%86%E3%81%93%E3%81%A8"><i class="fa fa-link"></i></a>どういうこと？？</h1>
+
+<p>スクリプトが勝手に画面に見えている押せるボタンをランダムで押したり、スクロールをガチャガチャやってみたりしてくれます。<br>
+百聞は一見にしかずということで動画を取ってみました。<br>
+<a href="https://www.youtube.com/watch?v=nO27t4djuBE" class="autolink" rel="nofollow noopener" target="_blank">https://www.youtube.com/watch?v=nO27t4djuBE</a></p>
+
+<h1>
+<span id="何の役にたつの" class="fragment"></span><a href="#%E4%BD%95%E3%81%AE%E5%BD%B9%E3%81%AB%E3%81%9F%E3%81%A4%E3%81%AE"><i class="fa fa-link"></i></a>何の役にたつの？</h1>
+
+<p>エラーが発生するまで適当にボタンを押し続けてくれることで、想定していなかった挙動や、画面遷移を発見することが出来るかもしれません。</p>
+
+<h1>
+<span id="やってみたい" class="fragment"></span><a href="#%E3%82%84%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F%E3%81%84"><i class="fa fa-link"></i></a>やってみたい！</h1>
+
+<p>コードはgithubに上がってます。<br>
+TestRunner-&gt;PlayModeでRunAllすると、モンキーが適当に50回ボタンを押して、何もエラーが発生しないことを確認してくれます。<br>
+また、ロード画面などが存在しても問題なく動くようになっています。<br>
+（押せるボタンが無い間は待つ。1秒以上押せるボタンが出てこなかった時はタイムアウトしてエラーになる）<br>
+さらに、Monkeyコンポーネントを適当なゲームオブジェクトにくっつけることで、無限に適当にボタンを押してくれます。<br>
+放置する時はこちらが便利です。<br>
+<a href="https://github.com/kyubuns/WakuTest" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/WakuTest</a></p>
+
+<h1>
+<span id="ついでにwakutestについて" class="fragment"></span><a href="#%E3%81%A4%E3%81%84%E3%81%A7%E3%81%ABwakutest%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6"><i class="fa fa-link"></i></a>ついでに、WakuTestについて</h1>
+
+<p>UIのテストをシンプルに書きたいなーというところから生まれました。<br>
+今のところ、Click()、Wait("GameObject名")の2つの機能を持っていて、<br>
+* Click() - 押せるかどうかを確認してからクリックしてくれる、クリック出来ない(他のGameObjectに隠れている、非アクティブである)場合はエラー。<br>
+* Wait() - そのゲームオブジェクトが出現するまで待つ。<br>
+という機能です。<br>
+ご意見お待ちしております。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">namespace</span> <span class="nn">WakuTest.Sample</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">WakuTestSample</span> <span class="p">:</span> <span class="n">UISceneTest</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="nf">WakuTestSample</span><span class="p">()</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="s">"Sample"</span><span class="p">)</span>
+        <span class="p">{</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">UnityTest</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">ClickAButton_ChangeText</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">yield</span> <span class="k">return</span> <span class="nf">SetupEventSystemAsync</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="nf">Button</span><span class="p">(</span><span class="s">"AButton"</span><span class="p">).</span><span class="nf">Click</span><span class="p">();</span>
+                <span class="n">Assert</span><span class="p">.</span><span class="nf">AreEqual</span><span class="p">(</span><span class="nf">Text</span><span class="p">(</span><span class="s">"AText"</span><span class="p">).</span><span class="n">text</span><span class="p">,</span> <span class="n">i</span><span class="p">.</span><span class="nf">ToString</span><span class="p">());</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">UnityTest</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">ClickBButton_NoChangeTexts</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">yield</span> <span class="k">return</span> <span class="nf">SetupEventSystemAsync</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="nf">Button</span><span class="p">(</span><span class="s">"BButton"</span><span class="p">).</span><span class="nf">Click</span><span class="p">();</span>
+                <span class="n">Assert</span><span class="p">.</span><span class="nf">AreEqual</span><span class="p">(</span><span class="nf">Text</span><span class="p">(</span><span class="s">"AText"</span><span class="p">).</span><span class="n">text</span><span class="p">,</span> <span class="s">"0"</span><span class="p">);</span>
+                <span class="n">Assert</span><span class="p">.</span><span class="nf">AreEqual</span><span class="p">(</span><span class="nf">Text</span><span class="p">(</span><span class="s">"CText"</span><span class="p">).</span><span class="n">text</span><span class="p">,</span> <span class="s">"0"</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">UnityTest</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">OpenAndCloseWindow</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">yield</span> <span class="k">return</span> <span class="nf">SetupEventSystemAsync</span><span class="p">();</span>
+            <span class="nf">Button</span><span class="p">(</span><span class="s">"OpenWindowButton"</span><span class="p">).</span><span class="nf">Click</span><span class="p">();</span>
+            <span class="k">yield</span> <span class="k">return</span> <span class="nf">WaitAsync</span><span class="p">(</span><span class="s">"CloseWindowButton"</span><span class="p">);</span>
+            <span class="nf">Button</span><span class="p">(</span><span class="s">"CloseWindowButton"</span><span class="p">).</span><span class="nf">Click</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">UnityTest</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">MonkeyTest_RandomButton</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">yield</span> <span class="k">return</span> <span class="nf">SetupEventSystemAsync</span><span class="p">();</span>
+
+            <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"--- MonkeyTest ---"</span><span class="p">);</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">50</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">yield</span> <span class="k">return</span> <span class="nf">WaitAsync</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">button</span> <span class="p">=</span> <span class="n">GameObject</span><span class="p">.</span><span class="n">FindObjectsOfType</span><span class="p">&lt;</span><span class="n">Button</span><span class="p">&gt;().</span><span class="nf">Where</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="nf">IsClickable</span><span class="p">()).</span><span class="nf">Where</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span> <span class="p">!=</span> <span class="s">"RaiseExceptionButton"</span><span class="p">).</span><span class="nf">RandomAtOrDefault</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">button</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+
+                    <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="n">Time</span><span class="p">.</span><span class="n">time</span> <span class="p">+</span> <span class="s">" Click "</span> <span class="p">+</span> <span class="n">button</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+                    <span class="n">button</span><span class="p">.</span><span class="nf">Click</span><span class="p">();</span>
+                    <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+                <span class="p">});</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>

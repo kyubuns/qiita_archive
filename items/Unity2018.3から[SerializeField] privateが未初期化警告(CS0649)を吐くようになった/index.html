@@ -1,0 +1,22 @@
+<p>Unity2018.3から</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="n">GameObject</span> <span class="n">hoge</span><span class="p">;</span>
+</pre></div></div>
+
+<p>というコードが <code>[CS0649] Field 'Piyo.hoge' is never assigned to, and will always have its default value null</code> という警告を吐くようになりました。<br>
+警告の詳細は<a href="https://docs.microsoft.com/ja-jp/dotnet/csharp/misc/cs0649" rel="nofollow noopener" target="_blank">こちら(CS0649)</a>。</p>
+
+<p>冷静に考えると、今まで警告が出てなかった方がおかしいのですが、<br>
+(Unityがコンパイラに手を入れていたため出ていなかった)<br>
+なにはともあれ、ちゃんと初期化して警告を消してあげましょう。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="n">GameObject</span> <span class="n">hoge</span> <span class="p">=</span> <span class="k">default</span><span class="p">;</span>
+</pre></div></div>
+
+<p>.NET4.xなら、以下のsedで一気に消せます。</p>
+
+<div class="code-frame" data-lang="shell"><div class="highlight"><pre><span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">''</span> <span class="nt">-e</span> <span class="s2">"s/</span><span class="se">\[</span><span class="s2">SerializeField</span><span class="se">\]</span><span class="s2"> private </span><span class="se">\(</span><span class="s2">[^;]*</span><span class="se">\)</span><span class="s2">/</span><span class="se">\[</span><span class="s2">SerializeField</span><span class="se">\]</span><span class="s2"> private </span><span class="se">\1</span><span class="s2"> = default/g"</span> <span class="k">***</span>/<span class="k">*</span>.cs
+</pre></div></div>
+
+<p>Rider使いの方、Riderでは「そんな初期化要らないよ！消しちゃえ消しちゃえ！」ってRiderが <code>= default</code> 部分を消してきます。<br>
+くそ〜と思いながらRedundantDefaultMemberInitializerをDO_NOT_SHOWにしましょう。</p>

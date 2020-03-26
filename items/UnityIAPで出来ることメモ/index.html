@@ -1,0 +1,65 @@
+<p>1,2年前に、色んなIAPプラグインを漁って「このプラグインはコレが出来ない・・・」「こっちはこれが・・・」みたいな研究をした苦い思い出があるので<br>
+UnityIAPについては、ここで軽くまとめておきます。</p>
+
+<p><a href="http://docs.unity3d.com/Manual/UnityIAP.html" rel="nofollow noopener" target="_blank">Unity - Manual: Unity IAP</a></p>
+
+<ul>
+<li>信頼性
+
+<ul>
+<li>Unityが保守してくれるという意味で、今後も無くならないという安心感。</li>
+<li>まだリリースされたばっかりだからバグはあるかも という不安。</li>
+</ul>
+</li>
+<li>Unityへのインポート
+
+<ul>
+<li>専用UIがあるから超楽。</li>
+</ul>
+</li>
+<li>iOS/Android両対応のコスト
+
+<ul>
+<li>iOSの時はこれをして、Androidの時はこれをして・・・みたいなのはほぼ無し。</li>
+<li>ほぼほぼ共通コードで行ける。</li>
+<li>今のところ、iOS専用で書いたのはRestore処理、Android専用で書いたのはSetPublicKey。OS依存の処理はこのたった2行。</li>
+</ul>
+</li>
+<li>Editor上でデバッグ出来る？
+
+<ul>
+<li>出来る。</li>
+<li>Editor上では全部$0.01扱いになっていて、購入処理を走らせると専用のUIで「購入しますか？はい/いいえ」みたいなのが出るので、エディター上で購入した時のフロー及びOSレイヤーで購入をやっぱりやめた時のフローそれぞれ確認できる。</li>
+</ul>
+</li>
+<li>サーバーサイドでレシート検証
+
+<ul>
+<li>出来る。</li>
+<li>詳細はこちら <a href="http://docs.unity3d.com/Manual/UnityIAPProcessingPurchases.html" class="autolink" rel="nofollow noopener" target="_blank">http://docs.unity3d.com/Manual/UnityIAPProcessingPurchases.html</a>
+</li>
+</ul>
+</li>
+<li>レシートの取得
+
+<ul>
+<li>出来る。</li>
+</ul>
+</li>
+<li>ローカライズ済みの価格表示の取得（Storeによって「$0.99」になったり「¥120」になったりするstring）
+
+<ul>
+<li>出来る。</li>
+</ul>
+</li>
+<li>Ask To Buy(parental control対応)
+
+<ul>
+<li>出来る</li>
+<li><a href="http://docs.unity3d.com/Manual/UnityIAPiOSMAS.html" class="autolink" rel="nofollow noopener" target="_blank">http://docs.unity3d.com/Manual/UnityIAPiOSMAS.html</a></li>
+</ul>
+</li>
+</ul>
+
+<p>結論: すごい。<br>
+エディター上で購入フローのデバッグできるの感動した。</p>

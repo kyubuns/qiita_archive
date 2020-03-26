@@ -1,0 +1,71 @@
+
+<h2>
+<span id="まえがき" class="fragment"></span><a href="#%E3%81%BE%E3%81%88%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>まえがき</h2>
+
+<p>需要もあんまり無さそうなので手短にまとめます。<br>
+質問がありましたら、<a href="http://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">twitter</a>、コメントなどでどうぞ。</p>
+
+<h2>
+<span id="やりたいこと" class="fragment"></span><a href="#%E3%82%84%E3%82%8A%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8"><i class="fa fa-link"></i></a>やりたいこと</h2>
+
+<p>app_name://hogefugapiyo</p>
+
+<p>というリンクをどこかにしこんでおいて、これを踏んだら、app_nameというアプリを起動し、さらにhogefugapiyoという情報を渡す。</p>
+
+<h2>
+<span id="実装" class="fragment"></span><a href="#%E5%AE%9F%E8%A3%85"><i class="fa fa-link"></i></a>実装</h2>
+
+<h3>
+<span id="url-schemeを設定する" class="fragment"></span><a href="#url-scheme%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B"><i class="fa fa-link"></i></a>URL Schemeを設定する</h3>
+
+<p>URL Schemeを設定する方法は、前回紹介した通り。</p>
+
+<p><a href="http://qiita.com/kyubuns/items/6cbc982a3d96e8f4c5ce" class="autolink" id="reference-71482ca7142147545ffd">http://qiita.com/kyubuns/items/6cbc982a3d96e8f4c5ce</a></p>
+
+<h3>
+<span id="情報を受け取る" class="fragment"></span><a href="#%E6%83%85%E5%A0%B1%E3%82%92%E5%8F%97%E3%81%91%E5%8F%96%E3%82%8B"><i class="fa fa-link"></i></a>情報を受け取る</h3>
+
+<p>以下のObj-Cのコードを、Plugins/iOSにつっこむか、<a href="http://qiita.com/kyubuns/items/28dd316ef2415fc9a48d" id="reference-507056bc399c253640c2">なんやかんや</a>してコードを突っ込んでください。</p>
+
+<div class="code-frame" data-lang="lang">
+<div class="code-lang"><span class="bold">ExpandAppController.mm</span></div>
+<div class="highlight"><pre>#if ! __has_feature(objc_arc)
+#error This file must be compiled with ARC. Either turn on ARC for the project or use -fobjc-arc flag
+#endif
+
+#import "UnityAppController.h"
+
+extern "C"
+{
+    void UnitySendMessage(const char* obj, const char* method, const char* msg);
+}
+
+char* MakeStringCopy(const char* string)
+{
+    if (string == NULL) return NULL;
+    char* res = (char*)malloc(strlen(string) + 1);
+    strcpy(res, string);
+    return res;
+}
+
+@interface ExpandAppController : UnityAppController
+@end
+
+@implementation ExpandAppController
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    NSString* message = [url absoluteString];
+    UnitySendMessage("Receiver", "TriggerOpenURL", MakeStringCopy([message UTF8String]));
+    return YES;
+}
+@end
+
+IMPL_APP_CONTROLLER_SUBCLASS(ExpandAppController)
+</pre></div>
+</div>
+
+<p>頭からの3行は、ARCを利用しない場合は消してください。<br>
+ARCを利用する方法はこちらで紹介しています。<br>
+<a href="http://qiita.com/kyubuns/items/24d33044e77b9fa614b3#2-6" class="autolink" id="reference-2d3ff184ef4406810eb2">http://qiita.com/kyubuns/items/24d33044e77b9fa614b3#2-6</a></p>
+
+<p>これで、ReceiverというGameObjectのTriggerOpenURLに「app_name://hogefugapiyo」って文字列が渡されます。</p>

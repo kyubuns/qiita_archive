@@ -1,0 +1,12 @@
+<p>生成したXCodeプロジェクトの下、Unity-iPhone/Images.xcasset/LINE.imageset</p>
+
+<p>というディレクトリは出来てるでしょうか？</p>
+
+<p>その下に、LINE_icon01.pngというファイルがあれば大丈夫なはずです。</p>
+
+<p>そもそもディレクトリが存在しなければ、</p>
+
+<p>var sourceDirNames = Directory.GetDirectories(Application.dataPath, "*.imageset", SearchOption.AllDirectories);<br>
+の行でディレクトリが引っかからないところにあるのかもしれません。</p>
+
+<p>Debug.Logなどで出力してみて確かめてみてください。</p>

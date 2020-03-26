@@ -1,0 +1,44 @@
+<p>めっちゃシンプルなコードだけど毎回毎回書いてる気がしたのでここにメモしておく。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">TexturePostprocessor.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEditor</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">sealed</span> <span class="k">class</span> <span class="nc">TexturePostprocessor</span> <span class="p">:</span> <span class="n">AssetPostprocessor</span>
+<span class="p">{</span>
+    <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">TextureImporter</span><span class="p">&gt;&gt;</span> <span class="n">formats</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">TextureImporter</span><span class="p">&gt;&gt;{</span>
+        <span class="p">{</span> <span class="s">"Assets/Resources/Hoge/Fuga"</span><span class="p">,</span> <span class="n">HogeFuga</span> <span class="p">},</span>
+        <span class="p">{</span> <span class="s">"Assets/Resources/A/B/C/Icon"</span><span class="p">,</span> <span class="n">Icon</span> <span class="p">},</span>
+    <span class="p">};</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">HogeFuga</span><span class="p">(</span><span class="n">TextureImporter</span> <span class="n">target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">target</span><span class="p">.</span><span class="n">textureFormat</span> <span class="p">=</span> <span class="n">TextureImporterFormat</span><span class="p">.</span><span class="n">Automatic16bit</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Icon</span><span class="p">(</span><span class="n">TextureImporter</span> <span class="n">target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">target</span><span class="p">.</span><span class="n">mipmapEnabled</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+        <span class="n">target</span><span class="p">.</span><span class="n">textureFormat</span> <span class="p">=</span> <span class="n">TextureImporterFormat</span><span class="p">.</span><span class="n">AutomaticTruecolor</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">OnPreprocessTexture</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">TextureImporter</span> <span class="n">target</span> <span class="p">=</span> <span class="n">assetImporter</span> <span class="k">as</span> <span class="n">TextureImporter</span><span class="p">;</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="kt">var</span> <span class="n">a</span> <span class="k">in</span> <span class="n">formats</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">path</span> <span class="p">=</span> <span class="n">a</span><span class="p">.</span><span class="n">Key</span><span class="p">;</span>
+            <span class="kt">var</span> <span class="n">func</span> <span class="p">=</span> <span class="n">a</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(!</span><span class="n">target</span><span class="p">.</span><span class="n">assetPath</span><span class="p">.</span><span class="nf">StartsWith</span><span class="p">(</span><span class="n">path</span><span class="p">))</span> <span class="k">continue</span><span class="p">;</span>
+
+            <span class="n">Debug</span><span class="p">.</span><span class="nf">LogFormat</span><span class="p">(</span><span class="s">"TextureImportProcessor:{0}"</span><span class="p">,</span> <span class="n">target</span><span class="p">.</span><span class="n">assetPath</span><span class="p">);</span>
+            <span class="nf">func</span><span class="p">(</span><span class="n">target</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>

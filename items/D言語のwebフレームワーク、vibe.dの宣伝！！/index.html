@@ -1,0 +1,63 @@
+<p>D言語アドベントカレンダー16日目です。<br>
+repeatedlyさんに「D言語アドベントカレンダーやらないんですか？( <a href="https://twitter.com/kyubuns/status/266568134616571905" class="autolink" rel="nofollow noopener" target="_blank">https://twitter.com/kyubuns/status/266568134616571905</a> )」って聞いたら「作れば人集まるんでは？( <a href="https://twitter.com/repeatedly/status/266571187881119744" class="autolink" rel="nofollow noopener" target="_blank">https://twitter.com/repeatedly/status/266571187881119744</a> )」と言われたのでなぜかD言語歴数週間ですが建てました。<br>
+というか、まだ真面目にD言語使ってませんごめんなさい。<br>
+まぁ、そんな話はおいといて本日はvibe.dの紹介記事を書きます。<br>
+あと、QiitaMarkdownに慣れてないのでそのうち編集していい感じにしときます。</p>
+
+<h1>
+<span id="vibedって" class="fragment"></span><a href="#vibed%E3%81%A3%E3%81%A6"><i class="fa fa-link"></i></a>vibe.dって？</h1>
+
+<p>とりあえずgithubのURL置いときますね。<a href="https://github.com/rejectedsoftware/vibe.d" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/rejectedsoftware/vibe.d</a><br>
+vibe.dはD言語で書かれた非同期I/O&amp;webフレームワークです。<br>
+世間ではwebフレームワークと言えば、やれrubyのrailsだの、やれpythonのDjangoだのと言った物が流行ってますが、<br>
+動的型付け言語を100行以上書くと死んでしまう自分にとってはそれらが使えないわけです。<br>
+そこで、静的型付け言語かつイケイケなD言語でwebサイト構築してしまおう！ということですね。</p>
+
+<h1>
+<span id="特徴" class="fragment"></span><a href="#%E7%89%B9%E5%BE%B4"><i class="fa fa-link"></i></a>特徴</h1>
+
+<ul>
+<li>イケイケなD言語でwebサイト構築できる！</li>
+<li>静的型付け万歳</li>
+<li>ぶっちゃけ、webフレームワークとしてそこまで色々面倒見てくれるわけではない
+（MVCの分離とか）</li>
+<li>ここにまとまってるので見てください(<a href="http://vibed.org/" class="autolink" rel="nofollow noopener" target="_blank">http://vibed.org/</a>)</li>
+<li>forumですぐ返事帰ってくる</li>
+<li>windowsでも動くらしいですがやったことないので知らないです。(<a href="https://twitter.com/repeatedly/status/263581238609203200" class="autolink" rel="nofollow noopener" target="_blank">https://twitter.com/repeatedly/status/263581238609203200</a>)</li>
+<li>ぶっちゃけまだバグバグ</li>
+<li>もちろんDBも触れます！対応してるのはRedis,Mongoです！！MySQL？なにそれおいしいの？</li>
+</ul>
+
+<h1>
+<span id="インストール手順" class="fragment"></span><a href="#%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E6%89%8B%E9%A0%86"><i class="fa fa-link"></i></a>インストール手順</h1>
+
+<p><a href="http://vibed.org/download" class="autolink" rel="nofollow noopener" target="_blank">http://vibed.org/download</a><br>
+↑ここ読んで適当にいれてください。<br>
+何かmacにインストール時に罠踏んだ記憶があるのですが、思い出せないので何かあったらreplyください。<br>
+バグ多いけれど修正も多いけれど、プルリクエストもすぐ反応があるのでgithubからcloneして自分でコードいじりまくってプルリクエスト投げるのがオススメです。<br>
+そんな不安定な物使ってられるか！って方は他のフレームワーク使った方が幸せになれます。<br>
+他にオススメといえばCppCMSとかですかね。</p>
+
+<h1>
+<span id="なんかチュートリアル的な" class="fragment"></span><a href="#%E3%81%AA%E3%82%93%E3%81%8B%E3%83%81%E3%83%A5%E3%83%BC%E3%83%88%E3%83%AA%E3%82%A2%E3%83%AB%E7%9A%84%E3%81%AA"><i class="fa fa-link"></i></a>なんかチュートリアル的な</h1>
+
+<p>ここでの説明は、<del>詳しく書くのがめんどくさいので</del><br>
+単純にどうやって勉強すればいいんだよ！みたいなのだけ簡単に書きます。</p>
+
+<p>プロジェクトの作り方は、<br>
+vibe init プロジェクト名<br>
+です。簡単。</p>
+
+<p>すると、プロジェクト名のディレクトリの中に<br>
+public, source, viewsという3つのディレクトリができます。<br>
+あとpackage.jsonは <a href="http://vibed.org/docs#advanced" class="autolink" rel="nofollow noopener" target="_blank">http://vibed.org/docs#advanced</a> これ見てください。<br>
+publicは、imageとかcssとか静的な物置くのに使います。<br>
+sourceはDのソース置くところで、viewはテンプレートファイル置くところです。<br>
+(ここでいうテンプレートはtemplateではなくjinja2とかの方のやつです。)</p>
+
+<p>で、公式のドキュメントのトップがめちゃくちゃ分かりやすいのでこれ見てください。<br>
+完璧です。<br>
+<a href="http://vibed.org/docs" class="autolink" rel="nofollow noopener" target="_blank">http://vibed.org/docs</a></p>
+
+<p>tcpやwebsocketで複数コネクションに対して何かする（まぁ簡単に言えばチャット的な）コードのサンプルはうちのブログにあります。見て言ってください。<br>
+<a href="http://d.hatena.ne.jp/kyubuns/20121026/1351214632" class="autolink" rel="nofollow noopener" target="_blank">http://d.hatena.ne.jp/kyubuns/20121026/1351214632</a></p>

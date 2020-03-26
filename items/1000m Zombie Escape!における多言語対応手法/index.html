@@ -1,0 +1,148 @@
+<p><a href="http://1000mz.jp" rel="nofollow noopener" target="_blank">1000m Zombie Escape!</a>(以下1000mZ)における8カ国語対応方法について紹介します。<br>
+※こちらの記事で紹介するのは技術的な内容であり、ローカライズそのものに関するあれやこれやの話はしません。</p>
+
+<h1>
+<span id="はじめに" class="fragment"></span><a href="#%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB"><i class="fa fa-link"></i></a>はじめに</h1>
+
+<p>1000mZは「日本語」「英語」「ドイツ語」「中国語（簡体字）」「韓国語」「フランス語」「スペイン語」「イタリア語」の8カ国語に対応しています。<br>
+8カ国語対応するにあたって発生した問題点とその解決方法についてご紹介します。</p>
+
+<h1>
+<span id="前置き" class="fragment"></span><a href="#%E5%89%8D%E7%BD%AE%E3%81%8D"><i class="fa fa-link"></i></a>前置き</h1>
+
+<h2>
+<span id="いい感じフォントとなんでもフォント" class="fragment"></span><a href="#%E3%81%84%E3%81%84%E6%84%9F%E3%81%98%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E3%81%A8%E3%81%AA%E3%82%93%E3%81%A7%E3%82%82%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88"><i class="fa fa-link"></i></a>「いい感じフォント」と「なんでもフォント」</h2>
+
+<p>1000mzでは、ゲームの世界観にあった「いい感じフォント」（こちらは英語やドイツ語しか対応していない）と、<br>
+日本語や韓国語、中国語を表示するための「なんでもフォント」の2つのフォントを使用しています。</p>
+
+<h2>
+<span id="unicodeは全て表示できないといけない" class="fragment"></span><a href="#unicode%E3%81%AF%E5%85%A8%E3%81%A6%E8%A1%A8%E7%A4%BA%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84%E3%81%A8%E3%81%84%E3%81%91%E3%81%AA%E3%81%84"><i class="fa fa-link"></i></a>Unicodeは全て表示できないといけない！</h2>
+
+<p>「GameCenterのフレンド名を表示する」という機能があるため、<br>
+ゲーム内で使用する文字だけを表示できるようにしておく・・・ではなく、<br>
+全ての文字を表示する必要がありました。</p>
+
+<h1>
+<span id="ドイツ語のasciiコードは128-255に入ってる" class="fragment"></span><a href="#%E3%83%89%E3%82%A4%E3%83%84%E8%AA%9E%E3%81%AEascii%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AF128-255%E3%81%AB%E5%85%A5%E3%81%A3%E3%81%A6%E3%82%8B"><i class="fa fa-link"></i></a>ドイツ語のASCIIコードは128-255に入ってる！</h1>
+
+<h2>
+<span id="isalphabet" class="fragment"></span><a href="#isalphabet"><i class="fa fa-link"></i></a>IsAlphabet</h2>
+
+<p>「ラベルのテキストがアルファベットのみなら、"いい感じフォント"、違えば"なんでもフォント"を使う」という処理を行っています。<br>
+そのために、「テキストがアルファベットのみかどうか」を判定するメソッドを作りました。<br>
+説明を簡単にするため、1文字だけ判定しています。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="kt">bool</span> <span class="nf">IsAlphabet</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">c</span> <span class="p">&lt;</span> <span class="m">127</span><span class="p">;</span> <span class="p">}</span>
+</pre></div></div>
+
+<h2>
+<span id="ドイツ語" class="fragment"></span><a href="#%E3%83%89%E3%82%A4%E3%83%84%E8%AA%9E"><i class="fa fa-link"></i></a>ドイツ語</h2>
+
+<p>ここで問題が発生しました。<br>
+「ドイツ語がなんでもフォントで表示されてしまう」という問題です。<br>
+ドイツ語やスペイン語にはアルファベットだけでなく、以下の様な文字が含まれています。<br>
+<a href="https://ja.wikipedia.org/wiki/%C3%9C" class="autolink" rel="nofollow noopener" target="_blank">https://ja.wikipedia.org/wiki/%C3%9C</a></p>
+
+<p>「ドイツ語の文字コードとかどうなってるんだよ・・・」と思って調べてみたところ、128~254の範囲に収まってくれているみたいです。<br>
+<a href="https://msdn.microsoft.com/ja-jp/library/cc392379.aspx" rel="nofollow noopener" target="_blank">ASCII 文字セット (128 ～ 255)</a></p>
+
+<p>よって、以下のように修正しました。<br>
+IsAlphabetはおかしいんですかね。まあこんな感じです。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="kt">bool</span> <span class="nf">IsAlphabet</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">c</span> <span class="p">&lt;</span> <span class="m">255</span><span class="p">;</span> <span class="p">}</span>
+</pre></div></div>
+
+<h1>
+<span id="uguiのtextエレメントを全部探して自動的に翻訳を割り当ててる話" class="fragment"></span><a href="#ugui%E3%81%AEtext%E3%82%A8%E3%83%AC%E3%83%A1%E3%83%B3%E3%83%88%E3%82%92%E5%85%A8%E9%83%A8%E6%8E%A2%E3%81%97%E3%81%A6%E8%87%AA%E5%8B%95%E7%9A%84%E3%81%AB%E7%BF%BB%E8%A8%B3%E3%82%92%E5%89%B2%E3%82%8A%E5%BD%93%E3%81%A6%E3%81%A6%E3%82%8B%E8%A9%B1"><i class="fa fa-link"></i></a>uGUIのTextエレメントを全部探して自動的に翻訳を割り当ててる話</h1>
+
+<p>ローカライズ対応は、ゲーム内に存在しているラベル全部書き換えないといけないってことなので、1つ1つ対応なんてやってられません。<br>
+パーッとやりましょう。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">foreach</span><span class="p">(</span><span class="kt">var</span> <span class="n">text</span> <span class="k">in</span> <span class="n">root</span><span class="p">.</span><span class="n">GameObject</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">GetComponentsInChildren</span><span class="p">&lt;</span><span class="n">Text</span><span class="p">&gt;())</span>
+<span class="p">{</span>
+  <span class="n">text</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="n">Localizer</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="n">text</span><span class="p">.</span><span class="n">name</span> <span class="p">+</span> <span class="n">text</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+  <span class="c1">// Localizer.Get("HogeButton.Text") -&gt; "Hoge" みたいなのを返してくれるように良い感じのデータを作っておく</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<h1>
+<span id="フォント描画が重い" class="fragment"></span><a href="#%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E6%8F%8F%E7%94%BB%E3%81%8C%E9%87%8D%E3%81%84"><i class="fa fa-link"></i></a>フォント描画が重い！</h1>
+
+<p>実は、何でもかんでも描画できるようにDynamicフォントを使っていました。<br>
+さすがにシーン遷移時等のフォントの描画が重すぎるという判断になり、全てBitmapフォントに変えました。<br>
+「なんでもフォント」はBitmapのUnicodeに設定すればよかったのですが、<br>
+「いい感じフォント」には上であげたようにドイツ語なども必要なため、Custom setで設定しました。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F76f1850f-c0b9-e3cd-d86f-16c1bb3ccd0b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=b0c6bbaf764fca63384ed15c869e7b86" target="_blank" rel="nofollow noopener"><img width="452" alt="font1.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F76f1850f-c0b9-e3cd-d86f-16c1bb3ccd0b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=b0c6bbaf764fca63384ed15c869e7b86" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/76f1850f-c0b9-e3cd-d86f-16c1bb3ccd0b.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F76f1850f-c0b9-e3cd-d86f-16c1bb3ccd0b.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=cd09bda0ec87e9fd31990716243c263d 1x" loading="lazy"></a></p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre> !"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþ
+</pre></div></div>
+
+<h1>
+<span id="フォントサイズがでかい" class="fragment"></span><a href="#%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E3%82%B5%E3%82%A4%E3%82%BA%E3%81%8C%E3%81%A7%E3%81%8B%E3%81%84"><i class="fa fa-link"></i></a>フォントサイズがでかい！</h1>
+
+<p>さて、ここで上がってくるのはフォントのファイルサイズがでかい！問題です。<br>
+BitmapにしてUnicode全てを持つとなると、とてもテクスチャサイズがでかくなってしまい、フォントサイズを下げるとフォントが荒くなってしまう・・・<br>
+この問題をフォントを2つに分割することで解決しました。<br>
+「なんでもフォント - マスター用」「なんでもフォント - フレンド名用」</p>
+
+<h2>
+<span id="なんでもフォント---マスター用" class="fragment"></span><a href="#%E3%81%AA%E3%82%93%E3%81%A7%E3%82%82%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88---%E3%83%9E%E3%82%B9%E3%82%BF%E3%83%BC%E7%94%A8"><i class="fa fa-link"></i></a>なんでもフォント - マスター用</h2>
+
+<p>マスターに含まれている文字列（つまりゲーム内で使用する文字列）をフォントサイズ64ぐらいで持たせておきます。<br>
+こちらは限られて文字だけなので、文字数は少ないです。</p>
+
+<h2>
+<span id="なんでもフォント---フレンド名用" class="fragment"></span><a href="#%E3%81%AA%E3%82%93%E3%81%A7%E3%82%82%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88---%E3%83%95%E3%83%AC%E3%83%B3%E3%83%89%E5%90%8D%E7%94%A8"><i class="fa fa-link"></i></a>なんでもフォント - フレンド名用</h2>
+
+<p>こちらはUnicode全てをもたせます。<br>
+その代わりにフォントサイズは小さくしてしまいます。<br>
+そして、フレンド名はあまりでかく描画しないようにUIを少し修正してもらいました。</p>
+
+<h1>
+<span id="文字幅調整の話" class="fragment"></span><a href="#%E6%96%87%E5%AD%97%E5%B9%85%E8%AA%BF%E6%95%B4%E3%81%AE%E8%A9%B1"><i class="fa fa-link"></i></a>文字幅調整の話</h1>
+
+<p>「翻訳して貰ったテキストを見ると思ってたより長かった！」<br>
+ローカライズあるあるですね。<br>
+今回は、テキストラベルの幅にあわせて自動的にフォントサイズを調整してくれる機構を自作しました。<br>
+uGUIのTextにBestFitという機能はあるのですが、Bitmapフォントでは効かないんですよね。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">TextExtensions.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine.UI</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Baum</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">TextExtensions</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">RescaleTextForBestFit</span><span class="p">(</span><span class="k">this</span> <span class="n">Text</span> <span class="n">text</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">rate</span> <span class="p">=</span> <span class="n">text</span><span class="p">.</span><span class="n">preferredWidth</span> <span class="p">/</span> <span class="p">(</span><span class="n">text</span><span class="p">.</span><span class="n">gameObject</span><span class="p">.</span><span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">RectTransform</span><span class="p">&gt;().</span><span class="n">sizeDelta</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+            <span class="n">text</span><span class="p">.</span><span class="n">rectTransform</span><span class="p">.</span><span class="n">localScale</span> <span class="p">=</span> <span class="n">Vector3</span><span class="p">.</span><span class="n">one</span> <span class="p">*</span> <span class="n">Mathf</span><span class="p">.</span><span class="nf">Clamp01</span><span class="p">(</span><span class="m">1.0f</span> <span class="p">/</span> <span class="n">Mathf</span><span class="p">.</span><span class="nf">Max</span><span class="p">(</span><span class="m">1.0f</span><span class="p">,</span> <span class="n">rate</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<p>ざっとこんな感じに。<br>
+横幅しか調整してくれないのでご注意ください。</p>
+
+<h1>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h1>
+
+<p>このような困難を乗り越えて1000mzの多国語対応は行われています。<br>
+「こういうところはどうなってるの？」とか、「こうしたほうがスマートじゃない？」などなど、<br>
+ご意見ご感想は コメント欄や<a href="http://twitter.com/kyubuns/" rel="nofollow noopener" target="_blank">twitter</a>で受け付けております。</p>
+
+<p>先日よりユニティちゃんコラボも開催中！<br>
+<a href="http://1000mz.jp/" rel="nofollow noopener" target="_blank">1000m Zombie Escape!</a>よろしくお願いします！</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F74b87cd2-6aa4-c43a-58b7-42a29b1a74c3.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7a6ca2797af810e83a29809424ae0049" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F74b87cd2-6aa4-c43a-58b7-42a29b1a74c3.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=7a6ca2797af810e83a29809424ae0049" alt="56e77405f50b09351d00001d.jpg" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/74b87cd2-6aa4-c43a-58b7-42a29b1a74c3.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F74b87cd2-6aa4-c43a-58b7-42a29b1a74c3.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=0feeb0ae384e0fe947b0fe4613d4c087 1x" loading="lazy"></a></p>
+
+<h1>
+<span id="1000mzにおけるシリーズ" class="fragment"></span><a href="#1000mz%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA"><i class="fa fa-link"></i></a>1000mZにおける〜シリーズ</h1>
+
+<p><a href="http://qiita.com/kyubuns/items/98b2127e01d9baf62fe7" id="reference-69ab8947624f85d80fbc">"1000m Zombie Escape!"におけるゲームフロー制御方法</a><br>
+<a href="http://qiita.com/kyubuns/items/9cf5684bffc4103e944f">"1000m Zombie Escape!"における多言語対応手法</a></p>

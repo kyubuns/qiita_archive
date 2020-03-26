@@ -1,0 +1,78 @@
+
+<h1>
+<span id="こんな古くさいクラスは嫌だ" class="fragment"></span><a href="#%E3%81%93%E3%82%93%E3%81%AA%E5%8F%A4%E3%81%8F%E3%81%95%E3%81%84%E3%82%AF%E3%83%A9%E3%82%B9%E3%81%AF%E5%AB%8C%E3%81%A0"><i class="fa fa-link"></i></a>こんな古くさいクラスは嫌だ</h1>
+
+<p><code>Dummy.Run()</code>を呼ぶと、<code>Dummy.Success</code>か<code>Dummy.Failed</code>のどっちかが呼ばれるぜ！みたいなロックなクラスがあるとします。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Dummy</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Run</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Run!"</span><span class="p">);</span>
+        <span class="n">Observable</span><span class="p">.</span><span class="nf">Timer</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">1</span><span class="p">))</span>
+            <span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">Random</span><span class="p">.</span><span class="nf">Range</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="n">Success</span><span class="p">?.</span><span class="nf">Invoke</span><span class="p">();</span>
+                <span class="k">else</span> <span class="n">Failed</span><span class="p">?.</span><span class="nf">Invoke</span><span class="p">(</span><span class="s">"エラーメッセージ"</span><span class="p">);</span>
+            <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">event</span> <span class="n">Action</span> <span class="n">Success</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">event</span> <span class="n">Action</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">Failed</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<p>原始時代かよってツッコみたくなりますが、ネイティブプラグインとか書いてると仕方ないときがあるんですよね。</p>
+
+<h1>
+<span id="まずは普通に使ってみる" class="fragment"></span><a href="#%E3%81%BE%E3%81%9A%E3%81%AF%E6%99%AE%E9%80%9A%E3%81%AB%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%82%8B"><i class="fa fa-link"></i></a>まずは普通に使ってみる</h1>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="n">Dummy</span><span class="p">.</span><span class="n">Success</span> <span class="p">+=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"成功!"</span><span class="p">);</span>
+<span class="n">Dummy</span><span class="p">.</span><span class="n">Failed</span> <span class="p">+=</span> <span class="n">error</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">$"失敗... </span><span class="p">{</span><span class="n">error</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+
+<span class="n">Dummy</span><span class="p">.</span><span class="nf">Run</span><span class="p">();</span>
+</pre></div></div>
+
+<p>いやもう購読解除も面倒だし、2回目呼んだ時とかどうなっちゃうの！？あーーー</p>
+
+<h1>
+<span id="どう呼べたら嬉しいか" class="fragment"></span><a href="#%E3%81%A9%E3%81%86%E5%91%BC%E3%81%B9%E3%81%9F%E3%82%89%E5%AC%89%E3%81%97%E3%81%84%E3%81%8B"><i class="fa fa-link"></i></a>どう呼べたら嬉しいか</h1>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="k">await</span> <span class="nf">DummyRunWrap</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">Success</span><span class="p">)</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"成功!"</span><span class="p">);</span>
+<span class="k">else</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">$"失敗... </span><span class="p">{</span><span class="n">result</span><span class="p">.</span><span class="n">ErrorMessage</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+</pre></div></div>
+
+<p>そうそう、令和のC#ってこうだよね。</p>
+
+<h1>
+<span id="taskにする" class="fragment"></span><a href="#task%E3%81%AB%E3%81%99%E3%82%8B"><i class="fa fa-link"></i></a>Taskにする</h1>
+
+<p>そこでこうしてこう。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">class</span> <span class="nc">Result</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">bool</span> <span class="n">Success</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">ErrorMessage</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">async</span> <span class="n">UniTask</span><span class="p">&lt;</span><span class="n">Result</span><span class="p">&gt;</span> <span class="nf">DummyRunWrap</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">resultTask</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="nf">Amb</span><span class="p">(</span>
+        <span class="n">Observable</span><span class="p">.</span><span class="nf">FromEvent</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Dummy</span><span class="p">.</span><span class="n">Success</span> <span class="p">+=</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Dummy</span><span class="p">.</span><span class="n">Success</span> <span class="p">-=</span> <span class="n">x</span><span class="p">)</span>
+            <span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="n">Result</span> <span class="p">{</span> <span class="n">Success</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span> <span class="n">Error</span> <span class="p">=</span> <span class="k">null</span> <span class="p">}),</span>
+        <span class="n">Observable</span><span class="p">.</span><span class="n">FromEvent</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Dummy</span><span class="p">.</span><span class="n">Failed</span> <span class="p">+=</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Dummy</span><span class="p">.</span><span class="n">Failed</span> <span class="p">-=</span> <span class="n">x</span><span class="p">)</span>
+            <span class="p">.</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="n">Result</span> <span class="p">{</span> <span class="n">Success</span> <span class="p">=</span> <span class="k">false</span><span class="p">,</span> <span class="n">Error</span> <span class="p">=</span> <span class="s">"message"</span> <span class="p">})</span>
+    <span class="p">).</span><span class="nf">First</span><span class="p">().</span><span class="nf">ToUniTask</span><span class="p">();</span>
+
+    <span class="n">Dummy</span><span class="p">.</span><span class="nf">Run</span><span class="p">();</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">resultTask</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<p>こうして平和な2019年が訪れましたとさ。</p>
+
+<h1>
+<span id="まだお気づきじゃない方へ" class="fragment"></span><a href="#%E3%81%BE%E3%81%A0%E3%81%8A%E6%B0%97%E3%81%A5%E3%81%8D%E3%81%98%E3%82%83%E3%81%AA%E3%81%84%E6%96%B9%E3%81%B8"><i class="fa fa-link"></i></a>まだお気づきじゃない方へ</h1>
+
+<p><code>Dummy.Run()</code> の結果が帰ってくる前にもう一度 <code>Dummy.Run()</code> を呼ぶと死にます。</p>

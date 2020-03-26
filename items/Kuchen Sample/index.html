@@ -1,0 +1,181 @@
+
+<h2>
+<span id="シンプルに" class="fragment"></span><a href="#%E3%82%B7%E3%83%B3%E3%83%97%E3%83%AB%E3%81%AB"><i class="fa fa-link"></i></a>シンプルに</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">SimpleSample.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SimpleSample</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"baum"</span><span class="p">)</span> <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">OnClick</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="引数付き" class="fragment"></span><a href="#%E5%BC%95%E6%95%B0%E4%BB%98%E3%81%8D"><i class="fa fa-link"></i></a>引数付き</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">WithArgs.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">WithArgs</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="n">Subscribe</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="p">(</span><span class="n">topic</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="n">Debug</span><span class="p">.</span><span class="nf">LogFormat</span><span class="p">(</span><span class="s">"{0}: {1}"</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">number</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="s">"test message"</span><span class="p">,</span> <span class="m">123</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="ワイルドカード" class="fragment"></span><a href="#%E3%83%AF%E3%82%A4%E3%83%AB%E3%83%89%E3%82%AB%E3%83%BC%E3%83%89"><i class="fa fa-link"></i></a>ワイルドカード</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">Wildcard.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Wildcard</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"Topic.*"</span><span class="p">,</span> <span class="p">(</span><span class="n">topic</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="n">topic</span><span class="p">);</span> <span class="p">});</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Topic.Hoge"</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Topic.Fuga"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="複数個" class="fragment"></span><a href="#%E8%A4%87%E6%95%B0%E5%80%8B"><i class="fa fa-link"></i></a>複数個</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">Multiple.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Multiple</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]{</span><span class="s">"Topic.Hoge"</span><span class="p">,</span> <span class="s">"Topic.Fuga"</span><span class="p">},</span> <span class="p">(</span><span class="n">topic</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="n">topic</span><span class="p">);</span> <span class="p">});</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Topic.Hoge"</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"Topic.Fuga"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="subscribeonce" class="fragment"></span><a href="#subscribeonce"><i class="fa fa-link"></i></a>SubscribeOnce</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">SubscribeOnce.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SubscribeOnce</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">SubscribeOnce</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="p">(</span><span class="n">topic</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="n">topic</span><span class="p">);</span> <span class="p">});</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span> <span class="c1">// 2回目は呼び出されない</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="subscribewithcoroutine" class="fragment"></span><a href="#subscribewithcoroutine"><i class="fa fa-link"></i></a>SubscribeWithCoroutine</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">SubscribeWithCoroutine.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SubscribeWithCoroutine</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">SubscribeWithCoroutine</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="n">Coroutine</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">IEnumerator</span> <span class="nf">Coroutine</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">yield</span> <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="mute" class="fragment"></span><a href="#mute"><i class="fa fa-link"></i></a>Mute</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">SubscribeWithCoroutine.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">SubscribeWithCoroutine</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">SubscribeWithCoroutine</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"!"</span><span class="p">);</span> <span class="p">});</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nf">Mute</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span> <span class="c1">// Muteしてる間は呼ばれない</span>
+        <span class="k">this</span><span class="p">.</span><span class="nf">Unmute</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<h2>
+<span id="gameobject無し" class="fragment"></span><a href="#gameobject%E7%84%A1%E3%81%97"><i class="fa fa-link"></i></a>GameObject無し</h2>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">NonGameObject.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">Kuchen</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">NonGameObject</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">SubscribeTest</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">using</span><span class="p">(</span><span class="kt">var</span> <span class="n">subscriber</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Subscriber</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">subscriber</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="cm">/* hoge */</span> <span class="p">});</span>
+            <span class="n">Publisher</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="s">"SampleTopic"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>

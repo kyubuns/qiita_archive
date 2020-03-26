@@ -1,0 +1,16 @@
+<p>canvasサイズの変更はどこ寄せにするか等引数が多く汎用的に使えるようにするのは難しいなと思ったのでプラグインに導入することは諦めました</p>
+
+<p>実現方法としましては、93行目付近</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>    copiedDoc = app.activeDocument.duplicate(activeDocument.name.slice(0, -4) + '.copy.psd');
+</pre></div></div>
+
+<p>の直後に処理を入れてもらえれば実現できます。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>    copiedDoc = app.activeDocument.duplicate(activeDocument.name.slice(0, -4) + '.copy.psd');
+    copiedDoc.resizeCanvas(copiedDoc.width * 10.0, copiedDoc.height * 10.0,AnchorPosition.TOPLEFT);
+</pre></div></div>
+
+<p>これで、横10.0%,縦10.0%サイズの左上寄せでキャンバスのリサイズが出来ます。<br>
+ご確認ください。<br>
+参考: <a href="http://www.openspc2.org/book/PhotoshopCS2/easy/layerset/006/" class="autolink" rel="nofollow noopener" target="_blank">http://www.openspc2.org/book/PhotoshopCS2/easy/layerset/006/</a></p>

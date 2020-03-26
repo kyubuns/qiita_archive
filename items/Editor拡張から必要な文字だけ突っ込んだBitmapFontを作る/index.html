@@ -1,0 +1,31 @@
+<p>ユーザー入力の文字が入り得ないテキストは、出来るだけ綺麗に描画したい。<br>
+ということで、マスターデータから使うテキスト情報を拾ってきて、その文字列を含んだBitmapFontを作る。<br>
+スクリプト内ではcustomCharactersしか変えてないので、他の設定は先に手動で終わらせておくこと。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">UpdateFont.cs</span></div>
+<div class="highlight"><pre><span class="p">[</span><span class="nf">MenuItem</span><span class="p">(</span><span class="s">"Hoge/Update Font"</span><span class="p">)]</span>
+<span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">UpdateFont</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">path</span> <span class="p">=</span> <span class="s">"Assets/Font/***.ttf"</span><span class="p">;</span>
+    <span class="kt">var</span> <span class="n">importer</span> <span class="p">=</span> <span class="n">AssetImporter</span><span class="p">.</span><span class="nf">GetAtPath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">TrueTypeFontImporter</span><span class="p">;</span>
+
+    <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">char</span><span class="p">&gt;</span> <span class="n">allCharacters</span> <span class="p">=</span> <span class="s">""</span><span class="p">;</span>
+
+    <span class="c1">// ↓ここでゴニョゴニョして必要な文字を列挙する</span>
+    <span class="k">foreach</span><span class="p">(</span><span class="kt">var</span> <span class="n">text</span> <span class="k">in</span> <span class="n">Hoge</span><span class="p">.</span><span class="n">Fuga</span><span class="p">.</span><span class="n">Texts</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// ゴニョゴニョ</span>
+        <span class="n">allCharacters</span> <span class="p">+=</span> <span class="n">text</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">allCharacters</span> <span class="p">=</span> <span class="n">allCharacters</span><span class="p">.</span><span class="nf">Distinct</span><span class="p">().</span><span class="nf">OrderBy</span><span class="p">(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">);</span>
+    <span class="kt">var</span> <span class="n">charactersString</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">String</span><span class="p">(</span><span class="n">allCharacters</span><span class="p">.</span><span class="nf">ToArray</span><span class="p">()).</span><span class="nf">Replace</span><span class="p">(</span><span class="s">"\n"</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">importer</span><span class="p">.</span><span class="n">customCharacters</span> <span class="p">==</span> <span class="n">charactersString</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="n">importer</span><span class="p">.</span><span class="n">customCharacters</span> <span class="p">=</span> <span class="n">charactersString</span><span class="p">;</span>
+    <span class="n">EditorUtility</span><span class="p">.</span><span class="nf">SetDirty</span><span class="p">(</span><span class="n">importer</span><span class="p">);</span>
+    <span class="n">AssetDatabase</span><span class="p">.</span><span class="nf">ImportAsset</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">ImportAssetOptions</span><span class="p">.</span><span class="n">ForceUpdate</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>

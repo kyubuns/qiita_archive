@@ -1,0 +1,9 @@
+<p>設定を追加してみました。<br>
+こちらより最新のソースコードを落として頂き、<br>
+<a href="https://raw.githubusercontent.com/kyubuns/yogurt/master/ExportLayersToFile.jsx" class="autolink" rel="nofollow noopener" target="_blank">https://raw.githubusercontent.com/kyubuns/yogurt/master/ExportLayersToFile.jsx</a><br>
+<code>fileName = "{layer_name}.png" // 保存名</code><br>
+となっている箇所を<br>
+<code>fileName = "{file_name}{index}.png" // 保存名</code><br>
+と変更することで、ファイル名01.pngのような形式で出力されるようになります。<br>
+また、<code>folder = ""</code>という出力先を指定する設定も追加しました。<br>
+こちらを、デスクトップに出力するなら<code>folder = "~/Desktop"</code>のように指定すると保存先指定がでなくなります。</p>

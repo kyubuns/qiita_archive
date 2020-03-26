@@ -1,0 +1,138 @@
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F0091c244-4092-4031-a150-6d09fe6989a1.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=a1581ea01bd6eebcfbc1bcf48f32df9c" target="_blank" rel="nofollow noopener"><img width="740" alt="MMOもどき_v1_0_1.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F0091c244-4092-4031-a150-6d09fe6989a1.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=a1581ea01bd6eebcfbc1bcf48f32df9c" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/0091c244-4092-4031-a150-6d09fe6989a1.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F0091c244-4092-4031-a150-6d09fe6989a1.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=73055c85dc996dbf218765ee8e7edbd4 1x" loading="lazy"></a><br>
+名前もねぇ！チャットもねぇ！鯖もそれほど動いちゃねぇ！<br>
+他の人と位置同期しているだけ　のゲームです。<br>
+ゲームなのか・・・？</p>
+
+<p>百聞は一見にしかず というので、まあまずは遊んでみてください。<br>
+<a href="http://kyubuns.net/MMOM" class="autolink" rel="nofollow noopener" target="_blank">http://kyubuns.net/MMOM</a><br>
+iPhoneでも動きます！たぶんAndroidでも動きます！<br>
+人いないときは2窓してみてください。</p>
+
+<h1>
+<span id="rpgツクールmvって" class="fragment"></span><a href="#rpg%E3%83%84%E3%82%AF%E3%83%BC%E3%83%ABmv%E3%81%A3%E3%81%A6"><i class="fa fa-link"></i></a>RPGツクールMVって？</h1>
+
+<p>RPGツクールの最新作。<br>
+今回はWindowsの他に、Mac, iOS, Androidそしてhtml5に出力できちゃいます。<br>
+<a href="https://tkool.jp/mv/" class="autolink" rel="nofollow noopener" target="_blank">https://tkool.jp/mv/</a></p>
+
+<p>英語版が先週発売、日本語版は12月発売。<br>
+<a href="http://store.steampowered.com/app/363890/" class="autolink" rel="nofollow noopener" target="_blank">http://store.steampowered.com/app/363890/</a></p>
+
+<h1>
+<span id="やりたかったこと" class="fragment"></span><a href="#%E3%82%84%E3%82%8A%E3%81%9F%E3%81%8B%E3%81%A3%E3%81%9F%E3%81%93%E3%81%A8"><i class="fa fa-link"></i></a>やりたかったこと</h1>
+
+<p>RPGツクールを使ってオンラインゲームが作れるか という実験プロジェクトです。<br>
+ネットワーク部分はsocket.ioに丸投げしたので深い説明はしません。<br>
+ツクールとのつなぎ込み部分をメインに書いていきます。</p>
+
+<h1>
+<span id="やったこと" class="fragment"></span><a href="#%E3%82%84%E3%81%A3%E3%81%9F%E3%81%93%E3%81%A8"><i class="fa fa-link"></i></a>やったこと</h1>
+
+<ul>
+<li>プレイヤーの位置同期</li>
+<li>ルーム機能（マップを移動すると、そのマップ内のユーザーの座標のみ同期する）</li>
+</ul>
+
+<h1>
+<span id="実現方法" class="fragment"></span><a href="#%E5%AE%9F%E7%8F%BE%E6%96%B9%E6%B3%95"><i class="fa fa-link"></i></a>実現方法</h1>
+
+<h2>
+<span id="サーバー" class="fragment"></span><a href="#%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC"><i class="fa fa-link"></i></a>サーバー</h2>
+
+<p>サーバー側は特に目新しいことはやっていません。<br>
+socket.ioのroom機能を使って、クライアントから飛んできた移動後座標を他のクライアントにブロードキャストしてるだけです。<br>
+詳細は<a href="http://socket.io/docs/" rel="nofollow noopener" target="_blank">socket.ioのDocs</a>を見てください。<br>
+<a href="https://github.com/kyubuns/MMOM/blob/gh-pages/Server/server.coffee" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/MMOM/blob/gh-pages/Server/server.coffee</a></p>
+
+<h2>
+<span id="クライアント" class="fragment"></span><a href="#%E3%82%AF%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88"><i class="fa fa-link"></i></a>クライアント</h2>
+
+<p><a href="https://github.com/kyubuns/MMOM/blob/gh-pages/Dev/ClientPlugin/Network.coffee" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/MMOM/blob/gh-pages/Dev/ClientPlugin/Network.coffee</a><br>
+クライアントも普通にsocket.io使ってるだけです。</p>
+
+<p>・・・だと、説明にならないので、詰まった点を紹介していきます。</p>
+
+<h3>
+<span id="クライアントでsocketioをどうやってincludeするか" class="fragment"></span><a href="#%E3%82%AF%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%E3%81%A7socketio%E3%82%92%E3%81%A9%E3%81%86%E3%82%84%E3%81%A3%E3%81%A6include%E3%81%99%E3%82%8B%E3%81%8B"><i class="fa fa-link"></i></a>クライアントでsocket.ioをどうやってincludeするか</h3>
+
+<p><del>jsからjsをincludeするかなぁ・・・とか色々考えたんですけど、<br>
+よく考えたらindex.htmlが勝手に触れる場所にあるので、素直に<code>&lt;script type="text/javascript" src="js/libs/socket.io.js"&gt;&lt;/script&gt;</code>って書きました。<br>
+<a href="https://github.com/kyubuns/MMOM/blob/gh-pages/Client/index.html#L18" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/MMOM/blob/gh-pages/Client/index.html#L18</a></del></p>
+
+<p>追記:</p>
+
+<p>socket.io.jsのままjs/plugins以下に配置すると正常に読み込めなかったので上記の方法をとりましたが、<br>
+socket_io.jsなどにリネームしてから置いたら正常に動作しました。</p>
+
+<h3>
+<span id="どうやってイベントを増やすか" class="fragment"></span><a href="#%E3%81%A9%E3%81%86%E3%82%84%E3%81%A3%E3%81%A6%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%82%92%E5%A2%97%E3%82%84%E3%81%99%E3%81%8B"><i class="fa fa-link"></i></a>どうやってイベントを増やすか</h3>
+
+<p>プレイヤー1人＝1マップイベント。<br>
+つまり、誰かが接続してきたらUnityのPrefabのようにイベントを増やしてやらないといけない。<br>
+ということで、海外のフォーラムあさってたらイベントをクローンするプラグインがありました。<br>
+<a href="http://forums.rpgmakerweb.com/index.php?/topic/46527-orange-custom-events/" class="autolink" rel="nofollow noopener" target="_blank">http://forums.rpgmakerweb.com/index.php?/topic/46527-orange-custom-events/</a></p>
+
+<h3>
+<span id="ツクール---プラグインにどうやって情報を渡すか" class="fragment"></span><a href="#%E3%83%84%E3%82%AF%E3%83%BC%E3%83%AB---%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%81%AB%E3%81%A9%E3%81%86%E3%82%84%E3%81%A3%E3%81%A6%E6%83%85%E5%A0%B1%E3%82%92%E6%B8%A1%E3%81%99%E3%81%8B"><i class="fa fa-link"></i></a>ツクール -&gt; プラグインにどうやって情報を渡すか</h3>
+
+<p>プラグイン側に全ての情報があるので、ここはそれほど困らなかった。<br>
+例えば、プレイヤーの座標なら<code>$gamePlayer.x, $gamePlayer.y</code>に入っている。とかを頑張って読み解く。</p>
+
+<h3>
+<span id="プラグイン---ツクールにどうやって情報を渡すか" class="fragment"></span><a href="#%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3---%E3%83%84%E3%82%AF%E3%83%BC%E3%83%AB%E3%81%AB%E3%81%A9%E3%81%86%E3%82%84%E3%81%A3%E3%81%A6%E6%83%85%E5%A0%B1%E3%82%92%E6%B8%A1%E3%81%99%E3%81%8B"><i class="fa fa-link"></i></a>プラグイン -&gt; ツクールにどうやって情報を渡すか</h3>
+
+<p>問題はこちら。<br>
+プレイヤーAの位置がサーバーから飛んできたとして、どうやってツクール上のイベントの位置に反映するか。<br>
+また、このあたりまで作って「スクリプトばっかり書いてるとツクールらしさがないな・・・」ということで、イベントを無理にでも使ってみます。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Ff5ae467f-7740-3e40-f740-fc81ce0b4265.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=5e44e521fc86b70c49e668f33ea45729" target="_blank" rel="nofollow noopener"><img width="1038" alt="ID_001_-_Event_Editor_and_MMOもどき_v1_0_1_-_RPG_Maker_MV.png" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Ff5ae467f-7740-3e40-f740-fc81ce0b4265.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=5e44e521fc86b70c49e668f33ea45729" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/f5ae467f-7740-3e40-f740-fc81ce0b4265.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Ff5ae467f-7740-3e40-f740-fc81ce0b4265.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=0ba34949dea5d93b20b16bf4fbfacf16 1x" loading="lazy"></a></p>
+
+<p>1行目のScriptは、このメソッドを呼んでいます。<br>
+<a href="https://github.com/kyubuns/MMOM/blob/gh-pages/Dev/ClientPlugin/Network.coffee#L47" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/MMOM/blob/gh-pages/Dev/ClientPlugin/Network.coffee#L47</a></p>
+
+<div class="code-frame" data-lang="lang">
+<div class="code-lang"><span class="bold">Network.coffee</span></div>
+<div class="highlight"><pre>$gameVariables.setValue(10, 1)
+$gameVariables.setValue(11, info['x'])
+$gameVariables.setValue(12, info['y'])
+</pre></div>
+</div>
+
+<p>ツクール変数の10, 11, 12に、それぞれ1(生きてるか死んでるか)、x座標、y座標を書いてます。<br>
+それ以下は、ツクールの変数を見て移動するイベントです。</p>
+
+<h3>
+<span id="バグ-タイトル画面に戻るとエラーが発生する" class="fragment"></span><a href="#%E3%83%90%E3%82%B0-%E3%82%BF%E3%82%A4%E3%83%88%E3%83%AB%E7%94%BB%E9%9D%A2%E3%81%AB%E6%88%BB%E3%82%8B%E3%81%A8%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E7%99%BA%E7%94%9F%E3%81%99%E3%82%8B"><i class="fa fa-link"></i></a>バグ: タイトル画面に戻るとエラーが発生する</h3>
+
+<p>メニューからタイトル画面に戻ると、socketは生きたままマップ情報が破棄されてしまうので、<br>
+サーバーからデータが飛んできたタイミングでエラーになってしまっていた。<br>
+タイトル画面に戻ることのある遷移は、メニュー以外にも戦闘敗北時などが考えられるので、タイトル画面側で対処することにした。<br>
+タイトル画面が表示されるときにsocketが生きていれば殺す。<br>
+<a href="https://github.com/kyubuns/MMOM/blob/gh-pages/Dev/ClientPlugin/Network.coffee#L81" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/MMOM/blob/gh-pages/Dev/ClientPlugin/Network.coffee#L81</a></p>
+
+<h1>
+<span id="反省点" class="fragment"></span><a href="#%E5%8F%8D%E7%9C%81%E7%82%B9"><i class="fa fa-link"></i></a>反省点</h1>
+
+<ul>
+<li>RPGツクールでやる意味あったのか・・・？というぐらいRPGツクールの機能が使えていない。</li>
+<li>戦闘の同期とかまで作ったら面白かったのかも。</li>
+<li>プラグイン-&gt;ツクールに値を渡す方法がスマートじゃない・・・</li>
+<li>他プレイヤーの指定された位置まで移動するアルゴリズムが頭良くないため、稀にひっかかる</li>
+<li>この記事をテンション高めに書き上げたので色々書き漏らしてる気がする。</li>
+</ul>
+
+<h1>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h1>
+
+<p>ということで、今回のツクールはhtml5で出来ることは何でもできちゃいますね。<br>
+面白いゲームが出てくるのを楽しみにしています！<br>
+アプリ内課金とか実装できるのかなこれ・・・</p>
+
+<p>質問などは、コメントか<a href="http://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">twitter</a>までお気軽にどうぞ。</p>
+
+<h1>
+<span id="ちなみに" class="fragment"></span><a href="#%E3%81%A1%E3%81%AA%E3%81%BF%E3%81%AB"><i class="fa fa-link"></i></a>ちなみに</h1>
+
+<p>あの敵、全く調整せずに置いたんですけど勝てるらしい</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fdf780157-4adf-3e62-9dcd-35137bd27323.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=1e3e9d6286e74bca15fe26cfa2bdff8f" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fdf780157-4adf-3e62-9dcd-35137bd27323.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=1e3e9d6286e74bca15fe26cfa2bdff8f" alt="S__42885148.jpg" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/df780157-4adf-3e62-9dcd-35137bd27323.jpeg" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fdf780157-4adf-3e62-9dcd-35137bd27323.jpeg?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=0ab5ee6eebabd073be23c6b411743e74 1x" loading="lazy"></a></p>

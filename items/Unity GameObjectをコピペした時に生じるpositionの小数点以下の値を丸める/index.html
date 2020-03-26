@@ -1,0 +1,50 @@
+
+<h1>
+<span id="はじめに" class="fragment"></span><a href="#%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB"><i class="fa fa-link"></i></a>はじめに</h1>
+
+<p>Unityって、GameObjectをSceneViewでいじってても、小数点以下の動きはしないようになってます。<br>
+↑よくよく調べてみたら、NGUIの挙動でした。</p>
+
+<p>もちろん、Inspectorから直接入力したら、小数点も入ります。<br>
+後、Shift押しながらドラッグしても小数点付きで移動します。<br>
+でも、まぁ普通は小数点入らないようになってます。</p>
+
+<h1>
+<span id="でも" class="fragment"></span><a href="#%E3%81%A7%E3%82%82"><i class="fa fa-link"></i></a>でも</h1>
+
+<p>UnityでGameObjectを操作していて、positionに小数点が入ることがあります。<br>
+自分がよく引っかかるのは、GameObjectをコピー&amp;ペーストした時。<br>
+（他にも条件あったら教えてください！）</p>
+
+<p>うわーー、コピペしたゲームオブジェクトにだけpositionに小数点以下の値がー！！ってなります。<br>
+気持ち悪いから消します。</p>
+
+<h1>
+<span id="スクリプト" class="fragment"></span><a href="#%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88"><i class="fa fa-link"></i></a>スクリプト</h1>
+
+<p>これを、Editor以下につっこんでください。</p>
+
+<div class="code-frame" data-lang="text"><div class="highlight"><pre>using UnityEngine;
+using UnityEditor;
+
+[InitializeOnLoad]
+public class PositionRounder
+{
+  static PositionRounder()
+  {
+    EditorApplication.hierarchyWindowChanged += OnHierarchyWindowChanged;
+  }
+
+  static void OnHierarchyWindowChanged()
+  {
+    foreach(var target in Selection.gameObjects)
+    {
+      var p = target.transform.localPosition;
+      p.x = Mathf.Round(p.x * 1000.0f)/1000.0f;
+      p.y = Mathf.Round(p.y * 1000.0f)/1000.0f;
+      p.z = Mathf.Round(p.z * 1000.0f)/1000.0f;
+      target.transform.localPosition = p;
+    }
+  }
+}
+</pre></div></div>

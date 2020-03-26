@@ -1,0 +1,287 @@
+
+<h1>
+<span id="はじめに" class="fragment"></span><a href="#%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB"><i class="fa fa-link"></i></a>はじめに</h1>
+
+<p><a href="https://unityroom.com/unity1weeks" rel="nofollow noopener" target="_blank">1週間ゲームジャム お題「space」</a>を見て、<br>
+<a href="https://unityroom.com/games/space_parking" rel="nofollow noopener" target="_blank">宇宙で駐車スペースに駐車するゲーム</a>という物理演算ドタバタゲーを作ったので、<br>
+せっかくなら技術解説記事でも書こうと思い立った次第です。</p>
+
+<h1>
+<span id="利点" class="fragment"></span><a href="#%E5%88%A9%E7%82%B9"><i class="fa fa-link"></i></a>利点</h1>
+
+<p>PubSubでフローを管理することで、クラス間の依存が少なく出来てサイコー！って感じです。</p>
+
+<h1>
+<span id="messagebrokerってなに" class="fragment"></span><a href="#messagebroker%E3%81%A3%E3%81%A6%E3%81%AA%E3%81%AB"><i class="fa fa-link"></i></a>MessageBrokerってなに？</h1>
+
+<p><a href="https://www.assetstore.unity3d.com/#!/content/17276?aid=1100l3pRW" rel="nofollow noopener" target="_blank">UniRx</a>で提供されているPubSub機構です。<br>
+型ベースなのが非常に良いです。</p>
+
+<ul>
+<li>参考 : <a href="https://qiita.com/CST_negi/items/6f9e692df4e4847cf8a9" id="reference-54b137a04935dbd7f7aa">UniRxのMessageBrokerが便利という話</a>
+</li>
+</ul>
+
+<h1>
+<span id="本題へ" class="fragment"></span><a href="#%E6%9C%AC%E9%A1%8C%E3%81%B8"><i class="fa fa-link"></i></a>本題へ</h1>
+
+<p>このゲームの流れはこうです。</p>
+
+<ul>
+<li>最初の1秒は説明テキストを見せる（操作不可）</li>
+<li>操作可能にする</li>
+<li>何かしらのキーが押されたらゲームスタート
+
+<ul>
+<li>時間計測開始</li>
+<li>タイトル画面が消える</li>
+</ul>
+</li>
+<li>車が駐車スペースに止まったらゲーム終了</li>
+<li><p>ボタンを押したらリトライ</p></li>
+<li><p><strong>+ いつでもリトライ出来る</strong></p></li>
+</ul>
+
+<h2>
+<span id="ゲームフロー管理マン" class="fragment"></span><a href="#%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%95%E3%83%AD%E3%83%BC%E7%AE%A1%E7%90%86%E3%83%9E%E3%83%B3"><i class="fa fa-link"></i></a>ゲームフロー管理マン</h2>
+
+<p>いきなりゲームフローを管理してるクラスです。<br>
+上に書いたゲームフローをそのままコードに落としたように綺麗に書けてます。素敵。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">class</span> <span class="nc">GameFlow</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSecondsRealtime</span><span class="p">(</span><span class="m">1.0f</span><span class="p">);</span>
+
+        <span class="n">Controller</span><span class="p">.</span><span class="n">Enabled</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+        <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitUntil</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="n">Controller</span><span class="p">.</span><span class="n">Any</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">startTime</span> <span class="p">=</span> <span class="n">Time</span><span class="p">.</span><span class="n">time</span><span class="p">;</span>
+        <span class="n">MessageBroker</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="k">new</span> <span class="nf">GameStart</span><span class="p">());</span>
+
+        <span class="k">yield</span> <span class="k">return</span> <span class="n">MessageBroker</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Receive</span><span class="p">&lt;</span><span class="n">CarStay</span><span class="p">&gt;().</span><span class="nf">First</span><span class="p">().</span><span class="nf">ToYieldInstruction</span><span class="p">();</span>
+
+        <span class="n">MessageBroker</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="nf">Publish</span><span class="p">(</span><span class="k">new</span> <span class="nf">GameFinish</span><span class="p">(</span><span class="n">Time</span><span class="p">.</span><span class="n">time</span> <span class="p">-</span> <span class="n">startTime</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">GameStart</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">GameFinish</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="kt">float</span> <span class="n">Time</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="nf">GameFinish</span><span class="p">(</span><span class="kt">float</span> <span class="n">time</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Time</span> <span class="p">=</span> <span class="n">time</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 車が駐車スペースに停車したら飛んでくる</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">CarStay</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<h2>
+<span id="タイトル画面をふわぁっと消す" class="fragment"></span><a href="#%E3%82%BF%E3%82%A4%E3%83%88%E3%83%AB%E7%94%BB%E9%9D%A2%E3%82%92%E3%81%B5%E3%82%8F%E3%81%81%E3%81%A3%E3%81%A8%E6%B6%88%E3%81%99"><i class="fa fa-link"></i></a>タイトル画面をふわぁ〜っと消す</h2>
+
+<p>ゲームが開始したら、タイトル画面（「↑あなた」とか「↑ここにとめる」とかテキストが出てるやつ）をふわぁ〜っと消します。<br>
+ゲームスタートが飛んできたら、CanvasGroupごとフェードアウト。<br>
+これもコルーチンで回します。非常にシンプル。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">class</span> <span class="nc">Title</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">yield</span> <span class="k">return</span> <span class="n">MessageBroker</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Receive</span><span class="p">&lt;</span><span class="n">GameFlow</span><span class="p">.</span><span class="n">GameStart</span><span class="p">&gt;().</span><span class="nf">First</span><span class="p">().</span><span class="nf">ToYieldInstruction</span><span class="p">();</span>
+        <span class="k">yield</span> <span class="k">return</span> <span class="nf">StartCoroutine</span><span class="p">(</span><span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">CanvasGroup</span><span class="p">&gt;().</span><span class="nf">FadeOut</span><span class="p">());</span>
+        <span class="n">gameObject</span><span class="p">.</span><span class="nf">SetActive</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<p>これはゲームフローとは関係ないのですが、ふわぁ〜っとCanvasGroupのalphaを0にするやつも便利なので置いときます。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">CanvasGroupExtensions</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">IEnumerator</span> <span class="nf">FadeOut</span><span class="p">(</span><span class="k">this</span> <span class="n">CanvasGroup</span> <span class="k">group</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">time</span> <span class="p">=</span> <span class="m">0.0f</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">time</span> <span class="p">&lt;</span> <span class="m">1.0f</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">group</span><span class="p">.</span><span class="n">alpha</span> <span class="p">=</span> <span class="n">Mathf</span><span class="p">.</span><span class="nf">Lerp</span><span class="p">(</span><span class="m">1.0f</span><span class="p">,</span> <span class="m">0.0f</span><span class="p">,</span> <span class="n">time</span><span class="p">);</span>
+            <span class="n">time</span> <span class="p">+=</span> <span class="n">Time</span><span class="p">.</span><span class="n">deltaTime</span><span class="p">;</span>
+            <span class="k">yield</span> <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">group</span><span class="p">.</span><span class="n">alpha</span> <span class="p">=</span> <span class="m">0.0f</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<h2>
+<span id="リトライはいつでも受け付けたい" class="fragment"></span><a href="#%E3%83%AA%E3%83%88%E3%83%A9%E3%82%A4%E3%81%AF%E3%81%84%E3%81%A4%E3%81%A7%E3%82%82%E5%8F%97%E3%81%91%E4%BB%98%E3%81%91%E3%81%9F%E3%81%84"><i class="fa fa-link"></i></a>リトライはいつでも受け付けたい</h2>
+
+<p>リトライはゲームのフローに関係なく、いつでも突然呼び出したい。<br>
+そんな時は、普通にSubscribeしましょう。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">class</span> <span class="nc">GameFlow</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">MessageBroker</span><span class="p">.</span><span class="n">Default</span>
+            <span class="p">.</span><span class="n">Receive</span><span class="p">&lt;</span><span class="n">NextGame</span><span class="p">&gt;()</span>
+            <span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span> <span class="n">SceneManager</span><span class="p">.</span><span class="nf">LoadScene</span><span class="p">(</span><span class="n">SceneManager</span><span class="p">.</span><span class="nf">GetActiveScene</span><span class="p">().</span><span class="n">name</span><span class="p">))</span>
+            <span class="p">.</span><span class="nf">AddTo</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+        <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSecondsRealtime</span><span class="p">(</span><span class="m">1.0f</span><span class="p">);</span>
+
+<span class="err">　　　　　〜あとはいっしょ〜</span>
+</pre></div></div>
+
+<h2>
+<span id="ゲームが終了したら結果を表示する" class="fragment"></span><a href="#%E3%82%B2%E3%83%BC%E3%83%A0%E3%81%8C%E7%B5%82%E4%BA%86%E3%81%97%E3%81%9F%E3%82%89%E7%B5%90%E6%9E%9C%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B"><i class="fa fa-link"></i></a>ゲームが終了したら結果を表示する</h2>
+
+<p>GameFlow.StartでPublishした値、どこでも誰でも自由に受け取れます。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="p">[</span><span class="nf">RequireComponent</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">Text</span><span class="p">))]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Result</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">finish</span> <span class="p">=</span> <span class="n">MessageBroker</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Receive</span><span class="p">&lt;</span><span class="n">GameFlow</span><span class="p">.</span><span class="n">GameFinish</span><span class="p">&gt;().</span><span class="nf">First</span><span class="p">().</span><span class="nf">ToYieldInstruction</span><span class="p">();</span>
+        <span class="k">yield</span> <span class="k">return</span> <span class="n">finish</span><span class="p">;</span>
+        <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">Text</span><span class="p">&gt;().</span><span class="n">text</span> <span class="p">=</span> <span class="s">$"きろく </span><span class="p">{</span><span class="n">finish</span><span class="p">.</span><span class="n">Result</span><span class="p">.</span><span class="n">Time</span><span class="p">}</span><span class="s">びょう"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<h2>
+<span id="ツイートボタンでも値を使いたい" class="fragment"></span><a href="#%E3%83%84%E3%82%A4%E3%83%BC%E3%83%88%E3%83%9C%E3%82%BF%E3%83%B3%E3%81%A7%E3%82%82%E5%80%A4%E3%82%92%E4%BD%BF%E3%81%84%E3%81%9F%E3%81%84"><i class="fa fa-link"></i></a>ツイートボタンでも値を使いたい！</h2>
+
+<p>上記、Resultクラスとは何の依存も必要ありません。<br>
+こっちも勝手に値を待って、使えばいいだけ。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="p">[</span><span class="nf">RequireComponent</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">Button</span><span class="p">))]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">TweetButton</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">IEnumerator</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">finish</span> <span class="p">=</span> <span class="n">MessageBroker</span><span class="p">.</span><span class="n">Default</span><span class="p">.</span><span class="n">Receive</span><span class="p">&lt;</span><span class="n">GameFlow</span><span class="p">.</span><span class="n">GameFinish</span><span class="p">&gt;().</span><span class="nf">First</span><span class="p">().</span><span class="nf">ToYieldInstruction</span><span class="p">();</span>
+        <span class="k">yield</span> <span class="k">return</span> <span class="n">finish</span><span class="p">;</span>
+
+        <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">Button</span><span class="p">&gt;().</span><span class="nf">OnClickAsObservable</span><span class="p">().</span><span class="nf">Subscribe</span><span class="p">(</span><span class="n">_</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">finish</span><span class="p">.</span><span class="n">Result</span><span class="p">.</span><span class="n">Time</span><span class="p">}</span><span class="s">秒だったよ！とツイート"</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<h1>
+<span id="まとめ" class="fragment"></span><a href="#%E3%81%BE%E3%81%A8%E3%82%81"><i class="fa fa-link"></i></a>まとめ</h1>
+
+<p>いかがでしょうか、GameFlowクラスでゲームの流れは全て制御していながら、GameFlowクラスからも、他のクラスからも、お互いに依存は1つもありません。<br>
+「ゲームクリアしたときのデバッグがしたい！」という時に、「GameFinishをPublishするボタン」を置いておけばゲームクリアしたことになる。というのも非常に便利です。<br>
+ご意見ご感想は、ここのコメント欄か<a href="https://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">@kyubuns</a>までお気軽にどうぞ！</p>
+
+<h1>
+<span id="余談1" class="fragment"></span><a href="#%E4%BD%99%E8%AB%871"><i class="fa fa-link"></i></a>余談1</h1>
+
+<p>async/awaitを使えば、値を受け取るコードがもっとシンプルに書けて嬉しい。<br>
+<a href="https://gist.github.com/kyubuns/d0609398e71e16bb87a5451c72963391" class="autolink" rel="nofollow noopener" target="_blank">https://gist.github.com/kyubuns/d0609398e71e16bb87a5451c72963391</a></p>
+
+<h1>
+<span id="余談2" class="fragment"></span><a href="#%E4%BD%99%E8%AB%872"><i class="fa fa-link"></i></a>余談2</h1>
+
+<p>PubSubは関係ないけれど、他にも依存を減らす工夫を紹介します。<br>
+キー入力をしてから、車が動いて炎のエフェクトが出るまでの流れです。<br>
+ちなみにエフェクトはAssetStoreから拾ってきた<a href="https://www.assetstore.unity3d.com/#!/content/74293?aid=1100l3pRW" rel="nofollow noopener" target="_blank">CubeSpace - Effects</a>を使っています。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Controller</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">Enabled</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">Up</span> <span class="p">=&gt;</span> <span class="n">Enabled</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">UpArrow</span><span class="p">)</span> <span class="p">||</span> <span class="n">Input</span><span class="p">.</span><span class="nf">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">W</span><span class="p">));</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">Left</span> <span class="p">=&gt;</span> <span class="n">Enabled</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">LeftArrow</span><span class="p">)</span> <span class="p">||</span> <span class="n">Input</span><span class="p">.</span><span class="nf">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">A</span><span class="p">));</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">Down</span> <span class="p">=&gt;</span> <span class="n">Enabled</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">DownArrow</span><span class="p">)</span> <span class="p">||</span> <span class="n">Input</span><span class="p">.</span><span class="nf">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">S</span><span class="p">));</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">Right</span> <span class="p">=&gt;</span> <span class="n">Enabled</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">RightArrow</span><span class="p">)</span> <span class="p">||</span> <span class="n">Input</span><span class="p">.</span><span class="nf">GetKey</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">D</span><span class="p">));</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">Any</span> <span class="p">=&gt;</span> <span class="n">Up</span> <span class="p">||</span> <span class="n">Left</span> <span class="p">||</span> <span class="n">Down</span> <span class="p">||</span> <span class="n">Right</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">class</span> <span class="nc">Handle</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">BoolReactiveProperty</span> <span class="n">Up</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BoolReactiveProperty</span><span class="p">();</span>
+    <span class="k">public</span> <span class="n">BoolReactiveProperty</span> <span class="n">Down</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BoolReactiveProperty</span><span class="p">();</span>
+    <span class="k">public</span> <span class="n">BoolReactiveProperty</span> <span class="n">Left</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BoolReactiveProperty</span><span class="p">();</span>
+    <span class="k">public</span> <span class="n">BoolReactiveProperty</span> <span class="n">Right</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BoolReactiveProperty</span><span class="p">();</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Update</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Up</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="n">Controller</span><span class="p">.</span><span class="n">Up</span><span class="p">;</span>
+        <span class="n">Down</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="n">Controller</span><span class="p">.</span><span class="n">Down</span><span class="p">;</span>
+        <span class="n">Right</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="n">Controller</span><span class="p">.</span><span class="n">Right</span><span class="p">;</span>
+        <span class="n">Left</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="n">Controller</span><span class="p">.</span><span class="n">Left</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">public</span> <span class="k">class</span> <span class="nc">Engine</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="kt">float</span> <span class="n">UpForce</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="kt">float</span> <span class="n">DownForce</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="kt">float</span> <span class="n">RightTorque</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="kt">float</span> <span class="n">LeftTorque</span><span class="p">;</span>
+
+    <span class="k">private</span> <span class="n">Handle</span> <span class="n">Handle</span><span class="p">;</span>
+    <span class="k">private</span> <span class="n">RectTransform</span> <span class="n">RectTransformCache</span><span class="p">;</span>
+    <span class="k">private</span> <span class="n">Rigidbody2D</span> <span class="n">RigidbodyCache</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Awake</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Handle</span> <span class="p">=</span> <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">Handle</span><span class="p">&gt;();</span>
+        <span class="n">RectTransformCache</span> <span class="p">=</span> <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">RectTransform</span><span class="p">&gt;();</span>
+        <span class="n">RigidbodyCache</span> <span class="p">=</span> <span class="n">GetComponent</span><span class="p">&lt;</span><span class="n">Rigidbody2D</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Update</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Handle</span><span class="p">.</span><span class="n">Up</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span><span class="err">　</span><span class="n">RigidbodyCache</span><span class="p">.</span><span class="nf">AddForce</span><span class="p">(</span><span class="n">RectTransformCache</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="n">UpForce</span> <span class="p">*</span> <span class="n">Time</span><span class="p">.</span><span class="n">deltaTime</span><span class="p">,</span> <span class="n">ForceMode2D</span><span class="p">.</span><span class="n">Force</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Handle</span><span class="p">.</span><span class="n">Down</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span><span class="err">　</span><span class="n">RigidbodyCache</span><span class="p">.</span><span class="nf">AddForce</span><span class="p">(</span><span class="n">RectTransformCache</span><span class="p">.</span><span class="n">up</span> <span class="p">*</span> <span class="p">-</span><span class="n">DownForce</span> <span class="p">*</span> <span class="n">Time</span><span class="p">.</span><span class="n">deltaTime</span><span class="p">,</span> <span class="n">ForceMode2D</span><span class="p">.</span><span class="n">Force</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Handle</span><span class="p">.</span><span class="n">Right</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span><span class="err">　</span><span class="n">RigidbodyCache</span><span class="p">.</span><span class="nf">AddTorque</span><span class="p">(-</span><span class="n">RightTorque</span> <span class="p">*</span> <span class="n">Time</span><span class="p">.</span><span class="n">deltaTime</span><span class="p">,</span> <span class="n">ForceMode2D</span><span class="p">.</span><span class="n">Force</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Handle</span><span class="p">.</span><span class="n">Left</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span><span class="err">　</span><span class="n">RigidbodyCache</span><span class="p">.</span><span class="nf">AddTorque</span><span class="p">(</span><span class="n">LeftTorque</span> <span class="p">*</span> <span class="n">Time</span><span class="p">.</span><span class="n">deltaTime</span><span class="p">,</span> <span class="n">ForceMode2D</span><span class="p">.</span><span class="n">Force</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="p">[</span><span class="nf">RequireComponent</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">Handle</span><span class="p">))]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">CarParticle</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="n">Handle</span> <span class="n">Handle</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ParticleSystem</span><span class="p">&gt;</span> <span class="n">Front</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ParticleSystem</span><span class="p">&gt;</span> <span class="n">Rear</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ParticleSystem</span><span class="p">&gt;</span> <span class="n">Right</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ParticleSystem</span><span class="p">&gt;</span> <span class="n">Left</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Handle</span><span class="p">.</span><span class="n">Up</span><span class="p">.</span><span class="nf">DistinctUntilChanged</span><span class="p">().</span><span class="nf">Subscribe</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="nf">SetParticleActive</span><span class="p">(</span><span class="n">Rear</span><span class="p">,</span> <span class="n">x</span><span class="p">)).</span><span class="nf">AddTo</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+        <span class="n">Handle</span><span class="p">.</span><span class="n">Down</span><span class="p">.</span><span class="nf">DistinctUntilChanged</span><span class="p">().</span><span class="nf">Subscribe</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="nf">SetParticleActive</span><span class="p">(</span><span class="n">Front</span><span class="p">,</span> <span class="n">x</span><span class="p">)).</span><span class="nf">AddTo</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+        <span class="n">Handle</span><span class="p">.</span><span class="n">Right</span><span class="p">.</span><span class="nf">DistinctUntilChanged</span><span class="p">().</span><span class="nf">Subscribe</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="nf">SetParticleActive</span><span class="p">(</span><span class="n">Right</span><span class="p">,</span> <span class="n">x</span><span class="p">)).</span><span class="nf">AddTo</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+        <span class="n">Handle</span><span class="p">.</span><span class="n">Left</span><span class="p">.</span><span class="nf">DistinctUntilChanged</span><span class="p">().</span><span class="nf">Subscribe</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="nf">SetParticleActive</span><span class="p">(</span><span class="n">Left</span><span class="p">,</span> <span class="n">x</span><span class="p">)).</span><span class="nf">AddTo</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">SetParticleActive</span><span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">ParticleSystem</span><span class="p">&gt;</span> <span class="n">list</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">active</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">particleSystem</span> <span class="k">in</span> <span class="n">list</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">active</span><span class="p">)</span> <span class="n">particleSystem</span><span class="p">.</span><span class="nf">Play</span><span class="p">();</span>
+            <span class="k">else</span> <span class="n">particleSystem</span><span class="p">.</span><span class="nf">Stop</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></div>

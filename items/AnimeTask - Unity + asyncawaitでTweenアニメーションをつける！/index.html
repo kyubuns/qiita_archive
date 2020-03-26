@@ -1,0 +1,102 @@
+
+<h1>
+<span id="animetask" class="fragment"></span><a href="#animetask"><i class="fa fa-link"></i></a>AnimeTask</h1>
+
+<p>Task(async/await)ガンガン使ってる方向けのTweenアニメーションライブラリです。<br>
+<a href="https://qiita.com/kyubuns/items/761235f59febe923bf99" id="reference-720e637195974c3530cd">AnimeRx</a>のTask版です。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F97081543-ff93-1228-e92e-24ae7cdb7578.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=f32a327b5d6156d32cdb8cc777ea5e20" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F97081543-ff93-1228-e92e-24ae7cdb7578.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=f32a327b5d6156d32cdb8cc777ea5e20" alt="46568998-56470e80-c989-11e8-8798-c168a1c6b494.gif" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/97081543-ff93-1228-e92e-24ae7cdb7578.gif" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F97081543-ff93-1228-e92e-24ae7cdb7578.gif?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=987ab7a587eea2fdfd3538c97fedc834 1x" loading="lazy"></a></p>
+
+<h2>
+<span id="リポジトリ" class="fragment"></span><a href="#%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA"><i class="fa fa-link"></i></a>リポジトリ</h2>
+
+<p>Unity2017.1から動きます。(.net4.6を有効にする必要があります。)<br>
+Unity2018.3bでも動作確認済みです。<br>
+<a href="https://github.com/kyubuns/AnimeTask" rel="nofollow noopener" target="_blank">kyubuns/AnimeTask</a></p>
+
+<h2>
+<span id="コンセプト" class="fragment"></span><a href="#%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88"><i class="fa fa-link"></i></a>コンセプト</h2>
+
+<ul>
+<li>Taskだと順番にアニメーション処理がかけて便利！</li>
+</ul>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="nf">WhenAll</span><span class="p">(</span>
+    <span class="n">Anime</span><span class="p">.</span><span class="nf">PlayTo</span><span class="p">(</span><span class="n">Easing</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">Linear</span><span class="p">&gt;(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="p">-</span><span class="m">2f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="m">2f</span><span class="p">),</span> <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">LocalPosition</span><span class="p">(</span><span class="n">cube1</span><span class="p">)),</span>
+    <span class="n">Anime</span><span class="p">.</span><span class="nf">PlayTo</span><span class="p">(</span><span class="n">Easing</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">OutCubic</span><span class="p">&gt;(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="m">2f</span><span class="p">),</span> <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">LocalPosition</span><span class="p">(</span><span class="n">cube2</span><span class="p">))</span>
+<span class="p">);</span>
+
+<span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="nf">Delay</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">2.0</span><span class="p">));</span>
+
+<span class="k">await</span> <span class="n">Task</span><span class="p">.</span><span class="nf">WhenAll</span><span class="p">(</span>
+    <span class="n">Anime</span><span class="p">.</span><span class="nf">PlayTo</span><span class="p">(</span><span class="n">Easing</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">Linear</span><span class="p">&gt;(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="p">-</span><span class="m">2f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="m">2f</span><span class="p">),</span> <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">LocalPosition</span><span class="p">(</span><span class="n">cube1</span><span class="p">)),</span>
+    <span class="n">Anime</span><span class="p">.</span><span class="nf">PlayTo</span><span class="p">(</span><span class="n">Easing</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">OutCubic</span><span class="p">&gt;(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="m">2f</span><span class="p">),</span> <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">LocalPosition</span><span class="p">(</span><span class="n">cube2</span><span class="p">))</span>
+<span class="p">);</span>
+</pre></div></div>
+
+<ul>
+<li>値計算と値代入を切り分けて考えることで色んなアニメーションを色んなデータに使える。</li>
+<li>Easingは一通り実装済み。
+
+<ul>
+<li>Linear</li>
+<li>InQuad, OutQuad, InOutQuad</li>
+<li>InCubic, OutCubic, InOutCubic</li>
+<li>InQuart, OutQuart, InOutQuart</li>
+<li>InQuint, OutQuint, InOutQuint</li>
+<li>InSine, OutSine, InOutSine</li>
+<li>InExpo, OutExpo, InOutExpo</li>
+<li>InCirc, OutCirc, InOutCirc</li>
+<li>InElastic, OutElastic, InOutElastic</li>
+<li>InBack, OutBack, InOutBack</li>
+<li>InBounce, OutBounce, InOutBounce</li>
+</ul>
+</li>
+</ul>
+
+<h2>
+<span id="サンプル" class="fragment"></span><a href="#%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB"><i class="fa fa-link"></i></a>サンプル</h2>
+
+<h3>
+<span id="basic" class="fragment"></span><a href="#basic"><i class="fa fa-link"></i></a>Basic</h3>
+
+<p><code>(-5f, 0f, 0f)</code> から <code>(5f, 0f, 0f)</code> へ2秒かけて移動する。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">await</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span>
+    <span class="n">Easing</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">Linear</span><span class="p">&gt;(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="k">new</span> <span class="nf">Vector3</span><span class="p">(</span><span class="m">5f</span><span class="p">,</span> <span class="m">0f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="m">2f</span><span class="p">),</span>
+    <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">LocalPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="playto" class="fragment"></span><a href="#playto"><i class="fa fa-link"></i></a>PlayTo</h3>
+
+<p>PlayToを利用すると、現在地から移動する。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">await</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">PlayTo</span><span class="p">(</span>
+    <span class="n">Easing</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">Linear</span><span class="p">&gt;(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">3f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="m">2f</span><span class="p">),</span>
+    <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">LocalPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="easing" class="fragment"></span><a href="#easing"><i class="fa fa-link"></i></a>Easing</h3>
+
+<p>EasingのInCubicを利用して移動する。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">await</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">PlayTo</span><span class="p">(</span>
+    <span class="n">Easing</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">InCubic</span><span class="p">&gt;(</span><span class="k">new</span> <span class="nf">Vector3</span><span class="p">(-</span><span class="m">5f</span><span class="p">,</span> <span class="m">3f</span><span class="p">,</span> <span class="m">0f</span><span class="p">),</span> <span class="m">2f</span><span class="p">),</span>
+    <span class="n">TranslateTo</span><span class="p">.</span><span class="nf">LocalPosition</span><span class="p">(</span><span class="n">cube</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div></div>
+
+<h3>
+<span id="translatetoaction" class="fragment"></span><a href="#translatetoaction"><i class="fa fa-link"></i></a>TranslateTo.Action</h3>
+
+<p>TranslateTo.Actionを利用すると、アニメーションした値を自由に使用出来る。</p>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">await</span> <span class="n">Anime</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span>
+    <span class="n">Easing</span><span class="p">.</span><span class="n">Create</span><span class="p">&lt;</span><span class="n">Linear</span><span class="p">&gt;(</span><span class="m">0</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="m">2f</span><span class="p">),</span>
+    <span class="n">TranslateTo</span><span class="p">.</span><span class="n">Action</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="p">);</span>
+</pre></div></div>

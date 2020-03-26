@@ -1,0 +1,99 @@
+<p><a href="http://docs.unity3d.com/530/Documentation/ScriptReference/JsonUtility.html" rel="nofollow noopener" target="_blank">リファレンスはこちら</a></p>
+
+<p>[System.Serializable]を忘れててうまくパースされないという罠にかかったので一応メモ。</p>
+
+<p>ちなみに</p>
+
+<blockquote>
+<p>JsonUtility: JsonUtility no longer supports non-user-defined UnityEngine.Object types. Use UnityEditor.EditorJsonUtility for them now.<br>
+JsonUtility: JsonUtility.FromJson() no longer supports creating ScriptableObject instances. Only plain .NET classes and structs are supported now.<br>
+<a href="https://unity3d.com/jp/unity/beta/unity5.3.0b2" class="autolink" rel="nofollow noopener" target="_blank">https://unity3d.com/jp/unity/beta/unity5.3.0b2</a></p>
+</blockquote>
+
+<p>Dictionaryは未対応っぽい。対応予定あるのかな・・・</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">JsonTest.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+
+<span class="p">[</span><span class="n">Serializable</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Stage</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">StageName</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Enemy</span><span class="p">&gt;</span> <span class="n">Enemies</span><span class="p">;</span>
+    <span class="k">private</span> <span class="kt">int</span> <span class="n">privateValue1</span><span class="p">;</span> <span class="c1">// Serializeされないものはjsonに含まれない</span>
+    <span class="p">[</span><span class="n">SerializeField</span><span class="p">]</span> <span class="k">private</span> <span class="kt">int</span> <span class="n">privateValue2</span><span class="p">;</span> <span class="c1">// Inspectorと同じで、こうやればprivateだけどjsonに含まれる</span>
+<span class="p">}</span>
+
+<span class="p">[</span><span class="n">Serializable</span><span class="p">]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Enemy</span> <span class="p">:</span> <span class="n">ISerializationCallbackReceiver</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Hp</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Mp</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">OnBeforeSerialize</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Serialize前にごにょごにょいじれる"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">OnAfterDeserialize</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">Log</span><span class="p">(</span><span class="s">"Deserialize後にごにょごにょいじれる"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">JsonTest</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">json</span> <span class="p">=</span> <span class="nf">Serialize</span><span class="p">();</span>
+        <span class="nf">Deserialize</span><span class="p">(</span><span class="n">json</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">string</span> <span class="nf">Serialize</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">enemy1</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Enemy</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Name</span> <span class="p">=</span> <span class="s">"MonsterA"</span><span class="p">,</span>
+            <span class="n">Hp</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
+            <span class="n">Mp</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+        <span class="p">};</span>
+
+        <span class="kt">var</span> <span class="n">enemy2</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Enemy</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Name</span> <span class="p">=</span> <span class="s">"MonsterB"</span><span class="p">,</span>
+            <span class="n">Hp</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
+            <span class="n">Mp</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+        <span class="p">};</span>
+
+        <span class="kt">var</span> <span class="n">enemy3</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Enemy</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Name</span> <span class="p">=</span> <span class="s">"MonsterC"</span><span class="p">,</span>
+            <span class="n">Hp</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
+            <span class="n">Mp</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
+        <span class="p">};</span>
+
+        <span class="kt">var</span> <span class="n">stage</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Stage</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">StageName</span> <span class="p">=</span> <span class="s">"DummyStage"</span><span class="p">,</span>
+            <span class="n">Enemies</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Enemy</span><span class="p">&gt;{</span> <span class="n">enemy1</span><span class="p">,</span> <span class="n">enemy2</span><span class="p">,</span> <span class="n">enemy3</span> <span class="p">}</span>
+        <span class="p">};</span>
+
+        <span class="k">return</span> <span class="n">JsonUtility</span><span class="p">.</span><span class="nf">ToJson</span><span class="p">(</span><span class="n">stage</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">Deserialize</span><span class="p">(</span><span class="kt">string</span> <span class="n">json</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">stage</span> <span class="p">=</span> <span class="n">JsonUtility</span><span class="p">.</span><span class="n">FromJson</span><span class="p">&lt;</span><span class="n">Stage</span><span class="p">&gt;(</span><span class="n">json</span><span class="p">);</span>
+        <span class="n">Debug</span><span class="p">.</span><span class="nf">LogFormat</span><span class="p">(</span><span class="s">"StageName: {0}"</span><span class="p">,</span> <span class="n">stage</span><span class="p">.</span><span class="n">StageName</span><span class="p">);</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="kt">var</span> <span class="n">enemy</span> <span class="k">in</span> <span class="n">stage</span><span class="p">.</span><span class="n">Enemies</span><span class="p">)</span> <span class="n">Debug</span><span class="p">.</span><span class="nf">LogFormat</span><span class="p">(</span><span class="s">"Name: {0} | {1}/{2}"</span><span class="p">,</span> <span class="n">enemy</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">enemy</span><span class="p">.</span><span class="n">Hp</span><span class="p">,</span> <span class="n">enemy</span><span class="p">.</span><span class="n">Mp</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<p>最近<a href="http://qiita.com/kyubuns/items/d7f8c26250a6744c508e" id="reference-1d0528d948a767eb96d1">雑な更新</a>が多いんですけどアドベントカレンダー頑張るので許してください</p>

@@ -1,0 +1,121 @@
+
+<h1>
+<span id="まえがき" class="fragment"></span><a href="#%E3%81%BE%E3%81%88%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>まえがき</h1>
+
+<p>「今時メール？？」って思うんですけど、なんだかんだメールが便利な状況はあります。<br>
+iOSから画像つきメールを送るコードを書いたので共有します。<br>
+うちでは簡易バグレポーターとして、Debug.LogExceptionやDebug.Assertを検出したときにスクリーンショットを撮影し、StackTraceと共にメールで送るということをしています。<br>
+挙動確認は、Mac上のUnityEditorおよびiOSでのみ行いました。</p>
+
+<h1>
+<span id="導入方法" class="fragment"></span><a href="#%E5%B0%8E%E5%85%A5%E6%96%B9%E6%B3%95"><i class="fa fa-link"></i></a>導入方法</h1>
+
+<p>以下の2つのファイルをUnityプロジェクトにつっこみます。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">UniMail.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="cp">#if UNITY_IOS &amp;&amp; !UNITY_EDITOR
+</span><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Runtime.InteropServices</span><span class="p">;</span>
+<span class="cp">#endif
+</span>
+<span class="k">namespace</span> <span class="nn">UniMail</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Mail</span>
+    <span class="p">{</span>
+        <span class="err">#</span><span class="k">if</span> <span class="n">UNITY_IOS</span> <span class="p">&amp;&amp;</span> <span class="p">!</span><span class="n">UNITY_EDITOR</span>
+        <span class="p">[</span><span class="nf">DllImport</span><span class="p">(</span><span class="s">"__Internal"</span><span class="p">)]</span>
+        <span class="k">private</span> <span class="k">static</span> <span class="k">extern</span> <span class="k">void</span> <span class="nf">_SendWithImage</span><span class="p">(</span><span class="kt">string</span> <span class="n">mailTo</span><span class="p">,</span> <span class="kt">string</span> <span class="n">subject</span><span class="p">,</span> <span class="kt">string</span> <span class="n">body</span><span class="p">,</span> <span class="kt">string</span> <span class="n">imagePath</span><span class="p">);</span>
+        <span class="err">#</span><span class="n">endif</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">SendWithImage</span><span class="p">(</span><span class="kt">string</span> <span class="n">mailTo</span><span class="p">,</span> <span class="kt">string</span> <span class="n">subject</span><span class="p">,</span> <span class="kt">string</span> <span class="n">body</span><span class="p">,</span> <span class="kt">string</span> <span class="n">imagePath</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="err">#</span><span class="k">if</span> <span class="n">UNITY_IOS</span> <span class="p">&amp;&amp;</span> <span class="p">!</span><span class="n">UNITY_EDITOR</span>
+            <span class="nf">_SendWithImage</span><span class="p">(</span><span class="n">mailTo</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">imagePath</span><span class="p">);</span>
+            <span class="err">#</span><span class="k">else</span>
+            <span class="n">Application</span><span class="p">.</span><span class="nf">OpenURL</span><span class="p">(</span><span class="s">"mailto:"</span> <span class="p">+</span> <span class="n">mailTo</span> <span class="p">+</span> <span class="s">"?subject="</span> <span class="p">+</span> <span class="n">Uri</span><span class="p">.</span><span class="nf">EscapeDataString</span><span class="p">(</span><span class="n">subject</span><span class="p">)</span> <span class="p">+</span> <span class="s">"&amp;body="</span> <span class="p">+</span> <span class="n">Uri</span><span class="p">.</span><span class="nf">EscapeDataString</span><span class="p">(</span><span class="n">body</span><span class="p">)</span> <span class="p">+</span> <span class="s">"&amp;attachment="</span> <span class="p">+</span> <span class="n">Uri</span><span class="p">.</span><span class="nf">EscapeDataString</span><span class="p">(</span><span class="n">imagePath</span><span class="p">));</span>
+            <span class="err">#</span><span class="n">endif</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<div class="code-frame" data-lang="objective-c++">
+<div class="code-lang"><span class="bold">unimail.mm</span></div>
+<div class="highlight"><pre>#import "UnityAppController.h"
+#import "UnityAppController+ViewHandling.h"
+#import "UnityAppController+Rendering.h"
+#import &lt;MessageUI/MessageUI.h&gt;
+#import &lt;MessageUI/MFMailComposeViewController.h&gt;
+
+@interface MailPlugin : UIViewController &lt;MFMailComposeViewControllerDelegate&gt;{}
+
+-(void)sendMailWithImage:(NSString*)to Subject:(NSString*)subject Body:(NSString *)body ImagePath:(NSString *)imagePath;
+
+-(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error;
+
+@end
+
+@implementation MailPlugin
+-(void) sendMailWithImage:(NSString*)to Subject:(NSString*)subject Body:(NSString *)body ImagePath:(NSString *)imagePath
+{
+    if (![MFMailComposeViewController canSendMail]) return;
+
+    MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+    mailViewController.mailComposeDelegate = self;
+
+    // subject
+    [mailViewController setSubject:subject];
+
+    // mail to
+    NSArray *toRecipients = [NSArray arrayWithObject:to];
+    [mailViewController setToRecipients:toRecipients];
+
+    // body
+    [mailViewController setMessageBody:body isHTML:NO];
+
+    // image
+    NSLog(@"image path:%@", imagePath);
+    UIImage *image= [[UIImage alloc] initWithContentsOfFile:imagePath];
+    NSData *data  = [[NSData alloc] initWithData:UIImagePNGRepresentation(image)];
+    [mailViewController addAttachmentData:data mimeType:@"image/png" fileName:@"screen_shot.png"];
+
+    [GetAppController().rootViewController presentViewController: mailViewController animated:YES completion:NULL];
+}
+
+-(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+    [GetAppController().rootViewController dismissViewControllerAnimated:YES completion:NULL];
+}
+@end
+
+NSString* Mail_CreateNSString(const char* string)
+{
+    return [NSString stringWithUTF8String: string ? string : ""];
+}
+
+extern UIViewController* UnityGetGLViewController();
+static MailPlugin *mailPlugin = NULL;
+
+extern "C"
+{
+    void _SendWithImage(const char* charMailTo, const char* charSubject, const char* charBody, const char* charImagePath)
+    {
+        NSString *mailTo = Mail_CreateNSString(charMailTo);
+        NSString *subject = Mail_CreateNSString(charSubject);
+        NSString *body = Mail_CreateNSString(charBody);
+        NSString *imagePath = Mail_CreateNSString(charImagePath);
+
+        if(mailPlugin == NULL) mailPlugin = [[MailPlugin alloc] init];
+
+        [mailPlugin sendMailWithImage:mailTo Subject:subject Body:body ImagePath:imagePath];
+    }
+}
+</pre></div>
+</div>
+
+<p>unimail.mmは、以下のようにiOS pluginとして認識されるようにチェックをいれてください。</p>
+
+<p><a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fdafc0d9e-8191-9f85-0800-1349b00918ac.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=48939c1b538891fcda6cb6cb4abbe24b" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fdafc0d9e-8191-9f85-0800-1349b00918ac.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=48939c1b538891fcda6cb6cb4abbe24b" alt="Monosnap 2016-11-04 19-08-55.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/dafc0d9e-8191-9f85-0800-1349b00918ac.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2Fdafc0d9e-8191-9f85-0800-1349b00918ac.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=492599ddfcf47f7d5f8ffc801d131493 1x" loading="lazy"></a></p>

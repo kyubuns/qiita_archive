@@ -1,0 +1,147 @@
+<p>Unity界隈で9sliced spriteと呼ばれている9patchだか9sliceだかの画像を<br>
+自動で生成してくれるrubyのモジュールを作りました。<br>
+(この記事では9sliced spriteって呼びます。)</p>
+
+<p>9sliced spriteって何？って人は<a href="https://helpx.adobe.com/jp/fireworks/kb/7092.html" rel="nofollow noopener" target="_blank">この辺</a>を参照してください。</p>
+
+<h1>
+<span id="リポジトリ" class="fragment"></span><a href="#%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA"><i class="fa fa-link"></i></a>リポジトリ</h1>
+
+<p><a href="https://github.com/kyubuns/onion_ring" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/onion_ring</a></p>
+
+<h1>
+<span id="何が出来るの" class="fragment"></span><a href="#%E4%BD%95%E3%81%8C%E5%87%BA%E6%9D%A5%E3%82%8B%E3%81%AE"><i class="fa fa-link"></i></a>何が出来るの？</h1>
+
+<p>こういう画像をつっこむと<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fraw.githubusercontent.com%2Fkyubuns%2Fonion_ring%2Fmaster%2Fsample%2Fbefore.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=c2691baf380c014268dc112268334d8a" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fraw.githubusercontent.com%2Fkyubuns%2Fonion_ring%2Fmaster%2Fsample%2Fbefore.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=c2691baf380c014268dc112268334d8a" alt="before.png" data-canonical-src="https://raw.githubusercontent.com/kyubuns/onion_ring/master/sample/before.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fraw.githubusercontent.com%2Fkyubuns%2Fonion_ring%2Fmaster%2Fsample%2Fbefore.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=503cd37b21cacf7293d2ad60e1c1d6aa 1x" loading="lazy"></a></p>
+
+<p>こういう画像が出てきます。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fraw.githubusercontent.com%2Fkyubuns%2Fonion_ring%2Fmaster%2Fsample%2Fafter.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=5734ef82785a58dbaafe5830604534f6" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fraw.githubusercontent.com%2Fkyubuns%2Fonion_ring%2Fmaster%2Fsample%2Fafter.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=5734ef82785a58dbaafe5830604534f6" alt="after.png" data-canonical-src="https://raw.githubusercontent.com/kyubuns/onion_ring/master/sample/after.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fraw.githubusercontent.com%2Fkyubuns%2Fonion_ring%2Fmaster%2Fsample%2Fafter.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=3aa07c93a593c548bb5f1cc659defadb 1x" loading="lazy"></a></p>
+
+<p>さらに、[23, 0, 21, 0]というborderの値を得られます。<br>
+（left, top, right, bottom)<br>
+左から23px, 右から21pxまでを使って、その間を伸ばしてね。っていう指定です。</p>
+
+<p>こういう画像をつっこむと<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F2ca24278-be41-0a19-8803-bb231ab30fee.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=445eb05f3b378fdb72bd322c5b6f252d" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F2ca24278-be41-0a19-8803-bb231ab30fee.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=445eb05f3b378fdb72bd322c5b6f252d" alt="before.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/2ca24278-be41-0a19-8803-bb231ab30fee.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F2ca24278-be41-0a19-8803-bb231ab30fee.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=c9a3352c21411e5e99b3cdad75b12011 1x" loading="lazy"></a></p>
+
+<p>こうなります。<br>
+<a href="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F0df36154-50e3-dd20-f5e4-d1ebfa37a881.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=1da3125698467442794503c91d3565c8" target="_blank" rel="nofollow noopener"><img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F0df36154-50e3-dd20-f5e4-d1ebfa37a881.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;s=1da3125698467442794503c91d3565c8" alt="after.png" data-canonical-src="https://qiita-image-store.s3.amazonaws.com/0/6459/0df36154-50e3-dd20-f5e4-d1ebfa37a881.png" srcset="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.amazonaws.com%2F0%2F6459%2F0df36154-50e3-dd20-f5e4-d1ebfa37a881.png?ixlib=rb-1.2.2&amp;auto=format&amp;gif-q=60&amp;q=75&amp;w=1400&amp;fit=max&amp;s=87095a60162409d14375c1d3d35b71f0 1x" loading="lazy"></a></p>
+
+<h1>
+<span id="使い方" class="fragment"></span><a href="#%E4%BD%BF%E3%81%84%E6%96%B9"><i class="fa fa-link"></i></a>使い方</h1>
+
+<p>めんどくさいのでGemとかになってないです。<br>
+要望があれば・・・</p>
+
+<div class="code-frame" data-lang="ruby">
+<div class="code-lang"><span class="bold">sample.rb</span></div>
+<div class="highlight"><pre><span class="n">border</span> <span class="o">=</span> <span class="no">OnionRing</span><span class="o">::</span><span class="n">run</span><span class="p">(</span><span class="s1">'before.png'</span><span class="p">,</span> <span class="s1">'after.png'</span><span class="p">)</span>
+</pre></div>
+</div>
+
+<p>これだけ。</p>
+
+<h1>
+<span id="unity実用例" class="fragment"></span><a href="#unity%E5%AE%9F%E7%94%A8%E4%BE%8B"><i class="fa fa-link"></i></a>Unity実用例</h1>
+
+<p>ここからUnityの話をします！</p>
+
+<div class="code-frame" data-lang="ruby">
+<div class="code-lang"><span class="bold">sample.rb</span></div>
+<div class="highlight"><pre><span class="c1"># このスクリプトまともに動くか試してないので察してください。</span>
+<span class="n">slice_borders</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">slice_borders</span><span class="p">.</span><span class="nf">push</span><span class="p">([</span><span class="s1">'after1'</span><span class="p">,</span> <span class="no">OnionRing</span><span class="o">::</span><span class="n">run</span><span class="p">(</span><span class="s1">'before1.png'</span><span class="p">,</span> <span class="s1">'after1.png'</span><span class="p">)])</span>
+<span class="n">slice_borders</span><span class="p">.</span><span class="nf">push</span><span class="p">([</span><span class="s1">'after2'</span><span class="p">,</span> <span class="no">OnionRing</span><span class="o">::</span><span class="n">run</span><span class="p">(</span><span class="s1">'before2.png'</span><span class="p">,</span> <span class="s1">'after2.png'</span><span class="p">)])</span>
+<span class="c1"># さらにここでafter1.png, after2.pngを、TexturePackerでまとめて、hoge_atlas.pngに保存とかすると便利。</span>
+
+<span class="n">slice_borders_text</span> <span class="o">=</span> <span class="n">slice_borders</span><span class="p">.</span><span class="nf">map</span><span class="p">{</span><span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">line</span><span class="p">.</span><span class="nf">flatten</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">','</span><span class="p">)}.</span><span class="nf">join</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="no">File</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="s2">"hoge_atlas_border.txt"</span><span class="p">,</span> <span class="n">slice_borders_text</span><span class="p">)</span>
+<span class="n">cp</span> <span class="n">hoge_atlas_border</span><span class="p">.</span><span class="nf">txt</span> <span class="no">UnityProject</span><span class="o">/</span><span class="no">Assets</span><span class="o">/</span><span class="no">Resources</span><span class="o">/</span><span class="no">Hoge</span><span class="o">/</span>
+</pre></div>
+</div>
+
+<p>こんなかんじに、小さくした画像 + borderの値をテキストファイルに書いておきます。<br>
+そして、UnityのResources以下とか、まあ適当な場所にコピーもします。</p>
+
+<div class="code-frame" data-lang="c#">
+<div class="code-lang"><span class="bold">AtlasBorderSetter.cs</span></div>
+<div class="highlight"><pre><span class="k">using</span> <span class="nn">UnityEditor</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">BorderSetter</span> <span class="p">:</span> <span class="n">AssetPostprocessor</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">override</span> <span class="kt">int</span> <span class="nf">GetPostprocessOrder</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="m">200</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// TexturePackerが100</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">OnPostprocessAllAssets</span> <span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">importedAssets</span><span class="p">,</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">deletedAssets</span><span class="p">,</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">movedAssets</span><span class="p">,</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">movedFromAssetPaths</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">asset</span> <span class="k">in</span> <span class="n">importedAssets</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span><span class="p">(!</span><span class="n">asset</span><span class="p">.</span><span class="nf">EndsWith</span><span class="p">(</span><span class="s">"_border.txt"</span><span class="p">))</span> <span class="k">continue</span><span class="p">;</span>
+            <span class="kt">string</span> <span class="n">pathToTexture</span> <span class="p">=</span> <span class="n">asset</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span><span class="s">"_border.txt"</span><span class="p">,</span> <span class="s">".png"</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">File</span><span class="p">.</span><span class="nf">Exists</span><span class="p">(</span><span class="n">pathToTexture</span><span class="p">))</span> <span class="n">AssetDatabase</span><span class="p">.</span><span class="nf">ImportAsset</span><span class="p">(</span><span class="n">pathToTexture</span><span class="p">,</span> <span class="n">ImportAssetOptions</span><span class="p">.</span><span class="n">ForceUpdate</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">OnPreprocessTexture</span> <span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">TextureImporter</span> <span class="n">importer</span> <span class="p">=</span> <span class="n">assetImporter</span> <span class="k">as</span> <span class="n">TextureImporter</span><span class="p">;</span>
+
+        <span class="kt">string</span> <span class="n">pathToData</span> <span class="p">=</span> <span class="n">assetPath</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span><span class="s">".png"</span><span class="p">,</span> <span class="s">"_border.txt"</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">File</span><span class="p">.</span><span class="nf">Exists</span><span class="p">(</span><span class="n">pathToData</span><span class="p">))</span> <span class="nf">updateSpriteMetaData</span><span class="p">(</span><span class="n">importer</span><span class="p">,</span> <span class="n">pathToData</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">updateSpriteMetaData</span> <span class="p">(</span><span class="n">TextureImporter</span> <span class="n">importer</span><span class="p">,</span> <span class="kt">string</span> <span class="n">pathToData</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">string</span><span class="p">[]</span> <span class="n">dataFileContent</span> <span class="p">=</span> <span class="n">File</span><span class="p">.</span><span class="nf">ReadAllLines</span><span class="p">(</span><span class="n">pathToData</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">borders</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">Vector4</span><span class="p">&gt;();</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="kt">var</span> <span class="n">line</span> <span class="k">in</span> <span class="n">dataFileContent</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">elements</span> <span class="p">=</span> <span class="n">line</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="sc">','</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="n">name</span> <span class="p">=</span> <span class="n">elements</span><span class="p">[</span><span class="m">0</span><span class="p">];</span>
+            <span class="kt">var</span> <span class="n">left</span> <span class="p">=</span> <span class="kt">int</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="m">1</span><span class="p">]);</span>
+            <span class="kt">var</span> <span class="n">top</span> <span class="p">=</span> <span class="kt">int</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="m">2</span><span class="p">]);</span>
+            <span class="kt">var</span> <span class="n">right</span> <span class="p">=</span> <span class="kt">int</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="m">3</span><span class="p">]);</span>
+            <span class="kt">var</span> <span class="n">bottom</span> <span class="p">=</span> <span class="kt">int</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="m">4</span><span class="p">]);</span>
+            <span class="n">borders</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Vector4</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">top</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kt">var</span> <span class="n">metaList</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SpriteMetaData</span><span class="p">&gt;</span> <span class="p">();</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span><span class="p">&lt;</span><span class="n">importer</span><span class="p">.</span><span class="n">spritesheet</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="p">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">sprite</span> <span class="p">=</span> <span class="n">importer</span><span class="p">.</span><span class="n">spritesheet</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">sprite</span><span class="p">.</span><span class="n">border</span> <span class="p">=</span> <span class="n">borders</span><span class="p">[</span><span class="n">sprite</span><span class="p">.</span><span class="n">name</span><span class="p">];</span>
+            <span class="n">metaList</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">sprite</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">importer</span><span class="p">.</span><span class="n">spritesheet</span> <span class="p">=</span> <span class="n">metaList</span><span class="p">.</span><span class="nf">ToArray</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+
+<p>後は、↑のスクリプトをUnityのEditor以下に置いておくと、自動的にborderの設定までしてくれます！</p>
+
+<h1>
+<span id="リポジトリ-1" class="fragment"></span><a href="#%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA-1"><i class="fa fa-link"></i></a>リポジトリ</h1>
+
+<p><a href="https://github.com/kyubuns/onion_ring" class="autolink" rel="nofollow noopener" target="_blank">https://github.com/kyubuns/onion_ring</a></p>
+
+<h1>
+<span id="あとがき" class="fragment"></span><a href="#%E3%81%82%E3%81%A8%E3%81%8C%E3%81%8D"><i class="fa fa-link"></i></a>あとがき</h1>
+
+<p>自動的に9slice sprite画像を生成してくれるツールを探したんですけど、どうも見当たらなかったので自分で作っちゃいました。<br>
+意見・要望などは<a href="http://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">twitter</a>や、ここのコメント欄までお気軽にどうぞ！<br>
+ruby力低いのでコードへのつっこみもお待ちしてます。</p>
+
+<h1>
+<span id="おまけ" class="fragment"></span><a href="#%E3%81%8A%E3%81%BE%E3%81%91"><i class="fa fa-link"></i></a>おまけ</h1>
+
+<blockquote class="twitter-tweet">
+<p>. <a href="https://twitter.com/kyubuns" rel="nofollow noopener" target="_blank">@kyubuns</a> が自動 9 slicer を作ってくれたんだけど、この画像がこうなって、目から鱗である (ちなみに正しい) <a href="https://t.co/sJVNvxmtVo" rel="nofollow noopener" target="_blank">https://t.co/sJVNvxmtVo</a> <a href="http://t.co/Ug7V3QqmxN" rel="nofollow noopener" target="_blank">pic.twitter.com/Ug7V3QqmxN</a></p>— Yoshihiro Shindo (@beinteractive) <a href="https://twitter.com/beinteractive/status/599153712959860739" rel="nofollow noopener" target="_blank">2015, 5月 15</a>
+</blockquote>
+
+

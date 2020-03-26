@@ -1,0 +1,48 @@
+
+<h2>
+<span id="ああプロジェクト内の全てのprefabのtextcomponentの色変えて" class="fragment"></span><a href="#%E3%81%82%E3%81%82%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E5%86%85%E3%81%AE%E5%85%A8%E3%81%A6%E3%81%AEprefab%E3%81%AEtextcomponent%E3%81%AE%E8%89%B2%E5%A4%89%E3%81%88%E3%81%A6"><i class="fa fa-link"></i></a>ああ〜〜プロジェクト内の全てのPrefabのTextComponentの色変えて〜</h2>
+
+<div class="code-frame" data-lang="csharp"><div class="highlight"><pre><span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEditor</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine.UI</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Sandbox</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">ReimportPrefab</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="nf">MenuItem</span><span class="p">(</span><span class="s">"Sandbox/ReimportPrefab"</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Run</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">directory</span> <span class="p">=</span> <span class="k">new</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="nf">DirectoryInfo</span><span class="p">(</span><span class="n">Application</span><span class="p">.</span><span class="n">dataPath</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="n">files</span> <span class="p">=</span> <span class="n">directory</span><span class="p">.</span><span class="nf">GetFiles</span><span class="p">(</span><span class="s">"*.prefab"</span><span class="p">,</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="n">SearchOption</span><span class="p">.</span><span class="n">AllDirectories</span><span class="p">);</span>
+
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">file</span> <span class="k">in</span> <span class="n">files</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">path</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="nf">Combine</span><span class="p">(</span><span class="s">"Assets"</span><span class="p">,</span> <span class="n">file</span><span class="p">.</span><span class="nf">ToString</span><span class="p">().</span><span class="nf">Replace</span><span class="p">(</span><span class="n">Application</span><span class="p">.</span><span class="n">dataPath</span><span class="p">,</span> <span class="s">""</span><span class="p">));</span>
+
+                <span class="kt">var</span> <span class="n">go</span> <span class="p">=</span> <span class="n">PrefabUtility</span><span class="p">.</span><span class="nf">LoadPrefabContents</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+                <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">text</span> <span class="k">in</span> <span class="n">go</span><span class="p">.</span><span class="n">GetComponentsInChildren</span><span class="p">&lt;</span><span class="n">Text</span><span class="p">&gt;(</span><span class="k">true</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="n">text</span><span class="p">.</span><span class="n">color</span> <span class="p">=</span> <span class="n">Color</span><span class="p">.</span><span class="n">blue</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="n">PrefabUtility</span><span class="p">.</span><span class="nf">SaveAsPrefabAsset</span><span class="p">(</span><span class="n">go</span><span class="p">,</span> <span class="n">path</span><span class="p">);</span>
+                <span class="n">PrefabUtility</span><span class="p">.</span><span class="nf">UnloadPrefabContents</span><span class="p">(</span><span class="n">go</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</pre></div></div>
+
+<h2>
+<span id="関連" class="fragment"></span><a href="#%E9%96%A2%E9%80%A3"><i class="fa fa-link"></i></a>関連</h2>
+
+<ul>
+<li>プロジェクト内の全てのPrefabを2018.3フォーマットに変換する
+
+<ul>
+<li><a href="https://qiita.com/kyubuns/items/e558d50d239922061a48" class="autolink" id="reference-dff47e66597cba1a6a34">https://qiita.com/kyubuns/items/e558d50d239922061a48</a></li>
+</ul>
+</li>
+</ul>
